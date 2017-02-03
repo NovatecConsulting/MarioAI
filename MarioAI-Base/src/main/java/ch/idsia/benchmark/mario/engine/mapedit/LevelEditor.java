@@ -27,7 +27,7 @@
 
 package ch.idsia.benchmark.mario.engine.mapedit;
 
-import ch.idsia.Constants;
+import ch.idsia.ApplicationConstants;
 import ch.idsia.benchmark.mario.engine.LevelScene;
 import ch.idsia.benchmark.mario.engine.level.Level;
 import org.slf4j.Logger;
@@ -63,7 +63,7 @@ public LevelEditor()
     try
     {
         log.debug("System.getProperty(\"user.dir()\") = " + System.getProperty("user.dir"));
-        Level.loadBehaviors(new DataInputStream(LevelScene.class.getResourceAsStream(Constants.resourcePath + "/tiles.dat")));
+        Level.loadBehaviors(new DataInputStream(LevelScene.class.getResourceAsStream(ApplicationConstants.resourcePath + "/tiles.dat")));
 //            Level.loadBehaviors(new DataInputStream(new FileInputStream("ch/idsia/mario/resources/tiles.dat")));
     }
     catch (Exception e)
@@ -135,7 +135,7 @@ public JPanel buildButtonPanel()
 {
     loadButton = new JButton("Load");
     saveButton = new JButton("Save");
-    nameField = new JTextField(Constants.resourcePath + "/test.lvl", 10);
+    nameField = new JTextField(ApplicationConstants.resourcePath + "/test.lvl", 10);
     loadButton.addActionListener(this);
     saveButton.addActionListener(this);
     JPanel panel = new JPanel();

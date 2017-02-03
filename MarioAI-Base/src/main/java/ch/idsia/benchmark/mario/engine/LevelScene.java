@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import ch.idsia.Constants;
+import ch.idsia.ApplicationConstants;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.level.Level;
 import ch.idsia.benchmark.mario.engine.level.LevelGenerator;
@@ -51,7 +51,6 @@ import ch.idsia.benchmark.mario.engine.sprites.Shell;
 import ch.idsia.benchmark.mario.engine.sprites.Sparkle;
 import ch.idsia.benchmark.mario.engine.sprites.Sprite;
 import ch.idsia.benchmark.mario.engine.sprites.SpriteContext;
-import ch.idsia.benchmark.mario.options.AIOptions;
 import ch.idsia.benchmark.mario.options.LevelOptions;
 import ch.idsia.benchmark.mario.options.SimulationOptions;
 import ch.idsia.benchmark.mario.options.SystemOptions;
@@ -117,7 +116,7 @@ public final class LevelScene implements SpriteContext {
 
 	public LevelScene() {
 		try {
-			Level.loadBehaviors(new DataInputStream(ClassLoader.getSystemResourceAsStream(Constants.resourcePath + "/tiles.dat")));
+			Level.loadBehaviors(new DataInputStream(ClassLoader.getSystemResourceAsStream(ApplicationConstants.resourcePath + "/tiles.dat")));
 		}
 		catch (Exception e) {
 

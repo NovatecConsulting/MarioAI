@@ -1,5 +1,5 @@
 package ch.idsia;
 
-public class Constants {
+public class ApplicationConstants {
     public static String resourcePath = "baseResources";
 }

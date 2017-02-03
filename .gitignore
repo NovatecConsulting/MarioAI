@@ -11,4 +11,6 @@ bin
 *.log
 */target/
 .idea/*
-
+.classpath
+.project
+.DS_STORE

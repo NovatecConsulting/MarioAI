@@ -27,7 +27,7 @@
 
 package ch.idsia.benchmark.mario.engine;
 
-import ch.idsia.Constants;
+import ch.idsia.ApplicationConstants;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -59,22 +59,22 @@ public static void init(GraphicsConfiguration gc)
 {
     try
     {
-        mario = cutImage(gc, Constants.resourcePath + "/mariosheet.png", 32, 32);
-        racoonmario = cutImage(gc, Constants.resourcePath + "/racoonmariosheet.png", 32, 32);
-        smallMario = cutImage(gc, Constants.resourcePath + "/smallmariosheet.png", 16, 16);
-        fireMario = cutImage(gc, Constants.resourcePath + "/firemariosheet.png", 32, 32);
-        enemies = cutImage(gc, Constants.resourcePath + "/enemysheet.png", 16, 32);
-        items = cutImage(gc, Constants.resourcePath + "/itemsheet.png", 16, 16);
-        level = cutImage(gc, Constants.resourcePath + "/mapsheet.png", 16, 16);
-//            map = cutImage(gc, Constants.resourcePath + "/worldmap.png", 16, 16);
-        particles = cutImage(gc, Constants.resourcePath + "/particlesheet.png", 8, 8);
-        bg = cutImage(gc, Constants.resourcePath + "/bgsheet.png", 32, 32);
-//            logo = getImage(gc, Constants.resourcePath + "/logo.gif");
-//            titleScreen = getImage(gc, Constants.resourcePath + "/title.gif");
-        font = cutImage(gc, Constants.resourcePath + "/font.gif", 8, 8);
-        princess = cutImage(gc, Constants.resourcePath + "/princess.png", 32, 32);
-//            endScene = cutImage(gc, Constants.resourcePath + "/endscene.gif", 96, 96);
-//            gameOver = cutImage(gc, Constants.resourcePath + "/gameovergost.gif", 96, 64);
+        mario = cutImage(gc, ApplicationConstants.resourcePath + "/mariosheet.png", 32, 32);
+        racoonmario = cutImage(gc, ApplicationConstants.resourcePath + "/racoonmariosheet.png", 32, 32);
+        smallMario = cutImage(gc, ApplicationConstants.resourcePath + "/smallmariosheet.png", 16, 16);
+        fireMario = cutImage(gc, ApplicationConstants.resourcePath + "/firemariosheet.png", 32, 32);
+        enemies = cutImage(gc, ApplicationConstants.resourcePath + "/enemysheet.png", 16, 32);
+        items = cutImage(gc, ApplicationConstants.resourcePath + "/itemsheet.png", 16, 16);
+        level = cutImage(gc, ApplicationConstants.resourcePath + "/mapsheet.png", 16, 16);
+//            map = cutImage(gc, ApplicationConstants.resourcePath + "/worldmap.png", 16, 16);
+        particles = cutImage(gc, ApplicationConstants.resourcePath + "/particlesheet.png", 8, 8);
+        bg = cutImage(gc, ApplicationConstants.resourcePath + "/bgsheet.png", 32, 32);
+//            logo = getImage(gc, ApplicationConstants.resourcePath + "/logo.gif");
+//            titleScreen = getImage(gc, ApplicationConstants.resourcePath + "/title.gif");
+        font = cutImage(gc, ApplicationConstants.resourcePath + "/font.gif", 8, 8);
+        princess = cutImage(gc, ApplicationConstants.resourcePath + "/princess.png", 32, 32);
+//            endScene = cutImage(gc, ApplicationConstants.resourcePath + "/endscene.gif", 96, 96);
+//            gameOver = cutImage(gc, ApplicationConstants.resourcePath + "/gameovergost.gif", 96, 64);
     }
     catch (Exception e)
     {
