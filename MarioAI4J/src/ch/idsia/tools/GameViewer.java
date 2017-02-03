@@ -31,6 +31,8 @@ import ch.idsia.benchmark.mario.engine.SimulatorOptions;
 import ch.idsia.benchmark.mario.engine.VisualizationComponent;
 import ch.idsia.benchmark.mario.options.AIOptions;
 import ch.idsia.benchmark.mario.options.VisualizationOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -41,17 +43,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-/**
- * Created by IntelliJ IDEA. 
- * User: Sergey Karakovskiy 
- * Date: Mar 29, 2009 
- * Time: 3:34:13 PM 
- * Package: .Tools
- * 
- * NOT REFACTORED YET
- */
-
 public class GameViewer extends JFrame {
+
+	private static Logger log = LoggerFactory.getLogger(GameViewer.class);
+
 	Dimension defaultSize = new Dimension(900, 800);
 	Point defaultLocation = new Point(350, 10);
 
@@ -65,7 +60,7 @@ public class GameViewer extends JFrame {
 		int fps = FPS; // GlobalOptions.FPS;
 		delay = (fps > 0) ? (fps >= SimulatorOptions.MaxFPS) ? 0 : (1000 / fps)
 				: 100;
-		System.out.println("Game Viewer animator delay: " + delay);
+		log.debug("Game Viewer animator delay: " + delay);
 	}
 
 	GameViewerView gameViewerViewPanel = new GameViewerView();
@@ -236,7 +231,7 @@ public class GameViewer extends JFrame {
 				LabelConsole.setText("TextFieldConsole sent message:");
 				//toolsConfigurator.setConsoleText(Console.getText());
 			} else if (ob == btnUpdate) {
-				System.out.println("ob = " + ob);
+				log.debug("ob = " + ob);
 				gameViewerViewPanel.repaint();
 			}
 			// else

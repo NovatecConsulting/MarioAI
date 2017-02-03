@@ -27,6 +27,9 @@
 
 package ch.idsia.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,6 +43,9 @@ import java.util.List;
  * Package: ch.idsia.utils
  */
 public class ParameterContainer {
+
+	private static Logger log = LoggerFactory.getLogger(ParameterContainer.class);
+
 	protected HashMap<String, String> optionsHashMap = new HashMap<String, String>();
 	
 	private static List<String> allowedOptions = null;
@@ -118,7 +124,7 @@ public class ParameterContainer {
 		if (allowedOptions.contains(param)) {
 			optionsHashMap.put(param, value);
 		} else {
-			System.err.println("[MarioAI WARNING] ~ Unrecognized parameter [" + param + "] => [" + value + "]");
+			log.error("[MarioAI WARNING] ~ Unrecognized parameter [" + param + "] => [" + value + "]");
 		}
 	}
 
@@ -126,18 +132,18 @@ public class ParameterContainer {
 		String ret;
 		ret = optionsHashMap.get(param);
 		if (ret != null) {
-			System.err.println("[MarioAI INFO] ~ Specified value [" + param +"] => [" + ret + "]");
+			log.error("[MarioAI INFO] ~ Specified value [" + param +"] => [" + ret + "]");
 			return ret;
 		}
 
 		if (!allowedOptions.contains(param)) {
-			System.err.println("[MarioAI WARNING] ~ Parameter [" + param + "] is not valid. Typo?");
+			log.error("[MarioAI WARNING] ~ Parameter [" + param + "] is not valid. Typo?");
 			return "";
 		}
 
 		ret = defaultOptionsHashMap.get(param);
 		
-		System.err.println("[MarioAI INFO] ~ Default value [" + param + "] => [" + ret + "]");
+		log.error("[MarioAI INFO] ~ Default value [" + param + "] => [" + ret + "]");
 		 
 		optionsHashMap.put(param, ret);
 
@@ -254,7 +260,7 @@ public class ParameterContainer {
 			assert (defaultOptionsHashMap.get(param) != null);
 			return defaultOptionsHashMap.get(param);
 		} else {
-			System.err.println("[MarioAI WARNING] ~ Default value for param [" + param + "] not specified. Typo?");
+			log.error("[MarioAI WARNING] ~ Default value for param [" + param + "] not specified. Typo?");
 			return "";
 		}
 	}

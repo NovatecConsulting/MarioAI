@@ -56,18 +56,16 @@ import ch.idsia.benchmark.mario.options.SystemOptions;
 import ch.idsia.benchmark.mario.options.VisualizationOptions;
 import ch.idsia.tasks.SystemOfValues;
 import ch.idsia.tools.EvaluationInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Created by IntelliJ IDEA. 
- * User: Sergey Karakovskiy, sergey@idsia.ch 
- * Date: Mar 3, 2010 
- * Time: 10:08:13 PM 
- * Package: ch.idsia.benchmark.mario.environments
- * 
  * @author Sergey Karakovskiy, sergey@idsia.ch 
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 public final class MarioEnvironment implements IEnvironment {
+
+	private static Logger log = LoggerFactory.getLogger(MarioEnvironment.class);
 
 	private int prevRFH = -1;
 	private int prevRFW = -1;
@@ -116,13 +114,13 @@ public final class MarioEnvironment implements IEnvironment {
 	}
 
 	private MarioEnvironment() {
-		System.out.println(SimulatorOptions.getBenchmarkName());
+		log.debug(SimulatorOptions.getBenchmarkName());
 		levelScene = new LevelScene();
 	}
 
 	public void reset(IAgent agent) {
 		if (agent == null) {
-			System.err.println("MarioEnvironment.reset(agent): agent is NULL! Invalid.");
+			log.error("MarioEnvironment.reset(agent): agent is NULL! Invalid.");
 			throw new RuntimeException("Agent is null, environment cannot be reset.");
 		}
 		this.agent = agent;
@@ -132,7 +130,7 @@ public final class MarioEnvironment implements IEnvironment {
 	@SuppressWarnings("unchecked")
 	public void reset() {
 		if (agent == null) {
-			System.err.println("MarioEnvironment.reset(): no agent bound to the environment, cannot reset. Use MarioEnvironment.reset(agent) first!");
+			log.error("MarioEnvironment.reset(): no agent bound to the environment, cannot reset. Use MarioEnvironment.reset(agent) first!");
 			throw new RuntimeException("Agent is null, environment cannot be reset, use MarioEnvironment.reset(agent) first!");
 		}
 		
@@ -530,7 +528,7 @@ public final class MarioEnvironment implements IEnvironment {
 			try {
 				recorder.saveLastRun(filename);
 			} catch (IOException ex) {
-				System.err.println("[Mario AI EXCEPTION] : Recording could not be saved.");
+				log.error("[Mario AI EXCEPTION] : Recording could not be saved.");
 				ex.printStackTrace();
 			}
 		}

@@ -59,7 +59,7 @@ private List<EvaluationInfo> evaluationSummary = new ArrayList<EvaluationInfo>()
 //            String resetData = server.recvUnSafe();
 //            if (resetData.startsWith("ciao"))
 //            {
-//                System.out.println("Evaluator: ciao received from client; restarting server");
+//                log.debug("Evaluator: ciao received from client; restarting server");
 //                server.restartServer();
 //                continue;
 //            }
@@ -106,7 +106,7 @@ private List<EvaluationInfo> evaluationSummary = new ArrayList<EvaluationInfo>()
 //            }
 //            else
 //            {
-//                System.err.println("Evaluator: Message <" + resetData + "> is incorrect client behavior. Exiting evaluation...");
+//                log.error("Evaluator: Message <" + resetData + "> is incorrect client behavior. Exiting evaluation...");
 //                server.restartServer();
 //            }
 //        }

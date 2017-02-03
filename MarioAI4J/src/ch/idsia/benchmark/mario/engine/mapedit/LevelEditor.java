@@ -27,8 +27,11 @@
 
 package ch.idsia.benchmark.mario.engine.mapedit;
 
+import ch.idsia.Constants;
 import ch.idsia.benchmark.mario.engine.LevelScene;
 import ch.idsia.benchmark.mario.engine.level.Level;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -41,6 +44,8 @@ import java.io.*;
 
 public class LevelEditor extends JFrame implements ActionListener, Serializable
 {
+    private static Logger log = LoggerFactory.getLogger(LevelEditor.class);
+
 private static final long serialVersionUID = 7461321112832160393L;
 
 private JButton loadButton;
@@ -57,8 +62,8 @@ public LevelEditor()
 
     try
     {
-        System.out.println("System.getProperty(\"user.dir()\") = " + System.getProperty("user.dir"));
-        Level.loadBehaviors(new DataInputStream(LevelScene.class.getResourceAsStream("resources/tiles.dat")));
+        log.debug("System.getProperty(\"user.dir()\") = " + System.getProperty("user.dir"));
+        Level.loadBehaviors(new DataInputStream(LevelScene.class.getResourceAsStream(Constants.resourcePath + "/tiles.dat")));
 //            Level.loadBehaviors(new DataInputStream(new FileInputStream("ch/idsia/mario/resources/tiles.dat")));
     }
     catch (Exception e)
@@ -112,7 +117,7 @@ public JPanel buildBitmapPanel()
 
                 try
                 {
-                    System.out.println("bm = " + bm);
+                    log.debug("bm = " + bm);
                     Level.saveBehaviors(new DataOutputStream(new FileOutputStream("SAVEDtiles.dat")));
                 }
                 catch (Exception e)
@@ -130,7 +135,7 @@ public JPanel buildButtonPanel()
 {
     loadButton = new JButton("Load");
     saveButton = new JButton("Save");
-    nameField = new JTextField("resources/test.lvl", 10);
+    nameField = new JTextField(Constants.resourcePath + "/test.lvl", 10);
     loadButton.addActionListener(this);
     saveButton.addActionListener(this);
     JPanel panel = new JPanel();

@@ -27,6 +27,9 @@
 
 package ch.idsia.benchmark.mario.engine.generalization;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Created by IntelliJ IDEA. 
  * User: Sergey Karakovskiy, sergey@idsia.ch 
@@ -40,6 +43,8 @@ package ch.idsia.benchmark.mario.engine.generalization;
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 public class TileGeneralizer {
+
+	private static Logger log = LoggerFactory.getLogger(TileGeneralizer.class);
 
 	/**
 	 * Generalize tile type 'el' according to the generalization 'zLevel'. 
@@ -184,7 +189,7 @@ public class TileGeneralizer {
 			case (-1):
 				return Tile.PRINCESS;
 			}
-			System.err.println("GeneralizerLevelScene.generalize(el=" + el + ", zLevel=" + zLevel + "): Unknown value el = " + el + ". Possible Level tiles bug!");
+			log.error("GeneralizerLevelScene.generalize(el=" + el + ", zLevel=" + zLevel + "): Unknown value el = " + el + ". Possible Level tiles bug!");
 			return Tile.SOMETHING; // everything else is "something", so it is 1
 		case (2):
 			switch (el) {
@@ -220,7 +225,7 @@ public class TileGeneralizer {
 			}
 			return Tile.SOMETHING; // everything else is "something", so it is 1
 		}
-		System.err.println("Unkown ZLevel Z" + zLevel);
+		log.error("Unkown ZLevel Z" + zLevel);
 		
 		throw new RuntimeException("Invalid ZLevel[" + zLevel + "], a tile cannot be interpreted. Have you correctly set up your zLevel for the scene in your agent?");
 	}

@@ -37,13 +37,10 @@ import ch.idsia.benchmark.mario.options.FastOpts;
 import ch.idsia.benchmark.mario.options.MarioOptions;
 import ch.idsia.tools.EvaluationInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Created by IntelliJ IDEA.
- * User: Sergey Karakovskiy, sergey at idsia dot ch
- * Date: Mar 1, 2010 
- * Time: 1:50:37 PM 
- * Package: ch.idsia.scenarios
- * 
  * Wraps execution of concrete {@link IAgent} within {@link MarioEnvironment} using preset {@link MarioOptions}, which are combined
  * together with passed 'options' during the construction.
  * <br/><br/>
@@ -56,7 +53,9 @@ import ch.idsia.tools.EvaluationInfo;
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 public class MarioSimulator {
-	
+
+	private static Logger log = LoggerFactory.getLogger(MarioSimulator.class);
+
 	static {
 		MarioOptions.javaInit();
 	}
@@ -78,22 +77,22 @@ public class MarioSimulator {
 	}
 	
 	public synchronized EvaluationInfo run(IAgent agent) {
-		System.out.println("[MarioSimulator] run(" + (agent == null ? "NULL" : agent.getClass().getName()) + ")");
+		log.debug("[MarioSimulator] run(" + (agent == null ? "NULL" : agent.getClass().getName()) + ")");
 		if (agent == null) {
-			System.err.println("[MarioSimulator] agent is NULL! Aborting!");
+			log.error("[MarioSimulator] agent is NULL! Aborting!");
 			throw new RuntimeException("Agent is NULL! Please specify correct agent to run within the simulator.");
 		}
 		
-		System.out.println("[MarioSimulator] Initializing MarioOptions..");
+		log.debug("[MarioSimulator] Initializing MarioOptions..");
 		
 		MarioOptions.reset(options);
 		
-		System.out.println("[MarioSimulator] Initializing the environment and the agent...");
+		log.debug("[MarioSimulator] Initializing the environment and the agent...");
 		
 		IEnvironment environment = MarioEnvironment.getInstance();
 		environment.reset(agent);
 				
-		System.out.println("[MarioSimulator] SIMULATION RUNNING!");
+		log.debug("[MarioSimulator] SIMULATION RUNNING!");
 		
 		while (!environment.isLevelFinished()) {
 			// UPDATE THE ENVIRONMENT
@@ -108,14 +107,14 @@ public class MarioSimulator {
 			agent.receiveReward(environment.getIntermediateReward());
 		}
 		
-		System.out.println("[MarioSimulator] SIMULATION ENDED!");
+		log.debug("[MarioSimulator] SIMULATION ENDED!");
 		
 		EvaluationInfo result = environment.getEvaluationInfo();
 		
-		System.out.println("[MarioSimulator] RESULT:");
-		System.out.println(result.toString());
+		log.debug("[MarioSimulator] RESULT:");
+		log.debug(result.toString());
 		
-		System.out.println("[MarioSimulator] Simulator terminated.");
+		log.debug("[MarioSimulator] Simulator terminated.");
 		
 		return result.clone(); // result is shared instance ... we must clone it to maintain sanity 		
 	}

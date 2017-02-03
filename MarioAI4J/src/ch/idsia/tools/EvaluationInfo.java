@@ -37,18 +37,17 @@ import ch.idsia.benchmark.mario.engine.sprites.Mario.MarioMode;
 import ch.idsia.tasks.MarioSystemOfValues;
 import ch.idsia.tasks.SystemOfValues;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * Created by IntelliJ IDEA. 
- * User: Sergey Karakovskiy 
- * Date: Apr 12, 2009 
- * Time: 12:44:51 AM 
- * Package: .Tools
- * 
  * @author Sergey Karakovskiy
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 
 public final class EvaluationInfo implements Cloneable {
+
+	private static Logger log = LoggerFactory.getLogger(EvaluationInfo.class);
 	
 	public static enum EvaluationResult {
 		LEVEL_TIMEDOUT,
@@ -196,7 +195,7 @@ public final class EvaluationInfo implements Cloneable {
 						System.out.print(spaceFormat(marioTrace[i][j]));
 						pw.print(spaceFormat(marioTrace[i][j]));
 					}
-					System.out.println();
+					log.debug("");
 					pw.println();
 				}
 				pw.flush();
@@ -323,7 +322,7 @@ public final class EvaluationInfo implements Cloneable {
 			// TODO:!H!:double check the validity of this change!
 			return (EvaluationInfo) super.clone();
 		} catch (CloneNotSupportedException e) {
-			System.err.println(e);
+			log.error("", e);
 			return null;
 		}
 

@@ -114,7 +114,7 @@ public void setSeed(long seed, String creatures, int difficulty)
             kindByDifficulty = true;
         }
     }
-//    System.out.println(allowedCreatures.toString());
+//    log.debug(allowedCreatures.toString());
 }
 
 public boolean canAdd()

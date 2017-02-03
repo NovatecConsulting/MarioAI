@@ -27,6 +27,8 @@
 
 package ch.idsia.benchmark.mario.engine;
 
+import ch.idsia.Constants;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -57,22 +59,22 @@ public static void init(GraphicsConfiguration gc)
 {
     try
     {
-        mario = cutImage(gc, "resources/mariosheet.png", 32, 32);
-        racoonmario = cutImage(gc, "resources/racoonmariosheet.png", 32, 32);
-        smallMario = cutImage(gc, "resources/smallmariosheet.png", 16, 16);
-        fireMario = cutImage(gc, "resources/firemariosheet.png", 32, 32);
-        enemies = cutImage(gc, "resources/enemysheet.png", 16, 32);
-        items = cutImage(gc, "resources/itemsheet.png", 16, 16);
-        level = cutImage(gc, "resources/mapsheet.png", 16, 16);
-//            map = cutImage(gc, "resources/worldmap.png", 16, 16);
-        particles = cutImage(gc, "resources/particlesheet.png", 8, 8);
-        bg = cutImage(gc, "resources/bgsheet.png", 32, 32);
-//            logo = getImage(gc, "resources/logo.gif");
-//            titleScreen = getImage(gc, "resources/title.gif");
-        font = cutImage(gc, "resources/font.gif", 8, 8);
-        princess = cutImage(gc, "resources/princess.png", 32, 32);
-//            endScene = cutImage(gc, "resources/endscene.gif", 96, 96);
-//            gameOver = cutImage(gc, "resources/gameovergost.gif", 96, 64);
+        mario = cutImage(gc, Constants.resourcePath + "/mariosheet.png", 32, 32);
+        racoonmario = cutImage(gc, Constants.resourcePath + "/racoonmariosheet.png", 32, 32);
+        smallMario = cutImage(gc, Constants.resourcePath + "/smallmariosheet.png", 16, 16);
+        fireMario = cutImage(gc, Constants.resourcePath + "/firemariosheet.png", 32, 32);
+        enemies = cutImage(gc, Constants.resourcePath + "/enemysheet.png", 16, 32);
+        items = cutImage(gc, Constants.resourcePath + "/itemsheet.png", 16, 16);
+        level = cutImage(gc, Constants.resourcePath + "/mapsheet.png", 16, 16);
+//            map = cutImage(gc, Constants.resourcePath + "/worldmap.png", 16, 16);
+        particles = cutImage(gc, Constants.resourcePath + "/particlesheet.png", 8, 8);
+        bg = cutImage(gc, Constants.resourcePath + "/bgsheet.png", 32, 32);
+//            logo = getImage(gc, Constants.resourcePath + "/logo.gif");
+//            titleScreen = getImage(gc, Constants.resourcePath + "/title.gif");
+        font = cutImage(gc, Constants.resourcePath + "/font.gif", 8, 8);
+        princess = cutImage(gc, Constants.resourcePath + "/princess.png", 32, 32);
+//            endScene = cutImage(gc, Constants.resourcePath + "/endscene.gif", 96, 96);
+//            gameOver = cutImage(gc, Constants.resourcePath + "/gameovergost.gif", 96, 64);
     }
     catch (Exception e)
     {
@@ -85,7 +87,7 @@ private static Image getImage(GraphicsConfiguration gc, String imageName) throws
 {
     BufferedImage source = null;
     try
-    { source = ImageIO.read(Art.class.getResourceAsStream(imageName)); }
+    { source = ImageIO.read(ClassLoader.getSystemResourceAsStream(imageName)); }
     catch (Exception e) { e.printStackTrace(); }
 
     assert source != null;

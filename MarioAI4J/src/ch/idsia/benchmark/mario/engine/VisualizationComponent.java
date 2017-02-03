@@ -58,6 +58,8 @@ import ch.idsia.benchmark.mario.engine.tools.Scale2x;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.benchmark.mario.options.VisualizationOptions;
 import ch.idsia.tools.GameViewer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA. 
@@ -70,6 +72,9 @@ import ch.idsia.tools.GameViewer;
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 public class VisualizationComponent extends JComponent {
+
+	private static Logger log = LoggerFactory.getLogger(VisualizationComponent.class);
+
 	public int width, height;
 
 	public VolatileImage thisVolatileImage;
@@ -115,7 +120,7 @@ public class VisualizationComponent extends JComponent {
 
 		setFocusable(true);
 
-		// System.out.println("this (from constructor) = " + this);
+		// log.debug("this (from constructor) = " + this);
 
 		SimulatorOptions.registerMarioVisualComponent(this);
 
@@ -221,7 +226,7 @@ public class VisualizationComponent extends JComponent {
 			this.gameViewer.tick();
 		// Delay depending on how far we are behind.
 		if (delay > 0) {
-			// System.out.println("delay = " + delay);
+			// log.debug("delay = " + delay);
 			try {
 				tm += delay;
 				Thread.sleep(Math.max(0, tm - System.currentTimeMillis()));
@@ -507,7 +512,7 @@ public class VisualizationComponent extends JComponent {
 					entirePathStr.substring(progress_str.length()),
 					progress_str.length(), 28, 0);
 		} catch (StringIndexOutOfBoundsException e) {
-			// System.err.println("warning: progress line inaccuracy");
+			// log.error("warning: progress line inaccuracy");
 		}
 		drawStringDropShadow(g, progress_str, 0, 28, 2);
 		drawStringDropShadow(
@@ -534,32 +539,32 @@ public class VisualizationComponent extends JComponent {
 
 	public void init() {
 		graphicsConfiguration = getGraphicsConfiguration();
-		// System.out.println("!!HRUYA: graphicsConfiguration = " +
+		// log.debug("!!HRUYA: graphicsConfiguration = " +
 		// graphicsConfiguration);
 		Art.init(graphicsConfiguration);
 
 	}
 
 	public void postInitGraphics() {
-		// System.out.println("this = " + this);
+		// log.debug("this = " + this);
 		this.thisVolatileImage = this.createVolatileImage(
 				SimulatorOptions.VISUAL_COMPONENT_WIDTH,
 				SimulatorOptions.VISUAL_COMPONENT_HEIGHT);
 		this.thisGraphics = getGraphics();
 		this.thisVolatileImageGraphics = this.thisVolatileImage.getGraphics();
-		// System.out.println("thisGraphics = " + thisGraphics);
-		// System.out.println("thisVolatileImageGraphics = " +
+		// log.debug("thisGraphics = " + thisGraphics);
+		// log.debug("thisVolatileImageGraphics = " +
 		// thisVolatileImageGraphics);
 	}
 
 	public void postInitGraphicsAndLevel() {
 		if (graphicsConfiguration != null) {
-			// System.out.println("level = " + level);
-			// System.out.println("levelScene .level = " + levelScene.level);
+			// log.debug("level = " + level);
+			// log.debug("levelScene .level = " + levelScene.level);
 			// level = marioEnvironment.getLevel();
 
 			this.mario = marioEnvironment.getMarioSprite();
-			// System.out.println("mario = " + mario);
+			// log.debug("mario = " + mario);
 			this.level = marioEnvironment.getLevel();
 			layer = new LevelRenderer(level, graphicsConfiguration, this.width,
 					this.height);
@@ -584,7 +589,7 @@ public class VisualizationComponent extends JComponent {
 		int fps = SimulatorOptions.FPS;
 		delay = (fps > 0) ? (fps >= SimulatorOptions.MaxFPS) ? 0 : (1000 / fps)
 				: 100;
-		// System.out.println("Delay: " + delay);
+		// log.debug("Delay: " + delay);
 	}
 
 	// THis method here solely for the displaying information in order to reduce
@@ -594,16 +599,16 @@ public class VisualizationComponent extends JComponent {
 		this.agentNameStr = agent.getName();
 		if (agent instanceof KeyListener) {
 			if (prevHumanKeyBoardAgent != null) {
-				System.out.println("[MarioVisualComponent] ~ Unregistering OLD agent's KeyListener callback...");
+				log.debug("[MarioVisualComponent] ~ Unregistering OLD agent's KeyListener callback...");
 				this.removeKeyListener(prevHumanKeyBoardAgent);
 			}
-			System.out.println("[MarioVisualComponent] ~ Registering agent's KeyListener callback...");			
+			log.debug("[MarioVisualComponent] ~ Registering agent's KeyListener callback...");
 			
 			this.prevHumanKeyBoardAgent = (KeyListener) agent;
 			this.addKeyListener(this.prevHumanKeyBoardAgent);
 		} else {
 			if (prevHumanKeyBoardAgent != null) {
-				System.out.println("[MarioVisualComponent] ~ Unregistering OLD agent's KeyListener callback...");
+				log.debug("[MarioVisualComponent] ~ Unregistering OLD agent's KeyListener callback...");
 				this.removeKeyListener(prevHumanKeyBoardAgent);
 				this.prevHumanKeyBoardAgent = null;
 			}

@@ -34,6 +34,8 @@ import ch.idsia.agents.IAgent;
 import ch.idsia.benchmark.mario.engine.Replayer;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.environments.IEnvironment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA. 
@@ -46,6 +48,8 @@ import ch.idsia.benchmark.mario.environments.IEnvironment;
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 public class ReplayAgent implements IAgent {
+
+	private static Logger log = LoggerFactory.getLogger(ReplayAgent.class);
 
 	private Replayer replayer;
 	private MarioInput keys;
@@ -79,7 +83,7 @@ public class ReplayAgent implements IAgent {
 			keys.reset();
 			replayer.readAction(keys);
 		} catch (IOException e) {
-			System.err.println("[Mario AI Exception] : ReplayAgent is not able to read next action");
+			log.error("[Mario AI Exception] : ReplayAgent is not able to read next action");
 			e.printStackTrace();
 		}
 		return keys;

@@ -178,7 +178,7 @@ public final class Mario extends Sprite {
 		Mario.large = on ? newLarge : lastLarge;
 		Mario.fire = on ? newFire : lastFire;
 
-		// System.out.println("on = " + on);
+		// log.debug("on = " + on);
 		if (large) {
 			sheet = Art.mario;
 			if (fire)
@@ -199,7 +199,7 @@ public final class Mario extends Sprite {
 	}
 
 	void setMode(boolean large, boolean fire) {
-		// System.out.println("large = " + large);
+		// log.debug("large = " + large);
 		if (fire)
 			large = true;
 		if (!large)
@@ -222,10 +222,10 @@ public final class Mario extends Sprite {
 		// return;
 		this.isRacoon = isRacoon;
 		// this.setMode(isRacoon, false);
-		// System.out.println("isRacoon = " + isRacoon);
-		// System.out.println("Art.racoonmario.length = " +
+		// log.debug("isRacoon = " + isRacoon);
+		// log.debug("Art.racoonmario.length = " +
 		// Art.racoonmario.length);
-		// System.out.println("Art.racoonmario[0].length = " +
+		// log.debug("Art.racoonmario[0].length = " +
 		// Art.racoonmario[0].length);
 		if (isRacoon) {
 			savePrevState();
@@ -400,10 +400,10 @@ public final class Mario extends Sprite {
 
 		// if (keys[KEY_DUMP_CURRENT_WORLD])
 		// try {
-		// System.out.println("DUMP:");
+		// log.debug("DUMP:");
 		// // levelScene.getObservationStrings(System.out);
 		// //levelScene.level.save(System.out);
-		// System.out.println("DUMPED:");
+		// log.debug("DUMPED:");
 		// } catch (IOException e) {
 		// e.printStackTrace(); //To change body of catch statement use File |
 		// Settings | File Templates.
@@ -507,9 +507,9 @@ public final class Mario extends Sprite {
 				carried.release(this);
 				carried = null;
 				setRacoon(false);
-				// System.out.println("carried = " + carried);
+				// log.debug("carried = " + carried);
 			}
-			// System.out.println("sideWaysSpeed = " + sideWaysSpeed);
+			// log.debug("sideWaysSpeed = " + sideWaysSpeed);
 		}
 	}
 
@@ -832,7 +832,7 @@ public final class Mario extends Sprite {
 			carried = shell;
 			shell.carried = true;
 			setRacoon(true);
-			// System.out.println("shell = " + shell);
+			// log.debug("shell = " + shell);
 		} else {
 			invulnerableTime = 1;
 		}

@@ -27,6 +27,9 @@
 
 package ch.idsia.utils.statistics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
@@ -49,6 +52,7 @@ import java.util.Vector;
 
 public class StatisticalSummary implements java.io.Serializable
 {
+    private static Logger log = LoggerFactory.getLogger(StatisticalSummary.class);
 
 // a temporary fix for an immediate need
 // this should really be handled with a more general
@@ -108,12 +112,12 @@ public Watch watch;
 public StatisticalSummary()
 {
     this("");
-    // System.out.println("Exited default...");
+    // log.debug("Exited default...");
 }
 
 public StatisticalSummary(String name)
 {
-    // System.out.println("Creating SS");
+    // log.debug("Creating SS");
     this.name = name;
     n = 0;
     sum = 0;
@@ -123,7 +127,7 @@ public StatisticalSummary(String name)
     // be that number
     min = Double.POSITIVE_INFINITY;
     max = Double.NEGATIVE_INFINITY;
-    // System.out.println("Finished Creating SS");
+    // log.debug("Finished Creating SS");
     watch = null;
     valid = false;
 }
@@ -203,10 +207,10 @@ private void computeStats()
             // avoids tiny negative numbers possible through imprecision
             num = 0;
         }
-        // System.out.println("Num = " + num);
+        // log.debug("Num = " + num);
         sd = Math.sqrt(num / (n - 1));
-        // System.out.println(" Test: sd = " + sd);
-        // System.out.println(" Test: n = " + n);
+        // log.debug(" Test: sd = " + sd);
+        // log.debug(" Test: n = " + n);
         valid = true;
     }
 }
@@ -311,7 +315,7 @@ public void save(String path)
         oos.close();
     } catch (Exception e)
     {
-        System.out.println(e);
+        log.error("", e);
     }
 }
 
@@ -327,7 +331,7 @@ public static StatisticalSummary load(String path)
         return ss;
     } catch (Exception e)
     {
-        System.out.println(e);
+        log.error("", e);
         return null;
     }
 }
@@ -345,28 +349,28 @@ public static void main(String[] args) throws Exception
         ts2.add(i / 10 + new Double(args[0]).doubleValue());
     }
 
-    System.out.println(ts1);
-    System.out.println(ts2);
-    System.out.println(StatisticalSummary.sigDiff(ts1, ts2));
-    System.out.println((ts2.mean() - ts1.mean()) / ts1.stdErr());
+    log.debug(ts1.toString());
+    log.debug(ts2.toString());
+    log.debug("" + StatisticalSummary.sigDiff(ts1, ts2));
+    log.debug("" + (ts2.mean() - ts1.mean()) / ts1.stdErr());
 
     System.exit(0);
 
-    System.out.println("Creating summaries");
+    log.debug("Creating summaries");
 
     StatisticalSummary trainSummary = new StatisticalSummary();
-    System.out.println("1");
+    log.debug("1");
     // StatisticalSummary testSummary = new VisualSummary("EA");
-    System.out.println("2");
+    log.debug("2");
     // testSummary.watch = new StatisticalSummary.Watch( 1.0 );
-    System.out.println("3");
+    log.debug("3");
     // StatisticalSummary ostiaTrainSummary = new StatisticalSummary();
-    System.out.println("4");
+    log.debug("4");
     // ostiaTestSummary = new VisualSummary("OSTIA");
-    System.out.println("5");
+    log.debug("5");
     // ostiaTestSummary.watch = new StatisticalSummary.Watch( 1.0 );
 
-    System.out.println("Created summaries");
+    log.debug("Created summaries");
 
 
     StatisticalSummary s10 = new StatisticalSummary();
@@ -379,13 +383,13 @@ public static void main(String[] args) throws Exception
     {
         ss.add(0.71);
     }
-    System.out.println(ss);
+    log.debug(ss.toString());
     System.exit(0);
 
     StatisticalSummary s1 = new StatisticalSummary();
     StatisticalSummary s2 = new StatisticalSummary();
 
-    System.out.println(sigDiff(s1, s2));
+    log.debug("" + sigDiff(s1, s2));
 
     for (int i = 0; i < 20; i++)
     {
@@ -393,7 +397,7 @@ public static void main(String[] args) throws Exception
         s2.add(Math.random() + 0.5);
         // s1.add(i);
         // s2.add(i+2);
-        System.out.println(sigDiff(s1, s2));
+        log.debug("" + sigDiff(s1, s2));
     }
 }
 }

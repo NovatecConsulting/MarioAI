@@ -28,6 +28,9 @@
 package ch.idsia.utils.statistics;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Enumeration;
@@ -41,6 +44,7 @@ import java.util.Vector;
 
 public class Stats
 {
+    private static Logger log = LoggerFactory.getLogger(Stats.class);
 
 /**
  * Converts a vector of Numbers into an array of double.
@@ -153,9 +157,9 @@ private static double variance2(double[] v)
     double sumsq = 0.0;
     for (int i = 0; i < v.length; i++)
         sumsq += sqr(v[i]);
-    System.out.println(sumsq + " : " + mu);
+    log.debug(sumsq + " : " + mu);
     double diff = (sumsq - v.length * sqr(mu));
-    System.out.println("Diff = " + diff);
+    log.debug("Diff = " + diff);
     return diff / (v.length);
 }
 
@@ -218,7 +222,7 @@ public static double min(double[] v)
 public static void analyse(double[] v)
 {
     analyse(v, System.out);
-    // System.out.println("Average = " + mean(v) + "  sd = " + sdev(v));
+    // log.debug("Average = " + mean(v) + "  sd = " + sdev(v));
 }
 
 /**
@@ -277,12 +281,12 @@ public static void main(String[] args) throws IOException
 
     double dd = mean(d);
 
-    System.out.println(dd + "\t" + Double.isNaN(dd));
+    log.debug(dd + "\t" + Double.isNaN(dd));
 
     for (int i = 0; i < 3; i++)
     {
         double[] x = new double[i];
-        System.out.println(mean(x) + "\t " + stderr(x) + "\t " + sdev(x));
+        log.debug(mean(x) + "\t " + stderr(x) + "\t " + sdev(x));
     }
 }
 

@@ -32,6 +32,8 @@ import ch.idsia.benchmark.mario.options.AIOptions;
 import ch.idsia.benchmark.mario.options.LevelOptions;
 import ch.idsia.tools.RandomCreatureGenerator;
 import ch.idsia.utils.ErrorCodes;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -59,6 +61,8 @@ import java.util.Random;
  */
 
 public class LevelGenerator {
+	private static Logger log = LoggerFactory.getLogger(LevelGenerator.class);
+
 	public static final int TYPE_OVERGROUND = 0;
 	public static final int TYPE_UNDERGROUND = 1;
 	public static final int TYPE_CASTLE = 2;
@@ -117,7 +121,7 @@ public class LevelGenerator {
 							+ filePath);
 			System.exit(ErrorCodes.FILE_NAME_OR_LOAD_PROBLEM);
 		} catch (ClassNotFoundException e) {
-			System.err.println("[MarioAI EXCEPTION] : class not found in "
+			log.error("[MarioAI EXCEPTION] : class not found in "
 					+ filePath);
 			System.exit(ErrorCodes.FILE_NAME_OR_LOAD_PROBLEM);
 		}
@@ -193,7 +197,7 @@ public class LevelGenerator {
 		currentLength += buildStraight(0, level.length, true, floor,
 				INFINITE_FLOOR_HEIGHT);
 		while (currentLength < level.length - 10) {
-			// System.out.println("level.currentLength - currentLength = " +
+			// log.debug("level.currentLength - currentLength = " +
 			// (level.currentLength - currentLength));
 			currentLength += buildZone(currentLength, level.length
 					- currentLength, ANY_HEIGHT, floor, INFINITE_FLOOR_HEIGHT);
@@ -260,15 +264,15 @@ public class LevelGenerator {
 	}
 
 	private static void setPrincess(int x, int y) {
-		// System.out.println("x = " + x);
-		// System.out.println("y = " + y);
+		// log.debug("x = " + x);
+		// log.debug("y = " + y);
 		level.setSpriteTemplate(x, y, new SpriteTemplate(Sprite.KIND_PRINCESS));
 		level.setBlock(x, y, (byte) (15 + 15 * 16));
 	}
 
 	private static int buildZone(int x, int maxLength, int maxHeight,
 			int floor, int floorHeight) {
-		// System.out.println("buildZone maxLength = " + maxLength);
+		// log.debug("buildZone maxLength = " + maxLength);
 		int t = globalRandom.nextInt(totalOdds);
 		int type = 0;
 		// calculate what will be built
@@ -1223,7 +1227,7 @@ public class LevelGenerator {
 	// private static int buildHillStraight(int xo, int maxLength, int vfloor,
 	// final boolean isInGap)
 	// {
-	// // System.out.println("xo = " + xo);
+	// // log.debug("xo = " + xo);
 	// int length = globalRandom.nextInt(10) + 10;
 	// if (length > maxLength)
 	// {

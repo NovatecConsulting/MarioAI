@@ -28,14 +28,12 @@
 package ch.idsia.benchmark.mario.engine;
 
 import java.awt.Point;
-import java.io.DataInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import ch.idsia.Constants;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.level.Level;
 import ch.idsia.benchmark.mario.engine.level.LevelGenerator;
@@ -58,8 +56,12 @@ import ch.idsia.benchmark.mario.options.LevelOptions;
 import ch.idsia.benchmark.mario.options.SimulationOptions;
 import ch.idsia.benchmark.mario.options.SystemOptions;
 import ch.idsia.benchmark.mario.options.VisualizationOptions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class LevelScene implements SpriteContext {
+
+	private static Logger log = LoggerFactory.getLogger(LevelScene.class);
 
 	public static final int cellSize = 16;
 
@@ -115,8 +117,10 @@ public final class LevelScene implements SpriteContext {
 
 	public LevelScene() {
 		try {
-			Level.loadBehaviors(new DataInputStream(LevelScene.class.getResourceAsStream("resources/tiles.dat")));
-		} catch (IOException e) {
+			Level.loadBehaviors(new DataInputStream(ClassLoader.getSystemResourceAsStream(Constants.resourcePath + "/tiles.dat")));
+		}
+		catch (Exception e) {
+
 			System.err
 					.println("[MarioAI ERROR] : error loading file resources/tiles.dat ; ensure this file exists in ch/idsia/benchmark/mario/engine ");
 			e.printStackTrace();
@@ -244,7 +248,7 @@ public final class LevelScene implements SpriteContext {
 				if (st != null) {
 					// if (st.getType() == Sprite.KIND_SPIKY)
 					// {
-					// System.out.println("here");
+					// log.debug("here");
 					// }
 
 					if (st.lastVisibleTick != tickCount - 1) {
@@ -302,7 +306,7 @@ public final class LevelScene implements SpriteContext {
 						if (mario.carried == shell && !shell.dead) {
 							mario.carried = null;
 							mario.setRacoon(false);
-							// System.out.println("sprite = " + sprite);
+							// log.debug("sprite = " + sprite);
 							shell.die();
 							++this.killedCreaturesTotal;
 						}
@@ -507,7 +511,7 @@ public final class LevelScene implements SpriteContext {
 				// replayer.closeFile();
 				// replayer.closeRecorder();
 			} catch (IOException e) {
-				System.err.println("[Mario AI Exception] ~ level reading failed");
+				log.error("[Mario AI Exception] ~ level reading failed");
 				e.printStackTrace();
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -520,7 +524,7 @@ public final class LevelScene implements SpriteContext {
 			try {
 				Level.save(level, new ObjectOutputStream(new FileOutputStream(SystemOptions.getSaveLevelFileName())));
 			} catch (IOException e) {
-				System.err.println("[Mario AI Exception] ~ Cannot write to file " + SystemOptions.getSaveLevelFileName());
+				log.error("[Mario AI Exception] ~ Cannot write to file " + SystemOptions.getSaveLevelFileName());
 				e.printStackTrace();
 			}
 		}
@@ -543,7 +547,7 @@ public final class LevelScene implements SpriteContext {
 		bonusPoints = -1;
 
 		mario = new Mario(this);
-		// System.out.println("mario = " + mario);
+		// log.debug("mario = " + mario);
 		memo = "";
 
 		sprites.add(mario);

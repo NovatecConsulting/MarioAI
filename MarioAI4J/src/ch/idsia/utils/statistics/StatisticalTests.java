@@ -27,6 +27,9 @@
 
 package ch.idsia.utils.statistics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.PrintStream;
 
 /**
@@ -40,6 +43,8 @@ import java.io.PrintStream;
 
 public class StatisticalTests
 {
+
+    private static Logger log = LoggerFactory.getLogger(StatisticalTests.class);
 
 //static Class dummy = Stats.class;
 
@@ -184,7 +189,7 @@ public static double tPaired(double[] s1, double[] s2, boolean twoSided)
     double var1 = Stats.variance(s1);
     double var2 = Stats.variance(s2);
     double covar = Stats.covar(s1, s2);
-    // System.out.println("Covar = " + covar);
+    // log.debug("Covar = " + covar);
     double nu = s1.length - 1;
     double m1 = Stats.mean(s1);
     double m2 = Stats.mean(s2);
@@ -215,7 +220,7 @@ public static double tPaired(double[] d, boolean twoSided)
     double mean = Stats.mean(d);
     double variance = Stats.variance(d);
     // double var2 = sumSquareDiff(d, mean) / (d.length - 1);
-    System.out.println(mean + " : " + variance);
+    log.debug(mean + " : " + variance);
     // Wait.Input();
     double stderr = Math.sqrt(variance / d.length);
 
@@ -223,7 +228,7 @@ public static double tPaired(double[] d, boolean twoSided)
 
     double t = mean / stderr;
 
-    System.out.println("t = " + t);
+    log.debug("t = " + t);
 
     if (twoSided)
         return tTest(t, nu);
@@ -253,12 +258,12 @@ public static double confDiff(double[] d, double conf)
     // find the alpha which gives this confidence level
 
     double mean = Stats.mean(d);
-    // System.out.println("SDEV = " + Stats.sdev(d));
+    // log.debug("SDEV = " + Stats.sdev(d));
     double stderr = Stats.stderr(d);
     double nu = d.length - 1.0;
 
     double t = findt(1.0 - (1.0 - conf) / 1, nu);
-    // System.out.println(t + "\t" + conf + "\t" + nu);
+    // log.debug(t + "\t" + conf + "\t" + nu);
 
     return t * stderr;
 
@@ -295,7 +300,7 @@ public static double findt(double conf, double nu)
         double cur = tTest(mid, nu);
         if (Math.abs(conf - cur) < eps)
         {
-            // System.out.println("Converged to " + cur + " in " + i + " iterations");
+            // log.debug("Converged to " + cur + " in " + i + " iterations");
             return mid;
         }
 
@@ -334,7 +339,7 @@ private static double binRoot(double x)
         double cur = mid * mid;
         if (Math.abs(x - cur) < eps)
         {
-            // System.out.println("Converged to " + cur + " in " + i + " iterations");
+            // log.debug("Converged to " + cur + " in " + i + " iterations");
             return mid;
         }
 
@@ -393,7 +398,7 @@ protected static double betai(double a, double b, double x)
     // can be used to find t statistic
     double bt;
     if ((x < 0.0) || (x > 1.0))
-        System.out.println("Error in betai: " + x);
+        log.debug("Error in betai: " + x);
     if ((x == 0.0) || (x == 1.0))
         bt = 0.0;
     else
@@ -441,7 +446,7 @@ protected static double betacf(double a, double b, double x)
         if (Math.abs(az - aold) < eps * Math.abs(az))
             return az;
     }
-    System.out.println("a or b too big, or maxIts too small");
+    log.debug("a or b too big, or maxIts too small");
     return -1;
 }
 
@@ -458,12 +463,12 @@ private static void fillUniform(double[] d, double mean)
 
 private static void test()
 {
-    System.out.println(tTest(1.311, 29));
-    System.out.println(tSingle(1.311, 29));
-    System.out.println(tTest(1.699, 29));
-    System.out.println(tTest(2.045, 29));
-    System.out.println(tTest(0.9, 29));
-    System.out.println(tTest(0.95, 29));
+    log.debug("" + tTest(1.311, 29));
+    log.debug("" + tSingle(1.311, 29));
+    log.debug("" + tTest(1.699, 29));
+    log.debug("" + tTest(2.045, 29));
+    log.debug("" + tTest(0.9, 29));
+    log.debug("" + tTest(0.95, 29));
 }
 
 /**
@@ -494,10 +499,10 @@ public static void confTest()
 {
     double[] mpg = {18.6, 18.4, 19.2, 20.8, 19.4, 20.5};
 
-    // System.out.println("Variance2 = " + Stats.variance2(mpg));
+    // log.debug("Variance2 = " + Stats.variance2(mpg));
 
-    // System.out.println("Mean = " + Stats.mean(mpg));
-    // System.out.println("Var = " + Stats.variance(mpg));
+    // log.debug("Mean = " + Stats.mean(mpg));
+    // log.debug("Var = " + Stats.variance(mpg));
     // Wait.Input();
     // System.exit(0);
 
@@ -533,10 +538,10 @@ private static void testT()
     double[] s1 = {137, 135, 83, 125, 47, 46, 114, 157, 57, 144};
     double[] s2 = {53, 114, 81, 86, 34, 66, 89, 113, 88, 111};
 
-    System.out.println("(Paired (one))     Reject h0 with prob. " + tPairedOneSided(s1, s2));
-    System.out.println("(Paired (two))     Reject h0 with prob. " + tPairedTwoSided(s1, s2));
-    System.out.println("(Not paired (one)) Reject h0 with prob. " + tNotPairedOneSided(s1, s2));
-    System.out.println("(Not paired (two)) Reject h0 with prob. " + tNotPairedTwoSided(s1, s2));
+    log.debug("(Paired (one))     Reject h0 with prob. " + tPairedOneSided(s1, s2));
+    log.debug("(Paired (two))     Reject h0 with prob. " + tPairedTwoSided(s1, s2));
+    log.debug("(Not paired (one)) Reject h0 with prob. " + tNotPairedOneSided(s1, s2));
+    log.debug("(Not paired (two)) Reject h0 with prob. " + tNotPairedTwoSided(s1, s2));
 
 }
 
@@ -559,14 +564,14 @@ public static void main(String[] args)
     /*
     test();
 
-    System.out.println("\n\n" + binRoot(81));
+    log.debug("\n\n" + binRoot(81));
 
     Wait.Input();
 
     double t = 0.11;
     double nu = 9.0;
 
-    System.out.println(tTest(t, nu));
+    log.debug(tTest(t, nu));
 
     */
     int n = 10;
@@ -579,7 +584,7 @@ public static void main(String[] args)
     {
         fillUniform(d, i / 10.0);
         // addConst(dd, d, i / 10.0);
-        // System.out.println(i + "\t " + tPaired(d, dd)  + "\t " + tPaired2(d, dd) + "\t" + tNotPaired(d, dd));
+        // log.debug(i + "\t " + tPaired(d, dd)  + "\t " + tPaired2(d, dd) + "\t" + tNotPaired(d, dd));
     }
 
 }

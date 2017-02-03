@@ -197,12 +197,12 @@ public final class AIOptions extends SimulationOptions {
 //	}
 //
 //	public void printOptions(boolean singleLine) {
-//		System.out.println("\n[MarioAI] : Options have been set to:");
+//		log.debug("\n[MarioAI] : Options have been set to:");
 //		for (Map.Entry<String, String> el : optionsHashMap.entrySet())
 //			if (singleLine)
 //				System.out.print(el.getKey() + " " + el.getValue() + " ");
 //			else
-//				System.out.println(el.getKey() + " " + el.getValue() + " ");
+//				log.debug(el.getKey() + " " + el.getValue() + " ");
 //	}
 //
 //	public static AIOptions getOptionsByString(String argString) {
@@ -268,7 +268,7 @@ public final class AIOptions extends SimulationOptions {
 //		//
 //		// if (ret % 2 == 0)
 //		// {
-//		// System.err.println("\n[MarioAI WARNING] : Wrong value for receptive field width: "
+//		// log.error("\n[MarioAI WARNING] : Wrong value for receptive field width: "
 //		// + ret++ +
 //		// " ; receptive field width set to " + ret);
 //		// setParameterValue("-rfw", s(ret));
@@ -284,7 +284,7 @@ public final class AIOptions extends SimulationOptions {
 //		int ret = asInt(getParameterValue("-rfh"));
 //		// if (ret % 2 == 0)
 //		// {
-//		// System.err.println("\n[MarioAI WARNING] : Wrong value for receptive field height: "
+//		// log.error("\n[MarioAI WARNING] : Wrong value for receptive field height: "
 //		// + ret++ +
 //		// " ; receptive field height set to " + ret);
 //		// setParameterValue("-rfh", s(ret));

@@ -28,14 +28,10 @@
 package ch.idsia.benchmark.mario.engine.generalization;
 
 import ch.idsia.benchmark.mario.engine.sprites.Sprite;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Created by IntelliJ IDEA. 
- * User: Sergey Karakovskiy, sergey@idsia.ch 
- * Date: Aug 5, 2009 
- * Time: 7:04:19 PM 
- * Package: ch.idsia.benchmark.mario.engine
- * 
  * Provides generalization of entities that can be placed over {@link Tile}.
  * 
  * TODO: investigate, seems like ad-hoc stuff for some competition or experiment, reconsider to cut it out completely...
@@ -44,6 +40,8 @@ import ch.idsia.benchmark.mario.engine.sprites.Sprite;
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
 public class EntityGeneralizer {
+
+	private static Logger log = LoggerFactory.getLogger(EntityGeneralizer.class);
 
 	public static EntityType generalize(byte el, int zLevel) {
 		switch (zLevel) {
@@ -88,7 +86,7 @@ public class EntityGeneralizer {
 			case Sprite.KIND_PRINCESS:
 				return EntityType.PRINCESS;
 			}
-			System.err.println("EntityGeneralizer.generalize(el=" + el + ", zLevel=" + zLevel + "): Failed to interpret el = " + el + "! Returning SOMETHING!");
+			log.error("EntityGeneralizer.generalize(el=" + el + ", zLevel=" + zLevel + "): Failed to interpret el = " + el + "! Returning SOMETHING!");
 			return EntityType.SOMETHING;
 		case (1):
 			switch (el) {
@@ -120,7 +118,7 @@ public class EntityGeneralizer {
 			case Sprite.KIND_PRINCESS:
 				return EntityType.PRINCESS;
 			}
-			System.err.println("EntityGeneralizer.generalize(el=" + el + ", zLevel=" + zLevel + "): Failed to interpret el = " + el + "! Returning SOMETHING!");
+			log.error("EntityGeneralizer.generalize(el=" + el + ", zLevel=" + zLevel + "): Failed to interpret el = " + el + "! Returning SOMETHING!");
 			return EntityType.SOMETHING;
 		case (2):
 			switch (el) {
@@ -149,7 +147,7 @@ public class EntityGeneralizer {
 				return EntityType.DANGER;
 			
 			}
-			System.err.println("EntityGeneralizer.generalize(el=" + el + ", zLevel=" + zLevel + "): Failed to interpret el = " + el + "! Returning SOMETHING!");
+			log.error("EntityGeneralizer.generalize(el=" + el + ", zLevel=" + zLevel + "): Failed to interpret el = " + el + "! Returning SOMETHING!");
 			return EntityType.SOMETHING;
 		}
 		
