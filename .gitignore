@@ -10,3 +10,5 @@ bin
 *.iml
 */logs/
 */target/
+.idea/*
+

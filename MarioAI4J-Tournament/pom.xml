@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.novatec</groupId>
-    <artifactId>MarioAiAgents</artifactId>
+    <artifactId>MarioAiTournament</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <description>MarioAi Base API</description>
+    <description>MarioAi Tournament</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -27,6 +27,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.martiansoftware</groupId>
+            <artifactId>jsap</artifactId>
+            <version>2.1</version>
         </dependency>
 
         <dependency>
@@ -75,15 +81,13 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>ch.idsia.agents.controllers.examples.Agent03_Forward</mainClass>
+                                    <mainClass>mario.MarioAgent</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-            
         </plugins>
-
     </build>
 </project>
