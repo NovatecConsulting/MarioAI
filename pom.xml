@@ -3,12 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.novatec</groupId>
-    <artifactId>MarioAi</artifactId>
+    <groupId>de.novatec.marioai</groupId>
+    <artifactId>MarioAI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-
-    <description>MarioAi</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,10 +14,9 @@
     </properties>
 
     <modules>
-        <module>MarioAI4J</module>
-        <module>MarioAI4J-Agents</module>
-        <module>MarioAI4J-Tournament</module>
-        <module>MarioAI4J-Playground</module>
+        <module>MarioAI-Base</module>
+        <module>MarioAI-Tournament</module>
+        <module>MarioAI-Simulation</module>
     </modules>
-    
+
 </project>
