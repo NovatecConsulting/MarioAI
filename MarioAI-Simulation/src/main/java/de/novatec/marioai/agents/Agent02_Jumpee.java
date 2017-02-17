@@ -28,9 +28,8 @@
 package de.novatec.marioai.agents;
 
 import ch.idsia.agents.AgentOptions;
-import ch.idsia.agents.IAgent;
-import ch.idsia.agents.controllers.MarioHijackAIBase;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
+import de.novatec.marioai.MarioAgenNtBase;
 
 /**
  * Agent that sprints forward and jumps whenever it can.
@@ -38,25 +37,20 @@ import ch.idsia.benchmark.mario.engine.input.MarioInput;
  * @author Sergey Karakovskiy
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent02_Jumpee extends MarioHijackAIBase implements IAgent {
+public class Agent02_Jumpee extends MarioAgenNtBase {
 
     @Override
-    public void reset(AgentOptions options) {
-        super.reset(options);
-    }
-
-    @Override
-    public MarioInput actionSelectionAI() {
+    public MarioInput doAiLogic() {
         // ALWAYS RUN RIGHT
-        control.runRight();
+        getMarioControl().runRight();
 
         // ALWAYS SPRINT
-        control.sprint();
+        getMarioControl().sprint();
 
         // JUMP IF YOU CAN!
         // ... this will make Mario to jump as high as possible
-        control.jump();
+        getMarioControl().jump();
 
-        return action;
+        return getMarioInput();
     }
 }

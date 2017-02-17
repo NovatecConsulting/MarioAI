@@ -1,74 +1,55 @@
 package de.novatec.marioai.agents;
 
-import ch.idsia.agents.AgentOptions;
-import ch.idsia.agents.IAgent;
-import ch.idsia.agents.controllers.MarioHijackAIBase;
-import ch.idsia.benchmark.mario.engine.LevelScene;
-import ch.idsia.benchmark.mario.engine.VisualizationComponent;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
-import ch.idsia.benchmark.mario.environments.IEnvironment;
+import de.novatec.marioai.MarioAgenNtBase;
 
-import java.awt.*;
 
 /**
  * An agent that sprints forward and jumps if it detects an obstacle ahead.
  *
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent03_Forward extends MarioHijackAIBase implements IAgent {
-
-    @Override
-    public void reset(AgentOptions options) {
-        super.reset(options);
-    }
+public class Agent03_Forward extends MarioAgenNtBase {
 
     private boolean enemyAhead() {
         return
-                e.danger(1, 0) || e.danger(1, -1)
-                        || e.danger(2, 0) || e.danger(2, -1)
-                        || e.danger(3, 0) || e.danger(2, -1);
+                getEntities().danger(1, 0)  ||
+                getEntities().danger(1, -1) ||
+                getEntities().danger(2, 0)  ||
+                getEntities().danger(2, -1) ||
+                getEntities().danger(3, 0)  ||
+                getEntities().danger(2, -1);
     }
 
     private boolean brickAhead() {
-        return
-                t.brick(1, 0) || t.brick(1, -1)
-                        || t.brick(2, 0) || t.brick(2, -1)
-                        || t.brick(3, 0) || t.brick(3, -1);
+        boolean brickAhed = getTiles().brick(1, 0)  ||
+                            getTiles().brick(1, -1) ||
+                            getTiles().brick(2, 0)  ||
+                            getTiles().brick(2, -1) ||
+                            getTiles().brick(3, 0)  ||
+                            getTiles().brick(3, -1);
+
+        return brickAhed;
     }
 
-    @Override
-    public void debugDraw(VisualizationComponent vis, LevelScene level, IEnvironment env, Graphics g) {
-        super.debugDraw(vis, level, env, g);
-        String debug = "";
-        if (enemyAhead()) {
-            debug += "|ENEMY AHEAD|";
-        }
-        if (brickAhead()) {
-            debug += "|BRICK AHEAD|";
-        }
-        if (mario != null && mario.onGround) {
-            debug += "|ON GROUND|";
-        }
-        VisualizationComponent.drawStringDropShadow(g, debug, 0, 26, 1);
-    }
 
-    public MarioInput actionSelectionAI() {
+    public MarioInput doAiLogic() {
         // ALWAYS RUN RIGHT
-        control.runRight();
+        getMarioControl().runRight();
 
         // ALWAYS SPEED RUN
-        control.sprint();
+        getMarioControl().sprint();
 
         // IF (ENEMY || BRICK AHEAD) => JUMP
         if (enemyAhead() || brickAhead())
-            control.jump();
+            getMarioControl().jump();
 
         // If (In the air) => keep JUMPing
-        if (!mario.onGround) {
-            control.jump();
+        if (!getMarioEntity().onGround) {
+            getMarioControl().jump();
         }
 
-        return action;
+        return getMarioInput();
     }
 
 }

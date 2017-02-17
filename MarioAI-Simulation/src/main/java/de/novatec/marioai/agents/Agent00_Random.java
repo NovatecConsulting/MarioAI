@@ -27,11 +27,9 @@
 
 package de.novatec.marioai.agents;
 
-import ch.idsia.agents.AgentOptions;
-import ch.idsia.agents.IAgent;
-import ch.idsia.agents.controllers.MarioHijackAIBase;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.input.MarioKey;
+import de.novatec.marioai.MarioAgenNtBase;
 
 import java.util.Random;
 
@@ -41,28 +39,22 @@ import java.util.Random;
  * @author Sergey Karakovskiy
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent00_Random extends MarioHijackAIBase implements IAgent {
+public class Agent00_Random extends MarioAgenNtBase {
 
-    private Random R = null;
-
-    @Override
-    public void reset(AgentOptions options) {
-        super.reset(options);
-        R = new Random();
-    }
+    private Random random = new Random();
 
     @Override
-    public MarioInput actionSelectionAI() {
+    public MarioInput doAiLogic() {
         for (int i = 0; i < MarioKey.numberOfKeys; ++i) {
-            boolean toggleParticularAction = R.nextBoolean();
+            boolean toggleParticularAction = random.nextBoolean();
             if (toggleParticularAction)
-                action.toggle(MarioKey.getMarioKey(i));
+                getMarioInput().toggle(MarioKey.getMarioKey(i));
         }
         // Prefer movement to the right.
-        if (R.nextBoolean()) {
-            action.press(MarioKey.RIGHT);
+        if (random.nextBoolean()) {
+            getMarioInput().press(MarioKey.RIGHT);
         }
 
-        return action;
+        return getMarioInput();
     }
 }
