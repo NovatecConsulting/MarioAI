@@ -1,11 +1,16 @@
 package de.novatec.marioai;
 
+import java.awt.Graphics;
+
 import ch.idsia.agents.controllers.MarioHijackAIBase;
 import ch.idsia.agents.controllers.modules.Entities;
 import ch.idsia.agents.controllers.modules.Tiles;
+import ch.idsia.benchmark.mario.engine.LevelScene;
+import ch.idsia.benchmark.mario.engine.VisualizationComponent;
 import ch.idsia.benchmark.mario.engine.generalization.MarioEntity;
 import ch.idsia.benchmark.mario.engine.input.MarioControl;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
+import ch.idsia.benchmark.mario.environments.IEnvironment;
 
 /**
  * This class is wrapping the given {@link MarioHijackAIBase} API in order to hide irrelevant members.
@@ -13,7 +18,7 @@ import ch.idsia.benchmark.mario.engine.input.MarioInput;
  *
  * @author tj NovaTec GmbH
  */
-public class MarioAgentNtWrapper extends MarioHijackAIBase {
+public abstract class MarioAgentNtWrapper extends MarioHijackAIBase {
 
     /**
      * @see {@link MarioAgenNtBase#getMarioControl}
@@ -49,4 +54,9 @@ public class MarioAgentNtWrapper extends MarioHijackAIBase {
     public Tiles getTiles() {
         return  t;
     }
+    
+    public LevelScene getLevelScene() {
+    	return levelScene;
+    }
+    
 }

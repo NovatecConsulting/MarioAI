@@ -76,6 +76,8 @@ public abstract class MarioAIBase extends MarioAgentBase {
 	
 	protected Tiles t = new Tiles();
 	
+	protected LevelScene levelScene = new LevelScene();
+	
 	public MarioAIBase() {
 		super("MarioAIBase");
 		name = getClass().getSimpleName();
@@ -105,6 +107,7 @@ public abstract class MarioAIBase extends MarioAgentBase {
 		t.tileField   = environment.getTileField();
 		e.entityField = environment.getEntityField();
 		e.entities    = environment.getEntities();
+		levelScene    = environment.getLevelScene();
 		action.tick();
 		control.tick();
 	}

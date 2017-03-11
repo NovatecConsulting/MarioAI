@@ -34,7 +34,7 @@ import ch.idsia.benchmark.mario.engine.LevelScene;
 import java.awt.*;
 
 
-public class Enemy extends Sprite
+public class Enemy extends Sprite implements Cloneable
 {
 public static final int IN_FILE_POS_RED_KOOPA = 0;
 public static final int IN_FILE_POS_GREEN_KOOPA = 1;
@@ -429,47 +429,7 @@ public void bumpCheck(int xTile, int yTile)
         winged = false;
         hPic = -hPic;
         yPicO = -yPicO + 16;
-//            log.debug("bumpCheck: mostelikely shell killed other creature");
     }
 }
 
-public void render(Graphics og)
-{
-    if (winged)
-    {
-        int xPixel = (int) (xOld + (x - xOld)) - xPicO;
-        int yPixel = (int) (yOld + (y - yOld)) - yPicO;
-
-        if (kind == KIND_GREEN_KOOPA ||
-                kind == KIND_RED_KOOPA ||
-                kind == KIND_GREEN_KOOPA_WINGED ||
-                kind == KIND_RED_KOOPA_WINGED)
-        {
-        } else
-        {
-            xFlipPic = !xFlipPic;
-            og.drawImage(sheet[wingTime / 4 % 2][4], xPixel + (xFlipPic ? wPic : 0) + (xFlipPic ? 10 : -10), yPixel + (yFlipPic ? hPic : 0) - 8, xFlipPic ? -wPic : wPic, yFlipPic ? -hPic : hPic, null);
-            xFlipPic = !xFlipPic;
-        }
-    }
-
-    super.render(og);
-
-    if (winged)
-    {
-        int xPixel = (int) (xOld + (x - xOld)) - xPicO;
-        int yPixel = (int) (yOld + (y - yOld)) - yPicO;
-
-        if (kind == KIND_GREEN_KOOPA ||
-                kind == KIND_RED_KOOPA ||
-                kind == KIND_GREEN_KOOPA_WINGED ||
-                kind == KIND_RED_KOOPA_WINGED)
-        {
-            og.drawImage(sheet[wingTime / 4 % 2][4], xPixel + (xFlipPic ? wPic : 0) + (xFlipPic ? 10 : -10), yPixel + (yFlipPic ? hPic : 0) - 10, xFlipPic ? -wPic : wPic, yFlipPic ? -hPic : hPic, null);
-        } else
-        {
-            og.drawImage(sheet[wingTime / 4 % 2][4], xPixel + (xFlipPic ? wPic : 0) + (xFlipPic ? 10 : -10), yPixel + (yFlipPic ? hPic : 0) - 8, xFlipPic ? -wPic : wPic, yFlipPic ? -hPic : hPic, null);
-        }
-    }
-}
 }

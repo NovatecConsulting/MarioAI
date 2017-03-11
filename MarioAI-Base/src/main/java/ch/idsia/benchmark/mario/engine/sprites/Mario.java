@@ -38,7 +38,7 @@ import ch.idsia.benchmark.mario.options.AIOptions;
 import ch.idsia.benchmark.mario.options.SimulationOptions;
 import ch.idsia.benchmark.mario.options.SystemOptions;
 
-public final class Mario extends Sprite {
+public final class Mario extends Sprite implements Cloneable {
 	
 	/**
 	 * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
@@ -59,6 +59,8 @@ public final class Mario extends Sprite {
 		}
 		
 	}
+	
+	private boolean isClone = false;
 
 	public static final int STATUS_RUNNING = 2;
 	public static final int STATUS_WIN = 1;
@@ -161,6 +163,8 @@ public final class Mario extends Sprite {
 		y = levelScene.getMarioInitialPos().y;
 		mapX = (int) (x / 16);
 		mapY = (int) (y / 16);
+		
+		//this.world = levelScene;
 
 		facing = 1;
 		setMode(Mario.large, Mario.fire);
@@ -199,7 +203,6 @@ public final class Mario extends Sprite {
 	}
 
 	void setMode(boolean large, boolean fire) {
-		// log.debug("large = " + large);
 		if (fire)
 			large = true;
 		if (!large)
@@ -438,7 +441,7 @@ public final class Mario extends Sprite {
 		move(0, ya);
 
 		if (y > levelScene.level.height * LevelScene.cellSize
-				+ LevelScene.cellSize)
+				+ LevelScene.cellSize && !isClone) 
 			die("Gap");
 
 		if (x < 0) {
@@ -746,12 +749,16 @@ public final class Mario extends Sprite {
 	}
 
 	public void getHurt(final int spriteKind) {
+		if (isClone) return;
 		if (deathTime > 0 || isMarioInvulnerable)
 			return;
 
 		if (invulnerableTime > 0)
 			return;
 
+		if (isClone) {
+			return;
+		}
 		++collisionsWithCreatures;
 		levelScene.appendBonusPoints(-MarioEnvironment.IntermediateRewardsSystemOfValues.kills);
 		if (large) {
@@ -765,6 +772,7 @@ public final class Mario extends Sprite {
 			invulnerableTime = 32;
 		} else {
 			// Mario dies
+			if (!isClone)
 			die("Collision with a creature ["
 					+ Sprite.getNameByKind(spriteKind) + "]");
 		}
@@ -779,6 +787,8 @@ public final class Mario extends Sprite {
 	}
 
 	public void die(final String reasonOfDeath) {
+		System.out.println("MARIO DIED, isClone: " + isClone);
+		if (isClone) return;
 		xDeathPos = (int) x;
 		yDeathPos = (int) y;
 		deathTime = 25;
@@ -820,9 +830,11 @@ public final class Mario extends Sprite {
 		++greenMushroomsDevoured;
 		if (mushroomMode == 0)
 			getHurt(Sprite.KIND_GREEN_MUSHROOM);
-		else
+		else {
+			if (!isClone)
 			die("Collision with a creature ["
 					+ Sprite.getNameByKind(Sprite.KIND_GREEN_MUSHROOM) + "]");
+		}
 	}
 
 	public void kick(final Shell shell) {
@@ -910,27 +922,14 @@ public final class Mario extends Sprite {
 	public boolean isOnTopOfLadder() {
 		return this.onTopOfLadder;
 	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Mario clone = (Mario) super.clone();
+		
+		clone.keys = (MarioInput)keys.clone();
+		clone.isClone = true;
+		return clone;
+	}
 }
 
-// public byte getKeyMask()
-// {
-// int mask = 0;
-// for (int i = 0; i < 7; i++)
-// {
-// if (keys[i]) mask |= (1 << i);
-// }
-// return (byte) mask;
-// }
-
-// public void setKeys(byte mask)
-// {
-// for (int i = 0; i < 7; i++)
-// {
-// keys[i] = (mask & (1 << i)) > 0;
-// }
-// }
-//
-// public static void get1Up()
-// {
-// lives++;
-// }

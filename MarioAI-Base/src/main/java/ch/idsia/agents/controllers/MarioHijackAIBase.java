@@ -23,7 +23,7 @@ import ch.idsia.benchmark.mario.environments.IEnvironment;
  * 
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class MarioHijackAIBase extends MarioAIBase implements KeyListener, IMarioDebugDraw {
+public abstract class MarioHijackAIBase extends MarioAIBase implements KeyListener, IMarioDebugDraw {
 
 	protected MarioCheaterKeyboard keyboard = new MarioCheaterKeyboard();
 	
@@ -47,7 +47,7 @@ public class MarioHijackAIBase extends MarioAIBase implements KeyListener, IMari
 		return keyboard.getInput();
 	}	
 	
-	@Override
+	/*@Override
 	public void debugDraw(VisualizationComponent vis, LevelScene level,	IEnvironment env, Graphics g) {
 		if (hijacked) {
 			MarioInput ai = actionSelectionAI();
@@ -88,7 +88,7 @@ public class MarioHijackAIBase extends MarioAIBase implements KeyListener, IMari
 		VisualizationComponent.drawStringDropShadow(g, "m.inTile[X,Y] = [" + mario.inTileX + "," + mario.inTileY + "]", 0, row++, 7);
 		VisualizationComponent.drawStringDropShadow(g, "m.speed.[x,y] = [" + floatFormat(mario.speed.x) + "," + floatFormat(mario.speed.y) + "]", 0, row++, 7);
 		
-	}
+	}*/
 	
 	private String floatFormat(float num) {
 		return floatFormat.format(num).replace(",", ".");

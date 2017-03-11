@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class is designed to quickly evaluate quality of {@link Runner} AI.
+ * This class is designed to quickly evaluate quality of {@link MarioAiRunner} AI.
  * <p>
  * Check {@link #main(String[])} method where you can easily run evaluation for
  * certain levels all for all level configs.
@@ -102,7 +102,7 @@ public class Evaluation {
     }
 
     /**
-     * Simple way how to evaluate your {@link Runner}.
+     * Simple way how to evaluate your {@link MarioAiRunner}.
      *
      * @param args
      */

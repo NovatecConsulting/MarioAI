@@ -32,12 +32,13 @@ import ch.idsia.benchmark.mario.engine.sprites.*;
 
 import java.io.Serializable;
 
-public class SpriteTemplate implements Serializable
+public class SpriteTemplate implements Serializable, Cloneable
 {
 public int lastVisibleTick = -1;
 public Sprite sprite;
 public boolean isDead = false;
 private boolean winged;
+private boolean isClone = false;
 
 private static final long serialVersionUID = -6585112454240065011L;
 
@@ -94,6 +95,8 @@ public SpriteTemplate(int type)
 
 public void spawn(LevelScene levelScene, int x, int y, int dir)
 {
+	System.out.println("SPAWNING:: isClone:" + isClone);
+	if (isClone) return;
     if (isDead) return;
 
     if (type == Sprite.KIND_ENEMY_FLOWER)
@@ -110,7 +113,17 @@ public void spawn(LevelScene levelScene, int x, int y, int dir)
 //            sprite = new Enemy(levelScene, x*16+8, y*16+15, dir, type, winged);
         sprite = new Enemy(levelScene, x * 16 + 8, y * 16 + 15, dir, type, winged, x, y);
     }
-    sprite.spriteTemplate = this;
+    //sprite.spriteTemplate = this;
     levelScene.addSprite(sprite);
 }
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		SpriteTemplate clone = (SpriteTemplate)super.clone();
+		clone.isClone = true;
+		//clone.sprite = null;
+		//clone.sprite = (Sprite) this.sprite.clone();
+		return clone;
+	}
+
 }

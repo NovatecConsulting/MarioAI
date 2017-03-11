@@ -47,8 +47,9 @@ public class Agent00_Random extends MarioAgenNtBase {
     public MarioInput doAiLogic() {
         for (int i = 0; i < MarioKey.numberOfKeys; ++i) {
             boolean toggleParticularAction = random.nextBoolean();
-            if (toggleParticularAction)
-                getMarioInput().toggle(MarioKey.getMarioKey(i));
+            if (toggleParticularAction) 
+            	if (!(MarioKey.getMarioKey(i).equals(MarioKey.LEFT) ||  MarioKey.getMarioKey(i).equals(MarioKey.DOWN) ))
+            		getMarioInput().toggle(MarioKey.getMarioKey(i));
         }
         // Prefer movement to the right.
         if (random.nextBoolean()) {

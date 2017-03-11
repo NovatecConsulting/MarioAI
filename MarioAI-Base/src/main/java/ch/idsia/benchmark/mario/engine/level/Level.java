@@ -32,7 +32,9 @@ import ch.idsia.benchmark.mario.options.LevelOptions;
 
 import java.io.*;
 
-public class Level implements Serializable {
+import org.apache.log4j.spi.ThrowableRendererSupport;
+
+public class Level implements Serializable, Cloneable {
 	private static final long serialVersionUID = -2222762134065697580L;
 
 	static public class objCounters implements Serializable {
@@ -52,7 +54,6 @@ public class Level implements Serializable {
 		public int totalCoins;
 		public int totalHillStraight;
 		public int totalTubes;
-		// TODO:TASK:[M] : include in Evaluation info:
 		public int totalPowerUps;
 
 		public int mushrooms = 0;
@@ -159,9 +160,6 @@ public class Level implements Serializable {
 			e.printStackTrace();
 			System.exit(-3);
 		}
-		// log.debug("spriteTemplates = " + spriteTemplates);
-		// observation = new byte[length][height];
-		// log.debug("observation = " + observation);
 	}
 
 	public static void loadBehaviors(DataInputStream dis) throws IOException {
@@ -301,63 +299,10 @@ public class Level implements Serializable {
 		aOutputStream.defaultWriteObject();
 		aOutputStream.writeObject(counters);
 	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Level clonedLevel = (Level) super.clone();
+		return clonedLevel;
+	}
 }
-
-// public void ASCIIToOutputStream(OutputStream os) throws IOException {
-// BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-// bw.write("\nlength = " + length);
-// bw.write("\nheight = " + height);
-// bw.write("\nMap:\n");
-// for (int y = 0; y < height; y++)
-//
-// {
-// for (int x = 0; x < length; x++)
-//
-// {
-// bw.write(map[x][y] + "\t");
-// }
-// bw.newLine();
-// }
-// bw.write("\nData: \n");
-//
-// for (int y = 0; y < height; y++)
-//
-// {
-// for (int x = 0; x < length; x++)
-//
-// {
-// bw.write(data[x][y] + "\t");
-// }
-// bw.newLine();
-// }
-//
-// bw.write("\nspriteTemplates: \n");
-// for (int y = 0; y < height; y++)
-//
-// {
-// for (int x = 0; x < length; x++)
-//
-// {
-// if (spriteTemplates[x][y] != null)
-// bw.write(spriteTemplates[x][y].getType() + "\t");
-// else
-// bw.write("_\t");
-//
-// }
-// bw.newLine();
-// }
-//
-// bw.write("\n==================\nAll objects: (Map[x,y], Data[x,y], Sprite[x,y])\n");
-// for (int y = 0; y < height; y++)
-// {
-// for (int x = 0; x < length; x++)
-//
-// {
-// bw.write("(" + map[x][y] + "," + data[x][y] + ", " + ((spriteTemplates[x][y]
-// == null) ? "_" : spriteTemplates[x][y].getType()) + ")\t");
-// }
-// bw.newLine();
-// }
-//
-// // bw.close();
-// }

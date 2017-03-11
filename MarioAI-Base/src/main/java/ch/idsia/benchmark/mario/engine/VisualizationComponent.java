@@ -268,9 +268,9 @@ public class VisualizationComponent extends JComponent {
 		g.translate(-xCam, -yCam);
 		
 		for (Sprite sprite : marioEnvironment.getLevelScene().sprites)
-			// levelScene.
-			if (sprite.layer == 0)
+			if (sprite.layer == 0) {
 				sprite.render(g);
+			}
 
 		g.translate(xCam, yCam);
 

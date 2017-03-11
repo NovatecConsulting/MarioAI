@@ -4,8 +4,6 @@ import ch.idsia.agents.IAgent;
 import ch.idsia.benchmark.mario.MarioSimulator;
 import ch.idsia.tools.EvaluationInfo;
 
-import de.novatec.marioai.agents.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,31 +11,21 @@ import org.slf4j.LoggerFactory;
  * Main class which runs the MarioAI-Simulation
  * Configure your simulation by modify static settings below
  */
-public class Runner {
+public class MarioAiRunner {
 
-    // CONFIGURE YOUR MARIO SIMULATION:
-    //  choose a Level or set it to a random Level
-    //  instantiate your yourAgent
-    private static LevelConfig level = LevelConfig.LEVEL_2_GOOMBAS;
-    private static boolean useRandomLevel = false;
-    private static IAgent yourAgent = new Agent04_Shooter();
-
-    private static Logger log = LoggerFactory.getLogger(Runner.class);
+    private static Logger log = LoggerFactory.getLogger(MarioAiRunner.class);
 
     /**
      * The simulation will be started by this main method.
      * @param args
      */
-    public static void main(String[] args) {
+    public static void run(IAgent agent, LevelConfig level) {
 
         MarioSimulator simulator;
 
-        if(useRandomLevel)
-            simulator = new MarioSimulator(level.getOptionsRandomized());
-        else
-            simulator = new MarioSimulator(level.getOptions());
+        simulator = new MarioSimulator(level.getOptions());
 
-        EvaluationInfo info = simulator.run(yourAgent);
+        EvaluationInfo info = simulator.run(agent);
 
         switch (info.getResult()) {
             case LEVEL_TIMEDOUT:

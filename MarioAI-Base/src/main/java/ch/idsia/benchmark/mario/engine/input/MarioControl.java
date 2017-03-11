@@ -177,6 +177,15 @@ public class MarioControl {
 	public boolean wantsSprint() {
 		return sprinting;
 	}
+
+	/**
+	 * Presses a given {@link MarioKey}.
+	 * 
+	 * @param key to press
+	 */
+	public void press(MarioKey key) {
+		input.press(key);
+	}
 	
 	
 	

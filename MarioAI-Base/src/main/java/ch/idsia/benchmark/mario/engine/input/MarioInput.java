@@ -1,16 +1,18 @@
 package ch.idsia.benchmark.mario.engine.input;
 
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 /**
  * Used by {@link IAgent} to represent the state of pressed key by the agent.
  * 
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class MarioInput {
-
+public class MarioInput implements Cloneable {
+	
 	private Set<MarioKey> justPressed = new TreeSet<MarioKey>(new Comparator<MarioKey>() {
 		@Override
 		public int compare(MarioKey o1, MarioKey o2) {
@@ -128,4 +130,26 @@ public class MarioInput {
 		pressed.clear();
 	}
 	
+	@Override
+	public String toString() {
+		String result = "[";
+		for (MarioKey marioKey : pressed) {
+			result += marioKey.getName() + ",";
+		}
+		result += "]";
+		return result;
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		MarioInput clone = (MarioInput) super.clone();
+		
+		//shallow copies show suffice
+		clone.pressed = ((Set) ((TreeSet) pressed).clone()); 
+		clone.justPressed = ((Set) ((TreeSet) justPressed).clone()); 
+		clone.justReleased = ((Set) ((TreeSet) justReleased).clone()); 
+		
+		return clone;
+	}
 }

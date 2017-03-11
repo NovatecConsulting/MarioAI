@@ -58,15 +58,15 @@ import ch.idsia.benchmark.mario.options.VisualizationOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class LevelScene implements SpriteContext {
+public final class LevelScene implements SpriteContext, Cloneable {
 
 	private static Logger log = LoggerFactory.getLogger(LevelScene.class);
 
 	public static final int cellSize = 16;
 
-	final public List<Sprite> sprites = new ArrayList<Sprite>();
-	final private List<Sprite> spritesToAdd = new ArrayList<Sprite>();
-	final private List<Sprite> spritesToRemove = new ArrayList<Sprite>();
+	public List<Sprite> sprites = new ArrayList<Sprite>();
+	private List<Sprite> spritesToAdd = new ArrayList<Sprite>();
+	private List<Sprite> spritesToRemove = new ArrayList<Sprite>();
 
 	public Level level;
 	public Mario mario;
@@ -79,14 +79,11 @@ public final class LevelScene implements SpriteContext {
 	private int width;
 	private int height;
 
-	private static boolean onLadder = false;
-
 	private Random randomGen = new Random(0);
 
 	final private List<Float> enemiesFloatsList = new ArrayList<Float>();
 	final private float[] marioFloatPos = new float[2];
 	final private int[] marioState = new int[11];
-	private int numberOfHiddenCoinsGained = 0;
 
 	private int greenMushroomMode = 0;
 
@@ -107,6 +104,7 @@ public final class LevelScene implements SpriteContext {
 	private int levelDifficulty;
 	private int levelLength;
 	private int levelHeight;
+	private boolean isClone = false;
 	public static int killedCreaturesTotal;
 	public static int killedCreaturesByFireBall;
 	public static int killedCreaturesByStomp;
@@ -116,12 +114,12 @@ public final class LevelScene implements SpriteContext {
 
 	public LevelScene() {
 		try {
-			Level.loadBehaviors(new DataInputStream(ClassLoader.getSystemResourceAsStream(ApplicationConstants.resourcePath + "/tiles.dat")));
-		}
-		catch (Exception e) {
+			Level.loadBehaviors(new DataInputStream(
+					ClassLoader.getSystemResourceAsStream(ApplicationConstants.resourcePath + "/tiles.dat")));
+		} catch (Exception e) {
 
-			System.err
-					.println("[MarioAI ERROR] : error loading file resources/tiles.dat ; ensure this file exists in ch/idsia/benchmark/mario/engine ");
+			System.err.println(
+					"[MarioAI ERROR] : error loading file resources/tiles.dat ; ensure this file exists in ch/idsia/benchmark/mario/engine ");
 			e.printStackTrace();
 			System.exit(0);
 		}
@@ -137,24 +135,23 @@ public final class LevelScene implements SpriteContext {
 			if (sprite.isDead())
 				continue;
 			switch (sprite.kind) {
-				case Sprite.KIND_GOOMBA:
-				case Sprite.KIND_BULLET_BILL:
-				case Sprite.KIND_ENEMY_FLOWER:
-				case Sprite.KIND_GOOMBA_WINGED:
-				case Sprite.KIND_GREEN_KOOPA:
-				case Sprite.KIND_GREEN_KOOPA_WINGED:
-				case Sprite.KIND_RED_KOOPA:
-				case Sprite.KIND_RED_KOOPA_WINGED:
-				case Sprite.KIND_SPIKY:
-				case Sprite.KIND_SPIKY_WINGED:
-				case Sprite.KIND_SHELL: {
-					enemiesFloatsList.add((float) sprite.kind);
-					enemiesFloatsList.add(sprite.x - mario.x);
-					enemiesFloatsList.add(sprite.y - mario.y);
-				}
+			case Sprite.KIND_GOOMBA:
+			case Sprite.KIND_BULLET_BILL:
+			case Sprite.KIND_ENEMY_FLOWER:
+			case Sprite.KIND_GOOMBA_WINGED:
+			case Sprite.KIND_GREEN_KOOPA:
+			case Sprite.KIND_GREEN_KOOPA_WINGED:
+			case Sprite.KIND_RED_KOOPA:
+			case Sprite.KIND_RED_KOOPA_WINGED:
+			case Sprite.KIND_SPIKY:
+			case Sprite.KIND_SPIKY_WINGED:
+			case Sprite.KIND_SHELL: {
+				enemiesFloatsList.add((float) sprite.kind);
+				enemiesFloatsList.add(sprite.x - mario.x);
+				enemiesFloatsList.add(sprite.y - mario.y);
+			}
 			}
 		}
-
 		float[] enemiesFloatsPosArray = new float[enemiesFloatsList.size()];
 
 		int i = 0;
@@ -203,10 +200,8 @@ public final class LevelScene implements SpriteContext {
 
 		if (xCam < 0)
 			xCam = 0;
-		if (xCam > level.length * cellSize
-				- SimulatorOptions.VISUAL_COMPONENT_WIDTH)
-			xCam = level.length * cellSize
-					- SimulatorOptions.VISUAL_COMPONENT_WIDTH;
+		if (xCam > level.length * cellSize - SimulatorOptions.VISUAL_COMPONENT_WIDTH)
+			xCam = level.length * cellSize - SimulatorOptions.VISUAL_COMPONENT_WIDTH;
 
 		fireballsOnScreen = 0;
 
@@ -214,8 +209,7 @@ public final class LevelScene implements SpriteContext {
 			if (sprite != mario) {
 				float xd = sprite.x - xCam;
 				float yd = sprite.y - yCam;
-				if (xd < -64 || xd > SimulatorOptions.VISUAL_COMPONENT_WIDTH + 64
-						|| yd < -64
+				if (xd < -64 || xd > SimulatorOptions.VISUAL_COMPONENT_WIDTH + 64 || yd < -64
 						|| yd > SimulatorOptions.VISUAL_COMPONENT_HEIGHT + 64) {
 					removeSprite(sprite);
 				} else {
@@ -231,10 +225,8 @@ public final class LevelScene implements SpriteContext {
 		// boolean hasShotCannon = false;
 		// int xCannon = 0;
 
-		for (int x = (int) xCam / cellSize - 1; x <= (int) (xCam + this.width)
-				/ cellSize + 1; x++)
-			for (int y = (int) yCam / cellSize - 1; y <= (int) (yCam + this.height)
-					/ cellSize + 1; y++) {
+		for (int x = (int) xCam / cellSize - 1; x <= (int) (xCam + this.width) / cellSize + 1; x++)
+			for (int y = (int) yCam / cellSize - 1; y <= (int) (yCam + this.height) / cellSize + 1; y++) {
 				int dir = 0;
 
 				if (x * cellSize + 8 > mario.x + cellSize)
@@ -252,7 +244,8 @@ public final class LevelScene implements SpriteContext {
 
 					if (st.lastVisibleTick != tickCount - 1) {
 						if (st.sprite == null || !sprites.contains(st.sprite))
-							st.spawn(this, x, y, dir);
+							if (!isClone)
+								st.spawn(this, x, y, dir);
 					}
 
 					st.lastVisibleTick = tickCount;
@@ -265,14 +258,11 @@ public final class LevelScene implements SpriteContext {
 							if ((tickCount - x * 2) % 100 == 0) {
 								// xCannon = x;
 								for (int i = 0; i < 8; i++) {
-									addSprite(new Sparkle(x * cellSize + 8, y
-											* cellSize
-											+ (int) (Math.random() * cellSize),
-											(float) Math.random() * dir, 0, 0,
-											1, 5));
+									addSprite(new Sparkle(x * cellSize + 8,
+											y * cellSize + (int) (Math.random() * cellSize),
+											(float) Math.random() * dir, 0, 0, 1, 5));
 								}
-								addSprite(new BulletBill(this, x * cellSize + 8
-										+ dir * 8, y * cellSize + 15, dir));
+								addSprite(new BulletBill(this, x * cellSize + 8 + dir * 8, y * cellSize + 15, dir));
 
 								// hasShotCannon = true;
 							}
@@ -285,8 +275,7 @@ public final class LevelScene implements SpriteContext {
 			sprite.tick();
 
 		byte levelElement = level.getBlock(mario.mapX, mario.mapY);
-		if (levelElement == (byte) (13 + 3 * 16)
-				|| levelElement == (byte) (13 + 5 * 16)) {
+		if (levelElement == (byte) (13 + 3 * 16) || levelElement == (byte) (13 + 5 * 16)) {
 			if (levelElement == (byte) (13 + 5 * 16))
 				mario.setOnTopOfLadder(true);
 			else
@@ -307,7 +296,9 @@ public final class LevelScene implements SpriteContext {
 							mario.setRacoon(false);
 							// log.debug("sprite = " + sprite);
 							shell.die();
-							++this.killedCreaturesTotal;
+							if (!isClone) {
+								++this.killedCreaturesTotal;
+							}
 						}
 					}
 				}
@@ -355,17 +346,14 @@ public final class LevelScene implements SpriteContext {
 
 			if (((Level.TILE_BEHAVIORS[block & 0xff]) & Level.BIT_SPECIAL) > 0) {
 				if (randomGen.nextInt(5) == 0 && level.difficulty > 4) {
-					addSprite(new GreenMushroom(this, x * cellSize + 8, y
-							* cellSize + 8));
+					addSprite(new GreenMushroom(this, x * cellSize + 8, y * cellSize + 8));
 					++level.counters.greenMushrooms;
 				} else {
 					if (!Mario.large) {
-						addSprite(new Mushroom(this, x * cellSize + 8, y
-								* cellSize + 8));
+						addSprite(new Mushroom(this, x * cellSize + 8, y * cellSize + 8));
 						++level.counters.mushrooms;
 					} else {
-						addSprite(new FireFlower(this, x * cellSize + 8, y
-								* cellSize + 8));
+						addSprite(new FireFlower(this, x * cellSize + 8, y * cellSize + 8));
 						++level.counters.flowers;
 					}
 				}
@@ -381,8 +369,7 @@ public final class LevelScene implements SpriteContext {
 				level.setBlock(x, y, (byte) 0);
 				for (int xx = 0; xx < 2; xx++)
 					for (int yy = 0; yy < 2; yy++)
-						addSprite(new Particle(x * cellSize + xx * 8 + 4, y
-								* cellSize + yy * 8 + 4, (xx * 2 - 1) * 4,
+						addSprite(new Particle(x * cellSize + xx * 8 + 4, y * cellSize + yy * 8 + 4, (xx * 2 - 1) * 4,
 								(yy * 2 - 1) * 4 - 8));
 			} else {
 				level.setBlockData(x, y, (byte) 4);
@@ -454,7 +441,7 @@ public final class LevelScene implements SpriteContext {
 	public boolean isSpeedButtonNotPressed() {
 		return mario.isSpeedButtonNotPressed();
 	}
-	
+
 	public boolean isMarioAbleToShoot() {
 		return mario.isAbleToShoot();
 	}
@@ -618,9 +605,30 @@ public final class LevelScene implements SpriteContext {
 		bonusPoints += superPunti;
 	}
 
-}
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		LevelScene clone = (LevelScene) super.clone();
+		clone.mario = (Mario) this.mario.clone();
+		clone.level = (Level) this.level.clone();
+		// clone.mario.world = clone;
 
-// public void update(boolean[] action)
-// {
-// System.arraycopy(action, 0, mario.keys, 0, 6);
-// }
+		List<Sprite> clonedSprites = new ArrayList<Sprite>(this.sprites.size());
+		for (Sprite item : this.sprites) {
+			if (item == mario) {
+				clonedSprites.add(clone.mario);
+			} else {
+				Sprite clonedSprite = (Sprite) item.clone();
+				if (clonedSprite.kind == Sprite.KIND_SHELL && ((Shell) clonedSprite).carried
+						&& clone.mario.carried != null) {
+					clone.mario.carried = clonedSprite;
+				}
+				clonedSprites.add(clonedSprite);
+			}
+		}
+
+		clone.sprites = clonedSprites;
+		clone.isClone = true;
+		return clone;
+	}
+
+}

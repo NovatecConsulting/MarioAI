@@ -27,13 +27,14 @@
 
 package ch.idsia.benchmark.mario.engine.sprites;
 
+import ch.idsia.benchmark.mario.engine.LevelScene;
 import ch.idsia.benchmark.mario.engine.SimulatorOptions;
 import ch.idsia.benchmark.mario.engine.VisualizationComponent;
 import ch.idsia.benchmark.mario.engine.level.SpriteTemplate;
 
 import java.awt.*;
 
-public class Sprite {
+public class Sprite implements Cloneable {
 	public static final int KIND_NONE = 0;
 	public static final int KIND_MARIO = -31;
 	public static final int KIND_GOOMBA = 80;
@@ -65,7 +66,9 @@ public class Sprite {
 
 	protected static float GROUND_INERTIA = 0.89f;
 	protected static float AIR_INERTIA = 0.89f;
-
+	
+	//public LevelScene world;
+	
 	public float xOld, yOld;
 	
 	/**
@@ -151,9 +154,6 @@ public class Sprite {
 			return "Power up Flower";
 		case Sprite.KIND_GREEN_MUSHROOM:
 			return "Green mushroom";
-			/*
-			 * case Sprite.KIND_PRINCESS: return "Princess";
-			 */
 		}
 
 		return "Unknown";
@@ -176,24 +176,17 @@ public class Sprite {
 		if (!visible)
 			return;
 
-		// int xPixel = (int)(xOld+(x-xOld)*cameraOffSet)-xPicO;
-		// int yPixel = (int)(yOld+(y-yOld)*cameraOffSet)-yPicO;
-
 		int xPixel = (int) x - xPicO;
 		int yPixel = (int) y - yPicO;
-
-		// System.out.print("xPic = " + xPic);
-		// System.out.print(", yPic = " + yPic);
-		// log.debug(", kind = " + this.kind);
+		
 
 		try {
 			og.drawImage(sheet[xPic][yPic], xPixel + (xFlipPic ? wPic : 0),
 					yPixel + (yFlipPic ? hPic : 0), xFlipPic ? -wPic : wPic,
 					yFlipPic ? -hPic : hPic, null);
 		} catch (ArrayIndexOutOfBoundsException ex) {
-			// log.error("ok:" + this.kind + ", " + xPic);
 		}
-		// Labels
+		
 		if (SimulatorOptions.areLabels)
 			og.drawString("" + xPixel + "," + yPixel, xPixel, yPixel);
 		
@@ -211,16 +204,6 @@ public class Sprite {
 		xOld = x;
 		yOld = y;
 	}
-
-	// public float getX(float alpha)
-	// {
-	// return (xOld+(x-xOld)*alpha)-xPicO;
-	// }
-	//
-	// public float getY(float alpha)
-	// {
-	// return (yOld+(y-yOld)*alpha)-yPicO;
-	// }
 
 	public void collideCheck() {
 	}
@@ -240,6 +223,19 @@ public class Sprite {
 	}
 
 	public boolean isDead() {
+		//return false;
 		return spriteTemplate != null && spriteTemplate.isDead;
+	}
+	
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		Sprite clone = (Sprite) super.clone();
+		
+		if (spriteTemplate != null)  {
+    		clone.spriteTemplate = (SpriteTemplate) this.spriteTemplate.clone();
+		}
+		
+		
+		return clone;
 	}
 }
