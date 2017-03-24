@@ -50,7 +50,6 @@ public abstract class MarioAiAgent implements IAgent {
 
 		@Override
 		public void debugDraw(VisualizationComponent vis, LevelScene level,	IEnvironment env, Graphics g) {
-			System.out.println("DEBUG MODE ON");
 			if (hijacked) {
 				MarioInput ai = actionSelectionAI();
 				if (ai != null) {

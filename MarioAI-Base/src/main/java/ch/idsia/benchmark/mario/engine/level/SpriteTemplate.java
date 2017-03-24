@@ -95,7 +95,6 @@ public SpriteTemplate(int type)
 
 public void spawn(LevelScene levelScene, int x, int y, int dir)
 {
-	System.out.println("SPAWNING:: isClone:" + isClone);
 	if (isClone) return;
     if (isDead) return;
 

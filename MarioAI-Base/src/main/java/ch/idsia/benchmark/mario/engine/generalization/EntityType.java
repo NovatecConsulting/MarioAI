@@ -203,5 +203,9 @@ public enum EntityType {
 		}
 		return false;
 	}
+
+	public TileType getTileType() {
+		return Enum.valueOf(TileType.class, this.toString());
+	}
 	
 }

@@ -154,4 +154,15 @@ public enum Tile {
 		return debug;
 	}
 	
+	@Override
+	public String toString() {
+		System.out.println("TO STIRNG: " + this.name());
+		return this.name();
+		
+	}
+
+	public TileType getTileType() {
+		return Enum.valueOf(TileType.class, this.toString());
+	}
+	
 }

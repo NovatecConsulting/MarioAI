@@ -719,8 +719,11 @@ public final class Mario extends Sprite implements Cloneable {
 		onGround = false;
 		sliding = false;
 		invulnerableTime = 1;
-		levelScene
+		
+		if (!isClone) {
+			levelScene
 				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+		}
 	}
 
 	public void stomp(final Shell shell) {
@@ -749,7 +752,10 @@ public final class Mario extends Sprite implements Cloneable {
 	}
 
 	public void getHurt(final int spriteKind) {
-		if (isClone) return;
+		if (isClone) {
+			wouldBeDead = true;
+			return;
+		}
 		if (deathTime > 0 || isMarioInvulnerable)
 			return;
 
@@ -779,6 +785,7 @@ public final class Mario extends Sprite implements Cloneable {
 	}
 
 	public void win() {
+		if (isClone) return;
 		xDeathPos = (int) x;
 		yDeathPos = (int) y;
 		winTime = 1;
@@ -799,6 +806,8 @@ public final class Mario extends Sprite implements Cloneable {
 	}
 
 	public void devourFlower() {
+		if (isClone) return;
+		
 		if (deathTime > 0)
 			return;
 
@@ -813,6 +822,8 @@ public final class Mario extends Sprite implements Cloneable {
 	}
 
 	public void devourMushroom() {
+		if (isClone) return;
+		
 		if (deathTime > 0)
 			return;
 

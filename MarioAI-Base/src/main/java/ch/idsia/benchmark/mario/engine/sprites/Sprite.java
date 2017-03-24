@@ -62,12 +62,15 @@ public class Sprite implements Cloneable {
 	public static final int KIND_UNDEF = -42;
 
 	public static SpriteContext spriteContext;
+	
 	public byte kind = KIND_UNDEF;
 
 	protected static float GROUND_INERTIA = 0.89f;
 	protected static float AIR_INERTIA = 0.89f;
 	
 	//public LevelScene world;
+	
+	public boolean wouldBeDead = false;
 	
 	public float xOld, yOld;
 	
@@ -223,8 +226,11 @@ public class Sprite implements Cloneable {
 	}
 
 	public boolean isDead() {
-		//return false;
 		return spriteTemplate != null && spriteTemplate.isDead;
+	}
+	
+	public boolean wouldBeDead() {
+		return wouldBeDead;
 	}
 	
 	@Override
