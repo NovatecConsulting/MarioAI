@@ -9,35 +9,19 @@ public enum LevelConfig {
 	LEVEL_1(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
 			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0)),
 
-	LEVEL_1_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
-			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
-
-
 	LEVEL_2(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
 			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GOOMBA) ),
 
-	LEVEL_2_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
-			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GOOMBA) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
-
 	LEVEL_3(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
 			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GREEN_KOOPA)),
-
-	LEVEL_3_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
-			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GREEN_KOOPA) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
 
 
 	LEVEL_4(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
 			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY)),
 
-	LEVEL_4_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
-			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
-
 
 	LEVEL_5(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
-			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY,Enemy.GOOMBA)),
-
-	LEVEL_5_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
-			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY,Enemy.GOOMBA) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID));
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY,Enemy.GOOMBA));
 
 	private String options;
 
