@@ -1,7 +1,7 @@
 package de.novatec.marioai.agents;
 
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
-import de.novatec.marioai.MarioAgenNtBase;
+import de.novatec.marioai.MarioAiAgent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent04_Shooter extends MarioAgenNtBase {
+public class Agent04_Shooter extends MarioAiAgent {
 
     private static Logger log = LoggerFactory.getLogger(Agent04_Shooter.class);
 

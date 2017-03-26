@@ -1,6 +1,4 @@
-package de.hskl.info_ag.mariocontest.dto;
-
-import de.hskl.info_ag.mariocontest.enums.EnemyType;
+package de.novatec.marioai;
 
 public class Enemy extends AbstractGameObject {
 	final EnemyType enemyType;

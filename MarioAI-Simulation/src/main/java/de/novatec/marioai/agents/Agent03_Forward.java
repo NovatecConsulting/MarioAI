@@ -1,7 +1,7 @@
 package de.novatec.marioai.agents;
 
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
-import de.novatec.marioai.MarioAgenNtBase;
+import de.novatec.marioai.MarioAiAgent;
 
 
 /**
@@ -9,7 +9,7 @@ import de.novatec.marioai.MarioAgenNtBase;
  *
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent03_Forward extends MarioAgenNtBase {
+public class Agent03_Forward extends MarioAiAgent {
 
     private boolean enemyAhead() {
         return

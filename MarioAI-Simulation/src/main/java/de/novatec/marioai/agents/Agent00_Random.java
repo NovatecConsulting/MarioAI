@@ -29,7 +29,7 @@ package de.novatec.marioai.agents;
 
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.input.MarioKey;
-import de.novatec.marioai.MarioAgenNtBase;
+import de.novatec.marioai.MarioAiAgent;
 
 import java.util.Random;
 
@@ -39,7 +39,7 @@ import java.util.Random;
  * @author Sergey Karakovskiy
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent00_Random extends MarioAgenNtBase {
+public class Agent00_Random extends MarioAiAgent {
 
     private Random random = new Random();
 

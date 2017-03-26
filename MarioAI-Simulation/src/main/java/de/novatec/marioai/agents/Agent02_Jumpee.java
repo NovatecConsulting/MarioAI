@@ -29,7 +29,7 @@ package de.novatec.marioai.agents;
 
 import ch.idsia.agents.AgentOptions;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
-import de.novatec.marioai.MarioAgenNtBase;
+import de.novatec.marioai.MarioAiAgent;
 
 /**
  * Agent that sprints forward and jumps whenever it can.
@@ -37,7 +37,7 @@ import de.novatec.marioai.MarioAgenNtBase;
  * @author Sergey Karakovskiy
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent02_Jumpee extends MarioAgenNtBase {
+public class Agent02_Jumpee extends MarioAiAgent {
 
     @Override
     public MarioInput doAiLogic() {

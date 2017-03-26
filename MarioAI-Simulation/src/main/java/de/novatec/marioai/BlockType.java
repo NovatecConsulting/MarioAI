@@ -1,4 +1,4 @@
-package de.hskl.info_ag.mariocontest.enums;
+package de.novatec.marioai;
 
 public enum BlockType {
 	SIMPLE,

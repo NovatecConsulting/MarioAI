@@ -1,60 +1,64 @@
 package de.novatec.marioai.simulation;
 
+import ch.idsia.benchmark.mario.engine.SimulatorOptions.ReceptiveFieldMode;
 import ch.idsia.benchmark.mario.engine.generalization.Enemy;
 import ch.idsia.benchmark.mario.options.FastOpts;
 
 public enum LevelConfig {
 
-    /**
-     * Level with no threats + no jumps.
-     */
-    LEVEL_0_FLAT(FastOpts.VIS_ON_2X + FastOpts.LEVEL_01_FLAT),
+	LEVEL_1(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0)),
 
-    /**
-     * Level where you have to jump.
-     */
-    LEVEL_1_JUMPING(FastOpts.VIS_ON_2X + FastOpts.LEVEL_02_JUMPING),
+	LEVEL_1_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
 
-    /**
-     * And here you must mind malicious GOOMBAs!
-     */
-    LEVEL_2_GOOMBAS(FastOpts.VIS_ON_2X + FastOpts.LEVEL_02_JUMPING + FastOpts.L_ENEMY(Enemy.GOOMBA)),
 
-    /**
-     * + Tubes with dangerous flowers.
-     */
-    LEVEL_3_TUBES(FastOpts.VIS_ON_2X + FastOpts.LEVEL_02_JUMPING + FastOpts.L_ENEMY(Enemy.GOOMBA) + FastOpts.L_TUBES_ON),
+	LEVEL_2(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GOOMBA) ),
 
-    /**
-     * Here we're adding SPIKIES! (Cannot be killed by fireballs...)
-     */
-    LEVEL_4_SPIKIES(FastOpts.VIS_ON_2X + FastOpts.LEVEL_02_JUMPING + FastOpts.L_ENEMY(Enemy.GOOMBA, Enemy.SPIKY) + FastOpts.L_TUBES_ON),
+	LEVEL_2_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GOOMBA) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
 
-    /**
-     * Finally, level with green tourtles (so called KOOPAs).
-     */
-    LEVEL_5_SPIKIES(FastOpts.VIS_ON_2X + FastOpts.LEVEL_02_JUMPING + FastOpts.L_ENEMY(Enemy.GOOMBA, Enemy.SPIKY, Enemy.GREEN_KOOPA) + FastOpts.L_TUBES_ON);
+	LEVEL_3(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GREEN_KOOPA)),
 
-    private String options;
+	LEVEL_3_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.GREEN_KOOPA) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
 
-    private LevelConfig(String options) {
-        this.options = options;
-    }
 
-    public String getOptions() {
-        return options;
-    }
+	LEVEL_4(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY)),
 
-    public String getOptionsRandomized() {
-        return options + FastOpts.L_RANDOMIZE;
-    }
+	LEVEL_4_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID)),
 
-    public String getOptionsVisualizationOff() {
-        return options + FastOpts.VIS_OFF;
-    }
 
-    public String getOptionsRndVissOff() {
-        return options + FastOpts.VIS_OFF + FastOpts.L_RANDOMIZE;
-    }
+	LEVEL_5(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY,Enemy.GOOMBA)),
+
+	LEVEL_5_DEBUG(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_BLOCKS_OFF + FastOpts.L_CANNONS_OFF + FastOpts.L_COINS_OFF + FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_GAPS_OFF
+			+ FastOpts.L_HIDDEN_BLOCKS_OFF + FastOpts.L_PLATFORMS_OFF + FastOpts.L_LADDERS_OFF + FastOpts.L_TUBES_OFF + FastOpts.L_DIFFICULTY(0) + FastOpts.L_ENEMY(Enemy.SPIKY,Enemy.GOOMBA) + FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID));
+
+	private String options;
+
+	private LevelConfig(String options) {
+		this.options = options;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public String getOptionsRandomized() {
+		return options + FastOpts.L_RANDOMIZE;
+	}
+
+	public String getOptionsVisualizationOff() {
+		return options + FastOpts.VIS_OFF;
+	}
+
+	public String getOptionsRndVissOff() {
+		return options + FastOpts.VIS_OFF + FastOpts.L_RANDOMIZE;
+	}
 
 }

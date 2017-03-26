@@ -28,7 +28,7 @@
 package de.novatec.marioai.agents;
 
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
-import de.novatec.marioai.MarioAgenNtBase;
+import de.novatec.marioai.MarioAiAgent;
 
 /**
  * Agent that sprints forward (to the right).
@@ -36,7 +36,7 @@ import de.novatec.marioai.MarioAgenNtBase;
  * @author Sergey Karakovskiy, firstname_at_idsia_dot_ch
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
-public class Agent01_SprintForward extends MarioAgenNtBase {
+public class Agent01_SprintForward extends MarioAiAgent {
 
     @Override
     public MarioInput doAiLogic() {

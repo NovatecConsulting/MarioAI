@@ -1,4 +1,4 @@
-package de.hskl.info_ag.mariocontest.enums;
+package de.novatec.marioai;
 
 import ch.idsia.benchmark.mario.engine.generalization.EntityType;
 

@@ -14,42 +14,42 @@ import ch.idsia.benchmark.mario.environments.IEnvironment;
 
 /**
  * This class is wrapping the given {@link MarioHijackAIBase} API in order to hide irrelevant members.
- * It will be used by {@link MarioAgenNtBase}
+ * It will be used by {@link MarioAiAgent}
  *
  * @author tj NovaTec GmbH
  */
 public abstract class MarioAgentNtWrapper extends MarioHijackAIBase {
 
     /**
-     * @see {@link MarioAgenNtBase#getMarioControl}
+     * @see {@link MarioAiAgent#getMarioControl}
      */
     public MarioControl getMarioControl() {
         return control;
     }
 
     /**
-     * @see {@link MarioAgenNtBase#getMarioEntity}
+     * @see {@link MarioAiAgent#getMarioEntity}
      */
     public MarioEntity getMarioEntity() {
         return mario;
     }
 
     /**
-     * @see {@link MarioAgenNtBase#getMarioInput}
+     * @see {@link MarioAiAgent#getMarioInput}
      */
     public MarioInput getMarioInput() {
         return action;
     }
 
     /**
-     * @see {@link MarioAgenNtBase#getEntities}
+     * @see {@link MarioAiAgent#getEntities}
      */
     public Entities getEntities() {
         return e;
     }
 
     /**
-     * @see {@link MarioAgenNtBase#getTiles}
+     * @see {@link MarioAiAgent#getTiles}
      */
     public Tiles getTiles() {
         return  t;

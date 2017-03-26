@@ -1,6 +1,4 @@
-package de.hskl.info_ag.mariocontest.dto;
-
-import de.hskl.info_ag.mariocontest.enums.CollectibleType;
+package de.novatec.marioai;
 
 public class Collectible extends AbstractGameObject {
 

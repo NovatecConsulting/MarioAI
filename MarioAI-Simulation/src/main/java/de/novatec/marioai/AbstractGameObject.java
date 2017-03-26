@@ -1,4 +1,4 @@
-package de.hskl.info_ag.mariocontest.dto;
+package de.novatec.marioai;
 
 public abstract class AbstractGameObject implements Comparable<AbstractGameObject> {
 	public AbstractGameObject(int relPosX, int relPosY) {
