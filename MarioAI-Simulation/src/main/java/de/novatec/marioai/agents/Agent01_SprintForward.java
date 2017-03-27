@@ -48,4 +48,9 @@ public class Agent01_SprintForward extends MarioAiAgent {
 
         return getMarioInput();
     }
+    
+	@Override
+	public String getName() {
+		return this.getClass().getName();
+	}
 }

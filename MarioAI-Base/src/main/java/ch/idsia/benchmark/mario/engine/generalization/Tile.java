@@ -1,5 +1,8 @@
 package ch.idsia.benchmark.mario.engine.generalization;
 
+/**
+ * Environment tiles not including enemies. 
+ */
 public enum Tile {
 	/**
 	 * ZLevel: 0 only 

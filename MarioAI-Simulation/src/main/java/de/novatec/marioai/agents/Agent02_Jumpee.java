@@ -53,4 +53,9 @@ public class Agent02_Jumpee extends MarioAiAgent {
 
         return getMarioInput();
     }
+    
+	@Override
+	public String getName() {
+		return this.getClass().getName();
+	}
 }

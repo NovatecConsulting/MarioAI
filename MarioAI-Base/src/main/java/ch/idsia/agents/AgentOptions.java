@@ -3,6 +3,9 @@ package ch.idsia.agents;
 import ch.idsia.benchmark.mario.engine.generalization.MarioEntity;
 import ch.idsia.benchmark.mario.environments.IEnvironment;
 
+/**
+ * Basic agent options. Contains the size of Mario's receptive field and his position within that field.
+ */
 public class AgentOptions {
 
 	public MarioEntity mario;

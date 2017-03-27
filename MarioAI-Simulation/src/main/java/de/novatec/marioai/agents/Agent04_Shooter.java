@@ -59,5 +59,8 @@ public class Agent04_Shooter extends MarioAiAgent {
         return getMarioInput();
     }
 
-
+	@Override
+	public String getName() {
+		return this.getClass().getName();
+	}
 }

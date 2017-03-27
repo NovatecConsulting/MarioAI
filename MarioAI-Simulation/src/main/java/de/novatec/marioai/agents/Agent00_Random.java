@@ -58,4 +58,9 @@ public class Agent00_Random extends MarioAiAgent {
 
         return getMarioInput();
     }
+
+	@Override
+	public String getName() {
+		return this.getClass().getName();
+	}
 }

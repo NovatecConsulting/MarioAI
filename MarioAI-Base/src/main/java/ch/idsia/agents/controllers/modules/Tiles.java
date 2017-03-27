@@ -4,6 +4,9 @@ import ch.idsia.agents.AgentOptions;
 import ch.idsia.benchmark.mario.engine.generalization.MarioEntity;
 import ch.idsia.benchmark.mario.engine.generalization.Tile;
 
+/**
+ * Class for accessing  {@link Tile}s in Mario's receptive field. 
+ */
 public class Tiles {
 
 	private MarioEntity mario;
