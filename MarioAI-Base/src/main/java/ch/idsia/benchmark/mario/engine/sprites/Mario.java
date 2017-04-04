@@ -28,28 +28,26 @@
 package ch.idsia.benchmark.mario.engine.sprites;
 
 import ch.idsia.benchmark.mario.engine.Art;
-import ch.idsia.benchmark.mario.engine.SimulatorOptions;
+import ch.idsia.benchmark.mario.engine.BonusPointsAppender;
 import ch.idsia.benchmark.mario.engine.LevelScene;
+import ch.idsia.benchmark.mario.engine.SimulatorOptions;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.input.MarioKey;
 import ch.idsia.benchmark.mario.engine.level.Level;
 import ch.idsia.benchmark.mario.environments.MarioEnvironment;
-import ch.idsia.benchmark.mario.options.AIOptions;
 import ch.idsia.benchmark.mario.options.SimulationOptions;
 import ch.idsia.benchmark.mario.options.SystemOptions;
 
 public final class Mario extends Sprite implements Cloneable {
-	
+
 	/**
 	 * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
 	 */
 	public static enum MarioMode {
-		SMALL(0),
-		LARGE(1),
-		FIRE_LARGE(2);
-		
+		SMALL(0), LARGE(1), FIRE_LARGE(2);
+
 		private int code;
-		
+
 		private MarioMode(int code) {
 			this.code = code;
 		}
@@ -57,9 +55,9 @@ public final class Mario extends Sprite implements Cloneable {
 		public int getCode() {
 			return code;
 		}
-		
+
 	}
-	
+
 	private boolean isClone = false;
 
 	public static final int STATUS_RUNNING = 2;
@@ -124,8 +122,8 @@ public final class Mario extends Sprite implements Cloneable {
 	// private static float GROUND_INERTIA = 0.89f;
 	// private static float AIR_INERTIA = 0.89f;
 
-	public MarioInput keys = new MarioInput(); 
-	
+	public MarioInput keys = new MarioInput();
+
 	private float runTime;
 	boolean wasOnGround = false;
 	boolean onGround = false;
@@ -143,6 +141,7 @@ public final class Mario extends Sprite implements Cloneable {
 	int height = 24;
 
 	private static LevelScene levelScene;
+	private static BonusPointsAppender bonusPointsAppender;
 	public int facing;
 
 	public int xDeathPos, yDeathPos;
@@ -159,12 +158,13 @@ public final class Mario extends Sprite implements Cloneable {
 		kind = KIND_MARIO;
 		// Mario.instance = this;
 		this.levelScene = levelScene;
+		Mario.bonusPointsAppender = new BonusPointsAppender(levelScene);
 		x = levelScene.getMarioInitialPos().x;
 		y = levelScene.getMarioInitialPos().y;
 		mapX = (int) (x / 16);
 		mapY = (int) (y / 16);
-		
-		//this.world = levelScene;
+
+		// this.world = levelScene;
 
 		facing = 1;
 		setMode(Mario.large, Mario.fire);
@@ -256,6 +256,7 @@ public final class Mario extends Sprite implements Cloneable {
 		this.prevyPicO = yPicO;
 	}
 
+	@Override
 	public void move() {
 		if (SimulatorOptions.isFly) {
 			xa = ya = 0;
@@ -386,18 +387,20 @@ public final class Mario extends Sprite implements Cloneable {
 			sliding = false;
 		}
 
-		// SPEED/SHOOT button is pressed and was not pressed before + we can fire and there is not too many fireballs on screen
+		// SPEED/SHOOT button is pressed and was not pressed before + we can
+		// fire and there is not too many fireballs on screen
 		if (keys.isPressed(MarioKey.SPEED) && speedButtonNotPressed && Mario.fire && levelScene.fireballsOnScreen < 2) {
 			// => FIRE NEXT FIREBALL!
 			levelScene.addSprite(new Fireball(levelScene, x + facing * 6, y - 20, facing));
 			++levelScene.fireballsOnScreen;
 		}
-		
+
 		// CHECK WHETHER MARIO STILL CAN SHOOT
 		ableToShoot = Mario.fire && levelScene.fireballsOnScreen < 2;
-		
+
 		// Cheats:
-		if (SimulatorOptions.isPowerRestoration && keys.isPressed(MarioKey.SPEED) && (!Mario.large || !Mario.fire))	setMode(true, true);
+		if (SimulatorOptions.isPowerRestoration && keys.isPressed(MarioKey.SPEED) && (!Mario.large || !Mario.fire))
+			setMode(true, true);
 		// if (cheatKeys[KEY_LIFE_UP])
 		// this.lives++;
 
@@ -427,11 +430,9 @@ public final class Mario extends Sprite implements Cloneable {
 
 		if (sliding) {
 			for (int i = 0; i < 1; i++) {
-				levelScene.addSprite(new Sparkle(
-						(int) (x + Math.random() * 4 - 2) + facing * 8,
-						(int) (y + Math.random() * 4) - 24, (float) (Math
-								.random() * 2 - 1), (float) Math.random() * 1,
-						0, 1, 5));
+				levelScene.addSprite(
+						new Sparkle((int) (x + Math.random() * 4 - 2) + facing * 8, (int) (y + Math.random() * 4) - 24,
+								(float) (Math.random() * 2 - 1), (float) Math.random() * 1, 0, 1, 5));
 			}
 			ya *= 0.5f;
 		}
@@ -440,8 +441,7 @@ public final class Mario extends Sprite implements Cloneable {
 		move(xa, 0);
 		move(0, ya);
 
-		if (y > levelScene.level.height * LevelScene.cellSize
-				+ LevelScene.cellSize && !isClone) 
+		if (y > levelScene.level.height * LevelScene.cellSize + LevelScene.cellSize && !isClone)
 			die("Gap");
 
 		if (x < 0) {
@@ -450,34 +450,38 @@ public final class Mario extends Sprite implements Cloneable {
 		}
 
 		/* if (x > levelScene.level.xExit * LevelScene.cellSize *//*- 8*//*
-																		 * && x
-																		 * <
-																		 * levelScene
-																		 * .
-																		 * level
-																		 * .
-																		 * xExit
-																		 * *
-																		 * LevelScene
-																		 * .
-																		 * cellSize
-																		 * + 2 *
-																		 * LevelScene
-																		 * .
-																		 * cellSize
-																		 * && y
-																		 * <
-																		 * levelScene
-																		 * .
-																		 * level
-																		 * .
-																		 * yExit
-																		 * *
-																		 * LevelScene
-																		 * .
-																		 * cellSize
-																		 * )
-																		 */
+																			 * &&
+																			 * x
+																			 * <
+																			 * levelScene
+																			 * .
+																			 * level
+																			 * .
+																			 * xExit
+																			 * *
+																			 * LevelScene
+																			 * .
+																			 * cellSize
+																			 * +
+																			 * 2
+																			 * *
+																			 * LevelScene
+																			 * .
+																			 * cellSize
+																			 * &&
+																			 * y
+																			 * <
+																			 * levelScene
+																			 * .
+																			 * level
+																			 * .
+																			 * yExit
+																			 * *
+																			 * LevelScene
+																			 * .
+																			 * cellSize
+																			 * )
+																			 */
 		if (mapX >= levelScene.level.xExit && mapY <= levelScene.level.yExit) {
 			x = (levelScene.level.xExit + 1) * LevelScene.cellSize;
 			win();
@@ -557,10 +561,8 @@ public final class Mario extends Sprite implements Cloneable {
 
 			if (xa > 3 || xa < -3) {
 				for (int i = 0; i < 3; i++) {
-					levelScene.addSprite(new Sparkle((int) (x + Math.random()
-							* 8 - 4), (int) (y + Math.random() * 4),
-							(float) (Math.random() * 2 - 1), (float) Math
-									.random() * -1, 0, 1, 5));
+					levelScene.addSprite(new Sparkle((int) (x + Math.random() * 8 - 4), (int) (y + Math.random() * 4),
+							(float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 1, 5));
 				}
 			}
 		}
@@ -612,11 +614,9 @@ public final class Mario extends Sprite implements Cloneable {
 		if (ya < 0) {
 			if (isBlocking(x + xa, y + ya - height, xa, ya))
 				collide = true;
-			else if (collide
-					|| isBlocking(x + xa - width, y + ya - height, xa, ya))
+			else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya))
 				collide = true;
-			else if (collide
-					|| isBlocking(x + xa + width, y + ya - height, xa, ya))
+			else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya))
 				collide = true;
 		}
 		if (xa > 0) {
@@ -676,8 +676,7 @@ public final class Mario extends Sprite implements Cloneable {
 		}
 	}
 
-	private boolean isBlocking(final float _x, final float _y, final float xa,
-			final float ya) {
+	private boolean isBlocking(final float _x, final float _y, final float xa, final float ya) {
 		int x = (int) (_x / 16);
 		int y = (int) (_y / 16);
 		if (x == (int) (this.x / 16) && y == (int) (this.y / 16))
@@ -692,9 +691,8 @@ public final class Mario extends Sprite implements Cloneable {
 			levelScene.level.setBlock(x, y, (byte) 0);
 			for (int xx = 0; xx < 2; xx++)
 				for (int yy = 0; yy < 2; yy++)
-					levelScene.addSprite(new Sparkle(x * 16 + xx * 8
-							+ (int) (Math.random() * 8), y * 16 + yy * 8
-							+ (int) (Math.random() * 8), 0, 0, 0, 2, 5));
+					levelScene.addSprite(new Sparkle(x * 16 + xx * 8 + (int) (Math.random() * 8),
+							y * 16 + yy * 8 + (int) (Math.random() * 8), 0, 0, 0, 2, 5));
 		}
 
 		if (blocking && ya < 0) {
@@ -719,10 +717,9 @@ public final class Mario extends Sprite implements Cloneable {
 		onGround = false;
 		sliding = false;
 		invulnerableTime = 1;
-		
+
 		if (!isClone) {
-			levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+			bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
 		}
 	}
 
@@ -747,8 +744,7 @@ public final class Mario extends Sprite implements Cloneable {
 			sliding = false;
 			invulnerableTime = 1;
 		}
-		levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
 	}
 
 	public void getHurt(final int spriteKind) {
@@ -766,7 +762,7 @@ public final class Mario extends Sprite implements Cloneable {
 			return;
 		}
 		++collisionsWithCreatures;
-		levelScene.appendBonusPoints(-MarioEnvironment.IntermediateRewardsSystemOfValues.kills);
+		bonusPointsAppender.appendBonusPoints(-MarioEnvironment.IntermediateRewardsSystemOfValues.kills);
 		if (large) {
 			// levelScene.paused = true;
 			// powerUpTime = -3 * FractionalPowerUpTime;
@@ -779,35 +775,36 @@ public final class Mario extends Sprite implements Cloneable {
 		} else {
 			// Mario dies
 			if (!isClone)
-			die("Collision with a creature ["
-					+ Sprite.getNameByKind(spriteKind) + "]");
+				die("Collision with a creature [" + Sprite.getNameByKind(spriteKind) + "]");
 		}
 	}
 
 	public void win() {
-		if (isClone) return;
+		if (isClone)
+			return;
 		xDeathPos = (int) x;
 		yDeathPos = (int) y;
 		winTime = 1;
 		status = Mario.STATUS_WIN;
-		levelScene.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.win);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.win);
 	}
 
 	public void die(final String reasonOfDeath) {
 		System.out.println("MARIO DIED, isClone: " + isClone);
-		if (isClone) return;
+		if (isClone)
+			return;
 		xDeathPos = (int) x;
 		yDeathPos = (int) y;
 		deathTime = 25;
 		status = Mario.STATUS_DEAD;
 		levelScene.addMemoMessage("Reason of death: " + reasonOfDeath);
-		levelScene
-				.appendBonusPoints(-MarioEnvironment.IntermediateRewardsSystemOfValues.win / 2);
+		bonusPointsAppender.appendBonusPoints(-MarioEnvironment.IntermediateRewardsSystemOfValues.win / 2);
 	}
 
 	public void devourFlower() {
-		if (isClone) return;
-		
+		if (isClone)
+			return;
+
 		if (deathTime > 0)
 			return;
 
@@ -817,13 +814,13 @@ public final class Mario extends Sprite implements Cloneable {
 			Mario.gainCoin();
 		}
 		++flowersDevoured;
-		levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.flowerFire);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.flowerFire);
 	}
 
 	public void devourMushroom() {
-		if (isClone) return;
-		
+		if (isClone)
+			return;
+
 		if (deathTime > 0)
 			return;
 
@@ -833,8 +830,7 @@ public final class Mario extends Sprite implements Cloneable {
 			Mario.gainCoin();
 		}
 		++mushroomsDevoured;
-		levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom);
 	}
 
 	public void devourGreenMushroom(final int mushroomMode) {
@@ -843,8 +839,7 @@ public final class Mario extends Sprite implements Cloneable {
 			getHurt(Sprite.KIND_GREEN_MUSHROOM);
 		else {
 			if (!isClone)
-			die("Collision with a creature ["
-					+ Sprite.getNameByKind(Sprite.KIND_GREEN_MUSHROOM) + "]");
+				die("Collision with a creature [" + Sprite.getNameByKind(Sprite.KIND_GREEN_MUSHROOM) + "]");
 		}
 	}
 
@@ -876,22 +871,19 @@ public final class Mario extends Sprite implements Cloneable {
 		onGround = false;
 		sliding = false;
 		invulnerableTime = 1;
-		levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
 	}
 
 	public static void gainCoin() {
 		coins++;
-		levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.coins);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.coins);
 		// if (coins % 100 == 0)
 		// get1Up();
 	}
 
 	public static void gainHiddenBlock() {
 		++hiddenBlocksFound;
-		levelScene
-				.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.hiddenBlock);
+		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.hiddenBlock);
 	}
 
 	public int getStatus() {
@@ -909,7 +901,7 @@ public final class Mario extends Sprite implements Cloneable {
 	public boolean isSpeedButtonNotPressed() {
 		return speedButtonNotPressed;
 	}
-	
+
 	public boolean isAbleToShoot() {
 		return ableToShoot;
 	}
@@ -933,14 +925,13 @@ public final class Mario extends Sprite implements Cloneable {
 	public boolean isOnTopOfLadder() {
 		return this.onTopOfLadder;
 	}
-	
+
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Mario clone = (Mario) super.clone();
-		
-		clone.keys = (MarioInput)keys.clone();
+
+		clone.keys = (MarioInput) keys.clone();
 		clone.isClone = true;
 		return clone;
 	}
 }
-

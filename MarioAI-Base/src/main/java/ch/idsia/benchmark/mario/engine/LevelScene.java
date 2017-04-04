@@ -28,10 +28,16 @@
 package ch.idsia.benchmark.mario.engine;
 
 import java.awt.Point;
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ch.idsia.ApplicationConstants;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
@@ -55,8 +61,6 @@ import ch.idsia.benchmark.mario.options.LevelOptions;
 import ch.idsia.benchmark.mario.options.SimulationOptions;
 import ch.idsia.benchmark.mario.options.SystemOptions;
 import ch.idsia.benchmark.mario.options.VisualizationOptions;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public final class LevelScene implements SpriteContext, Cloneable {
 
@@ -278,7 +282,7 @@ public final class LevelScene implements SpriteContext, Cloneable {
 			if (!isClone) {
 				sprite.collideCheck();
 			} else {
-			
+
 			}
 
 		for (Shell shell : shellsToCheck) {
@@ -313,25 +317,28 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		spritesToRemove.clear();
 	}
 
+	@Override
 	public void addSprite(Sprite sprite) {
 		spritesToAdd.add(sprite);
 		sprite.tick();
 	}
 
+	@Override
 	public void removeSprite(Sprite sprite) {
 		spritesToRemove.add(sprite);
 	}
 
 	public void bump(int x, int y, boolean canBreakBricks) {
 		byte block = level.getBlock(x, y);
-		
+
 		if ((Level.TILE_BEHAVIORS[block & 0xff] & Level.BIT_BUMPABLE) > 0) {
 			if (block == 1)
 				Mario.gainHiddenBlock();
 			bumpInto(x, y - 1);
-			
-			if (isClone) return;
-			
+
+			if (isClone)
+				return;
+
 			byte blockData = level.getBlockData(x, y);
 			if (blockData < 0)
 				level.setBlockData(x, y, (byte) (blockData + 1));
@@ -594,12 +601,12 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		return bonusPoints;
 	}
 
-	public void setBonusPoints(final int bonusPoints) {
+	void setBonusPoints(final int bonusPoints) {
 		if (!isClone)
 			this.bonusPoints = bonusPoints;
 	}
 
-	public void appendBonusPoints(final int superPunti) {
+	void appendBonusPoints(final int superPunti) {
 		if (!isClone) {
 			bonusPoints += superPunti;
 		}

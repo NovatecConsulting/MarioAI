@@ -21,27 +21,28 @@ import ch.idsia.benchmark.mario.engine.input.MarioKey;
 import ch.idsia.benchmark.mario.environments.IEnvironment;
 
 /**
- * Base class for MarioAgents.
- * It wraps methods and instances which will be needed to implement an MarioAgent.
- * A Agent has to extend this class and also to implement the method {@link #doAiLogic()}.
+ * Base class for MarioAgents. It wraps methods and instances which will be
+ * needed to implement an MarioAgent. An Agent has to extend this class and also
+ * to implement the method {@link #doAiLogic()}.
  *
  * @author tj NovaTec GmbH
  */
 public abstract class MarioAiAgent implements IAgent {
 
-	private final int WIDTH_HALF_FIELD_GRID = (SimulatorOptions.receptiveFieldWidth-1)/2;
+	private final int WIDTH_HALF_FIELD_GRID = (SimulatorOptions.receptiveFieldWidth - 1) / 2;
 
-	private final int HEIGHT_HALF_FIELD_GRID = (SimulatorOptions.receptiveFieldHeight-1)/2;
+	private final int HEIGHT_HALF_FIELD_GRID = (SimulatorOptions.receptiveFieldHeight - 1) / 2;
 
 	private final static int ENEMY_CHECK_DISTANCE = 4;
 
 	private List<Coords> coordinates = new ArrayList<Coords>();
 
 	/**
-	 * The execution of {@link #doAiLogic()} has to be delegated to the anonymous instance of {@link #baseApi}.
-	 * This instance also overwrites {@link MarioAgentNtWrapper#actionSelectionAI()}
+	 * The execution of {@link #doAiLogic()} has to be delegated to the
+	 * anonymous instance of {@link #baseApi}. This instance also overwrites
+	 * {@link MarioAgentNtWrapper#actionSelectionAI()}
 	 */
-	private MarioAgentNtWrapper baseApi = new MarioAgentNtWrapper(){
+	private MarioAgentNtWrapper baseApi = new MarioAgentNtWrapper() {
 
 		@Override
 		public MarioInput actionSelectionAI() {
@@ -49,41 +50,48 @@ public abstract class MarioAiAgent implements IAgent {
 		}
 
 		@Override
-		public void debugDraw(VisualizationComponent vis, LevelScene level,	IEnvironment env, Graphics g) {
+		public void debugDraw(VisualizationComponent vis, LevelScene level, IEnvironment env, Graphics g) {
 			if (hijacked) {
 				MarioInput ai = actionSelectionAI();
 				if (ai != null) {
 					String msg = "AGENT KEYS:   ";
-					boolean first = true;				
+					boolean first = true;
 					for (MarioKey pressedKey : ai.getPressed()) {
-						if (first) first = false;
-						else msg += " ";
+						if (first)
+							first = false;
+						else
+							msg += " ";
 						msg += pressedKey.getDebug();
 					}
 					VisualizationComponent.drawStringDropShadow(g, msg, 0, 9, 6);
 				}
 			}
-			if (mario == null) return;
+			if (mario == null)
+				return;
 
-			if (!renderExtraDebugInfo) return;
+			if (!renderExtraDebugInfo)
+				return;
 
 			Coords previous = null;
 			for (Coords coord : coordinates) {
 				if (previous != null) {
 					g.setColor(Color.RED);
 					if (previous.x > 1.0f || previous.y > 1.0f || coord.x > 1.0f || coord.y > 1.0f)
-						g.drawLine((int)previous.x, (int)previous.y, (int)coord.x, (int)coord.y);
+						g.drawLine((int) previous.x, (int) previous.y, (int) coord.x, (int) coord.y);
 					previous = coord;
 				} else {
 					previous = coord;
 				}
-			}	
+			}
 		}
 	};
 
 	/**
-	 * The logic (i.e. the Agent's algorithm) has to be implemented in this method.
-	 * @return the {@link MarioInput} instance which will be delegated through the simulator execution.
+	 * The logic (i.e. the Agent's algorithm) has to be implemented in this
+	 * method.
+	 * 
+	 * @return the {@link MarioInput} instance which will be delegated through
+	 *         the simulator execution.
 	 */
 	public abstract MarioInput doAiLogic();
 
@@ -120,7 +128,7 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 *  Make Mario shoot (only possible if fire flower consumed).
+	 * Make Mario shoot (only possible if fire flower consumed).
 	 */
 	public void shoot() {
 		this.getMarioControl().shoot();
@@ -150,7 +158,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Returns if a enemy is in range of {@value #ENEMY_CHECK_DISTANCE} ahead of Mario.
+	 * Returns if a enemy is in range of {@value #ENEMY_CHECK_DISTANCE} ahead of
+	 * Mario.
 	 * 
 	 * @return {@link Boolean}
 	 */
@@ -167,7 +176,7 @@ public abstract class MarioAiAgent implements IAgent {
 		return enemyAhead;
 	}
 
-	/** 
+	/**
 	 * Checks if Mario is currently on the ground.
 	 * 
 	 * @return is Mario currently on the ground.
@@ -176,7 +185,7 @@ public abstract class MarioAiAgent implements IAgent {
 		return this.getMarioEntity().onGround;
 	}
 
-	/** 
+	/**
 	 * Checks if Mario is currently falling.
 	 * 
 	 * @return is Mario currently falling.
@@ -187,7 +196,8 @@ public abstract class MarioAiAgent implements IAgent {
 
 	/**
 	 * Returns an ordered list of enemies in range of
-	 * {@value #ENEMY_CHECK_DISTANCE} ahead of Mario (ordered by closest enemy first)
+	 * {@value #ENEMY_CHECK_DISTANCE} ahead of Mario (ordered by closest enemy
+	 * first)
 	 * 
 	 * @return {@link List}
 	 */
@@ -219,8 +229,8 @@ public abstract class MarioAiAgent implements IAgent {
 		List<Collectible> collectibleList = new ArrayList<Collectible>();
 
 		/*
-		 * Y-Axis goes from -9 (top) to +9 (bottom)
-		 * X-Axis goes from -9 (left) to +9 (right)
+		 * Y-Axis goes from -9 (top) to +9 (bottom) X-Axis goes from -9 (left)
+		 * to +9 (right)
 		 */
 		// Vertical iteration (Top to bottom)
 		for (int curPosY = -(HEIGHT_HALF_FIELD_GRID); curPosY <= HEIGHT_HALF_FIELD_GRID; curPosY++) {
@@ -243,8 +253,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Returns an ordered List of all {@link Enemy}s that are currently
-	 * rendered within the grid (see debug).
+	 * Returns an ordered List of all {@link Enemy}s that are currently rendered
+	 * within the grid (see debug).
 	 * 
 	 * @return
 	 */
@@ -253,8 +263,8 @@ public abstract class MarioAiAgent implements IAgent {
 		List<Enemy> enemyList = new ArrayList<Enemy>();
 
 		/*
-		 * Y-Axis goes from -9 (top) to +9 (bottom)
-		 * X-Axis goes from -9 (left) to +9 (right)
+		 * Y-Axis goes from -9 (top) to +9 (bottom) X-Axis goes from -9 (left)
+		 * to +9 (right)
 		 */
 		// Vertical iteration (Top to bottom)
 		for (int curPosY = -(HEIGHT_HALF_FIELD_GRID); curPosY <= HEIGHT_HALF_FIELD_GRID; curPosY++) {
@@ -277,7 +287,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Returns the direct distance. Visually a straight line from Mario to target.
+	 * Returns the direct distance. Visually a straight line from Mario to
+	 * target.
 	 * 
 	 * @return {@link double}
 	 */
@@ -286,8 +297,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Returns an ordered List of all {@link Block}s that are currently
-	 * rendered within the grid (see debug).
+	 * Returns an ordered List of all {@link Block}s that are currently rendered
+	 * within the grid (see debug).
 	 * 
 	 * <i>NOTE:</i> receptiveFieldWidth is the width of the whole field
 	 * including 0 tile in the middle and both sides with the length of
@@ -300,12 +311,11 @@ public abstract class MarioAiAgent implements IAgent {
 		List<Block> interactiveBlocks = new ArrayList<>();
 
 		Tile[][] tileField = getTiles().tileField;
-		for(int i = 0; i < tileField.length; i++) {
+		for (int i = 0; i < tileField.length; i++) {
 			for (int j = 0; j < tileField[i].length; j++) {
-				int posX = j - WIDTH_HALF_FIELD_GRID,
-						posY = i - HEIGHT_HALF_FIELD_GRID;
+				int posX = j - WIDTH_HALF_FIELD_GRID, posY = i - HEIGHT_HALF_FIELD_GRID;
 
-				switch(tileField[i][j]) {
+				switch (tileField[i][j]) {
 				case BREAKABLE_BRICK:
 					interactiveBlocks.add(new Block(posX, posY, BlockType.BREAKABLE));
 					break;
@@ -340,7 +350,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Get some information about the Mario it self like {@link MarioEntity#onGround}
+	 * Get some information about the Mario it self like
+	 * {@link MarioEntity#onGround}
 	 * 
 	 * @return a {@link MarioEntity} instance
 	 */
@@ -349,7 +360,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Send direct inputs to Mario is possible through a {@link MarioInput} instance (like {@link MarioInput#press})
+	 * Send direct inputs to Mario is possible through a {@link MarioInput}
+	 * instance (like {@link MarioInput#press})
 	 * 
 	 * @return a {@link MarioInput} instance
 	 */
@@ -358,7 +370,8 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Looking for {@link Entities} in Mario's near is possible by the {@link Entities} object.
+	 * Looking for {@link Entities} in Mario's near is possible by the
+	 * {@link Entities} object.
 	 * 
 	 * @return a {@link Entities} instance
 	 */
@@ -367,9 +380,11 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Returns all {@link Tiles} within Mario's receptive field, which representing the terrain and collectible items such as coins, but not enemies.
+	 * Returns all {@link Tiles} within Mario's receptive field, which
+	 * representing the terrain and collectible items such as coins, but not
+	 * enemies.
 	 * 
-	 * @return All {@link Tiles} within Mario's receptive field. 
+	 * @return All {@link Tiles} within Mario's receptive field.
 	 */
 	public Tiles getTiles() {
 		return baseApi.getTiles();
@@ -388,21 +403,23 @@ public abstract class MarioAiAgent implements IAgent {
 	// Debug methods
 	////////////////
 
-	/** 
-	 * Draws a path on the screen by connecting all given coordinates in sequential order.
+	/**
+	 * Draws a path on the screen by connecting all given coordinates in
+	 * sequential order.
 	 * 
-	 * @param coordinates 
-	 * 		to draw
+	 * @param coordinates
+	 *            to draw
 	 * @param vis
-	 * 		visualization component
+	 *            visualization component
 	 * @param level
-	 * 		level scene
+	 *            level scene
 	 * @param env
-	 * 		environment
+	 *            environment
 	 * @param g
-	 * 		graphics
+	 *            graphics
 	 */
-	protected void drawPath(List<Coords> coordinates, VisualizationComponent vis, LevelScene level, IEnvironment env, Graphics g) {
+	protected void drawPath(List<Coords> coordinates, VisualizationComponent vis, LevelScene level, IEnvironment env,
+			Graphics g) {
 		this.coordinates = coordinates;
 		baseApi.debugDraw(vis, level, env, g);
 	}
@@ -410,9 +427,9 @@ public abstract class MarioAiAgent implements IAgent {
 	/**
 	 * Resets all dynamic data, such as coins collected, points, input, etc.
 	 * 
-	 * @param AgentOptions options
-	 * 		agent options after reset
-	 * 		
+	 * @param AgentOptions
+	 *            options agent options after reset
+	 * 
 	 */
 	@Override
 	public final void reset(AgentOptions options) {
@@ -428,7 +445,7 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Gets the currently selected actions via {@link MarioInput}.  
+	 * Gets the currently selected actions via {@link MarioInput}.
 	 */
 	@Override
 	public final MarioInput actionSelection() {
@@ -436,51 +453,67 @@ public abstract class MarioAiAgent implements IAgent {
 	}
 
 	/**
-	 * Observer method which receives the current intermediate reward (i.e. the points accumulated so far).
+	 * Observer method which receives the current intermediate reward (i.e. the
+	 * points accumulated so far).
 	 *
 	 * The following table shows what is rewarded and the value of the reward:
 	 * <table>
-	 * <tr><th>value</th><th>reward</th></tr>
 	 * <tr>
-	 * <td>distance</td><td>1</td>
+	 * <th>value</th>
+	 * <th>reward</th>
 	 * </tr>
 	 * <tr>
-	 * <td>win</td><td>1024</td>
+	 * <td>distance</td>
+	 * <td>1</td>
 	 * </tr>
 	 * <tr>
-	 * <td>coin</td><td>16</td>
+	 * <td>win</td>
+	 * <td>1024</td>
 	 * </tr>
 	 * <tr>
-	 * <td>kill</td><td>42</td>
+	 * <td>coin</td>
+	 * <td>16</td>
 	 * </tr>
 	 * <tr>
-	 * <td>killByFire</td><td>4</td>
+	 * <td>kill</td>
+	 * <td>42</td>
 	 * </tr>
 	 * <tr>
-	 * <td>killByShell</td><td>17</td>
+	 * <td>killByFire</td>
+	 * <td>4</td>
 	 * </tr>
 	 * <tr>
-	 * <td>killByStomp</td><td>12</td>
+	 * <td>killByShell</td>
+	 * <td>17</td>
 	 * </tr>
 	 * <tr>
-	 * <td>mushroom</td><td>58</td>
+	 * <td>killByStomp</td>
+	 * <td>12</td>
 	 * </tr>
 	 * <tr>
-	 * <td>time left</td><td>8</td>
+	 * <td>mushroom</td>
+	 * <td>58</td>
 	 * </tr>
 	 * <tr>
-	 * <td>hidden bloc</td><td>24</td>
+	 * <td>time left</td>
+	 * <td>8</td>
 	 * </tr>
 	 * <tr>
-	 * <td>green mushroom</td><td>58</td>
+	 * <td>hidden block</td>
+	 * <td>24</td>
 	 * </tr>
 	 * <tr>
-	 * <td>stomp</td><td>10</td>
+	 * <td>green mushroom</td>
+	 * <td>58</td>
+	 * </tr>
+	 * <tr>
+	 * <td>stomp</td>
+	 * <td>10</td>
 	 * </tr>
 	 * </table>
 	 * 
-	 *  @param float intermediateReward
-	 *  	the current intermediate reward
+	 * @param float
+	 *            intermediateReward the current intermediate reward
 	 */
 	@Override
 	public final void receiveReward(float intermediateReward) {
