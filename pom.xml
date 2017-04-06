@@ -5,7 +5,7 @@
 
     <groupId>de.novatec.marioai</groupId>
     <artifactId>MarioAI</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>pom</packaging>
 
     <properties>

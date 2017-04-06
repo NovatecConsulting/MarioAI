@@ -5,7 +5,7 @@
 
     <groupId>de.novatec.marioai</groupId>
     <artifactId>MarioAI-Base</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -71,6 +71,8 @@
                                     <mainClass>ch.idsia.RunMario</mainClass>
                                 </manifest>
                             </archive>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <finalName>${project.artifactId}-${project.version}-full</finalName>
                         </configuration>
                     </execution>
                 </executions>
