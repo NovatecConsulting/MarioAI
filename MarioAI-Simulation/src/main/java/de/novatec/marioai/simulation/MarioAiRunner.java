@@ -25,8 +25,10 @@ public class MarioAiRunner {
      * 		to load
      * @param boolean debug
      * 		draw debug view
+     * @param boolean randomize
+     * 		randomize level layout
      */
-    public static void run(IAgent agent, LevelConfig level, boolean debug) {
+    public static void run(IAgent agent, LevelConfig level, boolean debug, boolean randomize) {
 
         MarioSimulator simulator;
 
@@ -34,6 +36,10 @@ public class MarioAiRunner {
         
         if (debug) {
         	options += FastOpts.VIS_FIELD(ReceptiveFieldMode.GRID);
+        }
+        
+        if (randomize) {
+        	options = level.getOptionsRandomized();
         }
         
         simulator = new MarioSimulator(options);
