@@ -63,9 +63,9 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
+                            <descriptors>
+                                <descriptor>assembly.xml</descriptor>
+                            </descriptors>
                             <archive>
                                 <manifest>
                                     <mainClass>ch.idsia.RunMario</mainClass>
@@ -77,6 +77,37 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
