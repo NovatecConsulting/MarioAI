@@ -687,7 +687,8 @@ public final class Mario extends Sprite implements Cloneable {
 		byte block = levelScene.level.getBlock(x, y);
 
 		if (((Level.TILE_BEHAVIORS[block & 0xff]) & Level.BIT_PICKUPABLE) > 0) {
-			Mario.gainCoin();
+			if (!isClone) 
+				Mario.gainCoin();
 			levelScene.level.setBlock(x, y, (byte) 0);
 			for (int xx = 0; xx < 2; xx++)
 				for (int yy = 0; yy < 2; yy++)
@@ -811,26 +812,27 @@ public final class Mario extends Sprite implements Cloneable {
 		if (!fire) {
 			levelScene.mario.setMode(true, true);
 		} else {
-			Mario.gainCoin();
+			if (!isClone)
+				Mario.gainCoin();
 		}
 		++flowersDevoured;
 		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.flowerFire);
 	}
 
 	public void devourMushroom() {
-		if (isClone)
-			return;
-
 		if (deathTime > 0)
 			return;
 
 		if (!large) {
 			levelScene.mario.setMode(true, false);
 		} else {
-			Mario.gainCoin();
+			if (!isClone)
+				Mario.gainCoin();
 		}
-		++mushroomsDevoured;
-		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom);
+		if (!isClone) {
+			++mushroomsDevoured;
+			bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom);
+		}
 	}
 
 	public void devourGreenMushroom(final int mushroomMode) {
@@ -871,14 +873,13 @@ public final class Mario extends Sprite implements Cloneable {
 		onGround = false;
 		sliding = false;
 		invulnerableTime = 1;
-		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+		if (!isClone)
+			bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
 	}
 
 	public static void gainCoin() {
 		coins++;
 		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.coins);
-		// if (coins % 100 == 0)
-		// get1Up();
 	}
 
 	public static void gainHiddenBlock() {

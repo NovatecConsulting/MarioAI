@@ -70,6 +70,8 @@ public class Sprite implements Cloneable {
 	
 	//public LevelScene world;
 	
+	public boolean isClone = false;
+	
 	public boolean wouldBeDead = false;
 	
 	public float xOld, yOld;
@@ -236,6 +238,8 @@ public class Sprite implements Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Sprite clone = (Sprite) super.clone();
+		
+		clone.isClone = true;
 		
 		if (spriteTemplate != null)  {
     		clone.spriteTemplate = (SpriteTemplate) this.spriteTemplate.clone();

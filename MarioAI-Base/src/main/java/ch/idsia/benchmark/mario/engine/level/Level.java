@@ -36,6 +36,8 @@ import org.apache.log4j.spi.ThrowableRendererSupport;
 
 public class Level implements Serializable, Cloneable {
 	private static final long serialVersionUID = -2222762134065697580L;
+	
+	public boolean isClone = false;
 
 	static public class objCounters implements Serializable {
 		public int deadEndsCount = 0;
@@ -303,6 +305,7 @@ public class Level implements Serializable, Cloneable {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Level clonedLevel = (Level) super.clone();
+		clonedLevel.isClone = true;
 		return clonedLevel;
 	}
 }

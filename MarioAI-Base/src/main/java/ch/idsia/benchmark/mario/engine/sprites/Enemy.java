@@ -158,8 +158,10 @@ public void collideCheck()
                     {
                         spriteContext.addSprite(new Shell(levelScene, x, y, 1));
                     }
-                    ++LevelScene.killedCreaturesTotal;
-                    ++LevelScene.killedCreaturesByStomp;
+                    if (!isClone) {
+                    	++LevelScene.killedCreaturesTotal;
+                    	++LevelScene.killedCreaturesByStomp;
+                    }
                 }
             } else
             {
@@ -377,8 +379,10 @@ public boolean shellCollideCheck(Shell shell)
             hPic = -hPic;
             yPicO = -yPicO + 16;
 //                log.debug("shellCollideCheck");
-            ++LevelScene.killedCreaturesTotal;
-            ++LevelScene.killedCreaturesByShell;
+            if (!isClone) {
+            	++LevelScene.killedCreaturesTotal;
+            	++LevelScene.killedCreaturesByShell;
+            }
             return true;
         }
     }
@@ -406,9 +410,10 @@ public boolean fireballCollideCheck(Fireball fireball)
             winged = false;
             hPic = -hPic;
             yPicO = -yPicO + 16;
-//                log.debug("fireballCollideCheck");
-            ++LevelScene.killedCreaturesTotal;
-            ++LevelScene.killedCreaturesByFireBall;
+            if (!isClone) {
+            	++LevelScene.killedCreaturesTotal;
+            	++LevelScene.killedCreaturesByFireBall;
+            }
             return true;
         }
     }
