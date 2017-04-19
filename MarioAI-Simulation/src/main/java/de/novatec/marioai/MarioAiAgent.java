@@ -2,6 +2,8 @@ package de.novatec.marioai;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +29,7 @@ import ch.idsia.benchmark.mario.environments.IEnvironment;
  *
  * @author tj NovaTec GmbH
  */
-public abstract class MarioAiAgent implements IAgent {
+public abstract class MarioAiAgent implements IAgent, KeyListener {
 
 	private final int WIDTH_HALF_FIELD_GRID = (SimulatorOptions.receptiveFieldWidth - 1) / 2;
 
@@ -518,6 +520,22 @@ public abstract class MarioAiAgent implements IAgent {
 	@Override
 	public final void receiveReward(float intermediateReward) {
 		baseApi.receiveReward(intermediateReward);
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		baseApi.keyPressed(e);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		baseApi.keyReleased(e);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		baseApi.keyTyped(e);
+
 	}
 
 }

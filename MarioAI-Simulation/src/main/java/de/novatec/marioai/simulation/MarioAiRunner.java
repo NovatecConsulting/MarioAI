@@ -57,8 +57,8 @@ public class MarioAiRunner {
 
             case SIMULATION_RUNNING:
                 log.info("SIMULATION STILL RUNNING?");
-                throw new RuntimeException("Invalid evaluation info state, simulation should not be running.");
-
+                break; 
+                
             case VICTORY:
                 log.info("VICTORY!!!");
                 break;
