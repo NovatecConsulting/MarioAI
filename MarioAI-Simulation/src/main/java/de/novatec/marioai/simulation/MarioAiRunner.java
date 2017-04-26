@@ -1,13 +1,13 @@
 package de.novatec.marioai.simulation;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.idsia.agents.IAgent;
 import ch.idsia.benchmark.mario.MarioSimulator;
 import ch.idsia.benchmark.mario.engine.SimulatorOptions.ReceptiveFieldMode;
 import ch.idsia.benchmark.mario.options.FastOpts;
 import ch.idsia.tools.EvaluationInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Main class which runs the MarioAI-Simulation
@@ -39,7 +39,7 @@ public class MarioAiRunner {
         }
         
         if (randomize) {
-        	options = level.getOptionsRandomized();
+			options += level.getOptionsRandomized();
         }
         
         simulator = new MarioSimulator(options);

@@ -156,9 +156,7 @@ public enum Tile {
 	
 	@Override
 	public String toString() {
-		System.out.println("TO STRING: " + this.name());
 		return this.name();
-		
 	}
 
 	public TileType getTileType() {
