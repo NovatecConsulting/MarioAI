@@ -48,6 +48,9 @@ public abstract class MarioAiAgent implements IAgent, KeyListener {
 
 		@Override
 		public MarioInput actionSelectionAI() {
+			if (SimulatorOptions.isGameplayStopped && !SimulatorOptions.nextFrameIfPaused) {
+				return getMarioInput();
+			}
 			return doAiLogic();
 		}
 

@@ -27,9 +27,11 @@
 
 package ch.idsia.benchmark.mario;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ch.idsia.agents.IAgent;
 import ch.idsia.agents.controllers.keyboard.CheaterKeyboardAgent;
-import ch.idsia.benchmark.mario.engine.SimulatorOptions;
 import ch.idsia.benchmark.mario.engine.generalization.Enemy;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.environments.IEnvironment;
@@ -37,9 +39,6 @@ import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 import ch.idsia.benchmark.mario.options.FastOpts;
 import ch.idsia.benchmark.mario.options.MarioOptions;
 import ch.idsia.tools.EvaluationInfo;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Wraps execution of concrete {@link IAgent} within {@link MarioEnvironment} using preset {@link MarioOptions}, which are combined
@@ -96,12 +95,6 @@ public class MarioSimulator {
 		log.debug("[MarioSimulator] SIMULATION RUNNING!");
 		
 		while (!environment.isLevelFinished()) {
-			if (SimulatorOptions.isGameplayStopped && !SimulatorOptions.nextFrameIfPaused) {
-				// For some reason pausing the game will not work if we don't do something.
-				try {Thread.sleep(1);} catch (InterruptedException e) {}
-				continue;
-			}
-			
 			// UPDATE THE ENVIRONMENT
 			environment.tick();
 			// PUSH NEW PERCEPTS TO THE AGENT
