@@ -31,6 +31,7 @@ import ch.idsia.benchmark.mario.engine.Art;
 import ch.idsia.benchmark.mario.engine.BonusPointsAppender;
 import ch.idsia.benchmark.mario.engine.LevelScene;
 import ch.idsia.benchmark.mario.engine.SimulatorOptions;
+import ch.idsia.benchmark.mario.engine.generalization.MarioEntity;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.input.MarioKey;
 import ch.idsia.benchmark.mario.engine.level.Level;
@@ -77,6 +78,8 @@ public final class Mario extends Sprite implements Cloneable {
 
 	private static boolean isTrace;
 
+	private int score = 0;
+	
 	private static boolean isMarioInvulnerable;
 
 	private int status = STATUS_RUNNING;
@@ -721,6 +724,8 @@ public final class Mario extends Sprite implements Cloneable {
 
 		if (!isClone) {
 			bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+			score += MarioEnvironment.IntermediateRewardsSystemOfValues.stomp;
+
 		}
 	}
 
@@ -787,7 +792,11 @@ public final class Mario extends Sprite implements Cloneable {
 		yDeathPos = (int) y;
 		winTime = 1;
 		status = Mario.STATUS_WIN;
+		score += MarioEnvironment.IntermediateRewardsSystemOfValues.win;
 		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.win);
+		// score for time left
+		MarioEntity entity = MarioEnvironment.getInstance().getMario();
+		score += entity.timeLeft * MarioEnvironment.IntermediateRewardsSystemOfValues.timeLeft;
 	}
 
 	public void die(final String reasonOfDeath) {
@@ -800,6 +809,7 @@ public final class Mario extends Sprite implements Cloneable {
 		status = Mario.STATUS_DEAD;
 		levelScene.addMemoMessage("Reason of death: " + reasonOfDeath);
 		bonusPointsAppender.appendBonusPoints(-MarioEnvironment.IntermediateRewardsSystemOfValues.win / 2);
+		// score for time left
 	}
 
 	public void devourFlower() {
@@ -832,16 +842,20 @@ public final class Mario extends Sprite implements Cloneable {
 		if (!isClone) {
 			++mushroomsDevoured;
 			bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom);
+			score += MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom;
 		}
 	}
 
 	public void devourGreenMushroom(final int mushroomMode) {
-		++greenMushroomsDevoured;
-		if (mushroomMode == 0)
-			getHurt(Sprite.KIND_GREEN_MUSHROOM);
-		else {
-			if (!isClone)
-				die("Collision with a creature [" + Sprite.getNameByKind(Sprite.KIND_GREEN_MUSHROOM) + "]");
+		if (!isClone){
+			++greenMushroomsDevoured;
+			score += MarioEnvironment.IntermediateRewardsSystemOfValues.greenMushroom;
+			if (mushroomMode == 0)
+				getHurt(Sprite.KIND_GREEN_MUSHROOM);
+			else {
+				if (!isClone)
+					die("Collision with a creature [" + Sprite.getNameByKind(Sprite.KIND_GREEN_MUSHROOM) + "]");
+			}
 		}
 	}
 
@@ -873,13 +887,16 @@ public final class Mario extends Sprite implements Cloneable {
 		onGround = false;
 		sliding = false;
 		invulnerableTime = 1;
-		if (!isClone)
+		if (!isClone) {
 			bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.stomp);
+			score += MarioEnvironment.IntermediateRewardsSystemOfValues.stomp;
+		}
 	}
 
 	public static void gainCoin() {
 		coins++;
 		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.coins);
+		//score += MarioEnvironment.IntermediateRewardsSystemOfValues.coins;
 	}
 
 	public static void gainHiddenBlock() {
@@ -934,5 +951,22 @@ public final class Mario extends Sprite implements Cloneable {
 		clone.keys = (MarioInput) keys.clone();
 		clone.isClone = true;
 		return clone;
+	}
+
+	public int getScore() {
+		// add/subtract points for each pixel travelled
+		int distanceScore = (int)x / 16;
+		int killScore = 0;
+		
+		// calculate kill scores
+		MarioEntity entity = MarioEnvironment.getInstance().getMario();
+		killScore += entity.killsByFire * MarioEnvironment.IntermediateRewardsSystemOfValues.killedByFire;
+		killScore += entity.killsByShell * MarioEnvironment.IntermediateRewardsSystemOfValues.killedByShell;
+		killScore += entity.killsByStomp * MarioEnvironment.IntermediateRewardsSystemOfValues.killedByStomp;
+		killScore += entity.killsTotal * MarioEnvironment.IntermediateRewardsSystemOfValues.kills;
+		
+	
+		
+		return score + distanceScore + killScore;
 	}
 }

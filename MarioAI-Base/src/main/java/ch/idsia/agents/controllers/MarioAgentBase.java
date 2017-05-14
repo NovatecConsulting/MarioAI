@@ -68,8 +68,4 @@ public abstract class MarioAgentBase implements IAgent {
 	@Override
 	public abstract MarioInput actionSelection();
 	
-	@Override
-	public void receiveReward(float intermediateReward) {
-	}
-	
 }

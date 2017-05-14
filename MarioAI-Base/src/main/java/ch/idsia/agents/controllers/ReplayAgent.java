@@ -94,7 +94,8 @@ public class ReplayAgent implements IAgent {
 	}
 
 	@Override
-	public void receiveReward(final float intermediateReward) {
+	public int getScore() {
+		return 0;
 	}
-	
+
 }

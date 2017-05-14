@@ -74,6 +74,11 @@ abstract class MarioAgenNtBase implements IAgent {
 				}
 			}
 		}
+
+		@Override
+		public int getScore() {
+			return 0;
+		}
 	};
 
 	public void drawCoordinates(List<Coords> coordinates) {
@@ -183,14 +188,6 @@ abstract class MarioAgenNtBase implements IAgent {
 	@Override
 	public final MarioInput actionSelection() {
 		return baseApi.actionSelectionAI();
-	}
-
-	/**
-	 * default final implementation which is not allowed to override
-	 */
-	@Override
-	public final void receiveReward(float intermediateReward) {
-		baseApi.receiveReward(intermediateReward);
 	}
 
 	public Environment getEnvironment() {

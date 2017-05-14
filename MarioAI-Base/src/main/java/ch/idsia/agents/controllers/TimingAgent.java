@@ -78,5 +78,10 @@ public class TimingAgent extends MarioAgentBase implements IAgent {
 		actionsPerformed = 0;
 		return average;
 	}
+
+	@Override
+	public int getScore() {
+		return 0;
+	}
 	
 }

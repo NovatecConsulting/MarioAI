@@ -103,8 +103,6 @@ public class MarioSimulator {
 			MarioInput actions = agent.actionSelection();
 			// PROPAGATE ACTIONS TO THE ENVIRONMENT
 			environment.performAction(actions);
-			// NOTIFY AGENT ABOUT CURRENT INTERMEDIATE REWARD
-			agent.receiveReward(environment.getIntermediateReward());
 		}
 		
 		log.debug("[MarioSimulator] SIMULATION ENDED!");
@@ -113,6 +111,7 @@ public class MarioSimulator {
 		
 		log.debug("[MarioSimulator] RESULT:");
 		log.debug(result.toString());
+		log.debug("TOTAL SCORE: " + agent.getScore());
 		
 		log.debug("[MarioSimulator] Simulator terminated.");
 		

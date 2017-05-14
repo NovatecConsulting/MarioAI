@@ -21,6 +21,7 @@ import ch.idsia.benchmark.mario.engine.input.MarioControl;
 import ch.idsia.benchmark.mario.engine.input.MarioInput;
 import ch.idsia.benchmark.mario.engine.input.MarioKey;
 import ch.idsia.benchmark.mario.environments.IEnvironment;
+import ch.idsia.benchmark.mario.environments.MarioEnvironment;
 
 /**
  * Base class for MarioAgents. It wraps methods and instances which will be
@@ -88,6 +89,12 @@ public abstract class MarioAiAgent implements IAgent, KeyListener {
 					previous = coord;
 				}
 			}
+		}
+
+		@Override
+		public int getScore() {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 	};
 
@@ -457,9 +464,24 @@ public abstract class MarioAiAgent implements IAgent, KeyListener {
 		return baseApi.actionSelectionAI();
 	}
 
+	@Override
+	public void keyPressed(KeyEvent e) {
+		baseApi.keyPressed(e);
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		baseApi.keyReleased(e);
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		baseApi.keyTyped(e);
+
+	}
+	
 	/**
-	 * Observer method which receives the current intermediate reward (i.e. the
-	 * points accumulated so far).
+	 * Observer method which receives the current score.
 	 *
 	 * The following table shows what is rewarded and the value of the reward:
 	 * <table>
@@ -516,29 +538,11 @@ public abstract class MarioAiAgent implements IAgent, KeyListener {
 	 * <td>10</td>
 	 * </tr>
 	 * </table>
-	 * 
-	 * @param float
-	 *            intermediateReward the current intermediate reward
 	 */
 	@Override
-	public final void receiveReward(float intermediateReward) {
-		baseApi.receiveReward(intermediateReward);
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		baseApi.keyPressed(e);
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {
-		baseApi.keyReleased(e);
-	}
-
-	@Override
-	public void keyTyped(KeyEvent e) {
-		baseApi.keyTyped(e);
-
+	public final int getScore() {
+		int score = this.getLevelScene().getScore();
+		return score;
 	}
 
 }

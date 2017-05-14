@@ -94,6 +94,8 @@ public final class LevelScene implements SpriteContext, Cloneable {
 	public String memo = "";
 	private Point marioInitialPos;
 	private int bonusPoints = -1;
+	
+	private int score = 0;
 
 	// public int getTimeLimit() { return timeLimit; }
 
@@ -616,6 +618,11 @@ public final class LevelScene implements SpriteContext, Cloneable {
 			this.bonusPoints += bonusPoints;
 		}
 	}
+
+	public int getScore() {
+		return mario.getScore();
+	}
+
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {

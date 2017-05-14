@@ -89,4 +89,9 @@ public class KeyboardAgent extends MarioAgentBase implements KeyListener {
 		else keyboard.keyReleased(e);
 	}
 
+	@Override
+	public int getScore() {
+		return 0;
+	}
+
 }

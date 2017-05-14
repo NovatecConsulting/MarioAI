@@ -73,10 +73,8 @@ public interface IAgent {
 	MarioInput actionSelection();
 
 	/**
-	 * Agent is informed about 'intermediateReward' it accumulated so-far.
-	 * 
-	 * @param intermediateReward
+	 * Agent returns the current score.
 	 */
-	void receiveReward(float intermediateReward);
+	int getScore();
 
 }

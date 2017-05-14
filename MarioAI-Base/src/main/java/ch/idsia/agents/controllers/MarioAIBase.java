@@ -112,7 +112,4 @@ public abstract class MarioAIBase extends MarioAgentBase {
 		control.tick();
 	}
 
-	public void receiveReward(float intermediateReward) {
-	}
-
 }
