@@ -279,21 +279,21 @@ public class VisualizationComponent extends JComponent {
 
 		g.translate(-xCam, -yCam);
 
-		Sprite mario = null;
+		Sprite marioSprite = null;
 		
 		for (Sprite sprite : marioEnvironment.getLevelScene().sprites) {
 			// Mario, creatures
 			if (sprite.layer == 1) {
 				sprite.render(g);
 				if (sprite.kind == Sprite.KIND_MARIO) {
-					mario = sprite;
+					marioSprite = sprite;
 				}
 			}
 		}
 		
 		// Mario Grid Visualization Enable
 		if (SimulatorOptions.receptiveFieldMode != ReceptiveFieldMode.NONE) {
-			renderReceptiveField(mario, g);
+			renderReceptiveField(marioSprite, g);
 		}
 
 		g.translate(xCam, yCam);
@@ -304,7 +304,7 @@ public class VisualizationComponent extends JComponent {
 		drawStringDropShadow(g,
 				"ALL KILLS: " + marioEnvironment.getMario().killsTotal, 19,
 				0, 1);
-		drawStringDropShadow(g, "DISTANCE:" + (int) mario.x / 16 + " of "
+		drawStringDropShadow(g, "DISTANCE:" + (int) marioSprite.x / 16 + " of "
 				+ marioEnvironment.getLevelLength(), 0, 1, 7);
 		drawStringDropShadow(
 				g,
@@ -315,7 +315,7 @@ public class VisualizationComponent extends JComponent {
 				19, 2, 1);
 		// COINS:
 		g.drawImage(Art.level[0][2], 2, 20, 10, 10, null);
-		drawStringDropShadow(g, "x" + df.format(Mario.coins), 1, 2, 4);
+		drawStringDropShadow(g, "x" + df.format(mario.coinsCollected), 1, 2, 4);
 		g.drawImage(Art.items[0][0], 47, 20, 11, 11, null);
 		drawStringDropShadow(g, "x" + df.format(Mario.mushroomsDevoured), 7, 2,
 				4);
@@ -356,8 +356,8 @@ public class VisualizationComponent extends JComponent {
 
 		if (SimulatorOptions.areLabels) {
 			g.drawString("xCam: " + xCam + "yCam: " + yCam, 10, 205);
-			g.drawString("x : " + mario.x + "y: " + mario.y, 10, 215);
-			g.drawString("xOld : " + mario.xOld + "yOld: " + mario.yOld, 10,
+			g.drawString("x : " + marioSprite.x + "y: " + marioSprite.y, 10, 215);
+			g.drawString("xOld : " + marioSprite.xOld + "yOld: " + marioSprite.yOld, 10,
 					225);
 		}
 		

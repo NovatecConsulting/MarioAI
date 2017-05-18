@@ -110,7 +110,7 @@ public final class LevelScene implements SpriteContext, Cloneable {
 	private int levelDifficulty;
 	private int levelLength;
 	private int levelHeight;
-	private boolean isClone = false;
+	public boolean isClone = false;
 	public static int killedCreaturesTotal;
 	public static int killedCreaturesByFireBall;
 	public static int killedCreaturesByStomp;
@@ -351,24 +351,31 @@ public final class LevelScene implements SpriteContext, Cloneable {
 			if (((Level.TILE_BEHAVIORS[block & 0xff]) & Level.BIT_SPECIAL) > 0) {
 				if (randomGen.nextInt(5) == 0 && level.difficulty > 4) {
 					addSprite(new GreenMushroom(this, x * cellSize + 8, y * cellSize + 8));
-					if (!isClone)
+					if (!isClone) {
 						++level.counters.greenMushrooms;
+						mario.greenMushroomsDevoured++;
+					}
 				} else {
 					if (!Mario.large) {
 						addSprite(new Mushroom(this, x * cellSize + 8, y * cellSize + 8));
-						if (!isClone)
+						if (!isClone) {
 							++level.counters.mushrooms;
+							mario.mushroomsDevoured++;
+						}
 					} else {
 						addSprite(new FireFlower(this, x * cellSize + 8, y * cellSize + 8));
-						if (!isClone)
-						++level.counters.flowers;
+						if (!isClone) {
+							++level.counters.flowers;
+							mario.flowersDevoured++;
+						}
 					}
 				}
 			} else {
+				if (!isClone)
+					mario.coinsCollected++;
 				if (!isClone) 
 					Mario.gainCoin();
 				addSprite(new CoinAnim(x, y));
-				
 			}
 		}
 
@@ -389,6 +396,8 @@ public final class LevelScene implements SpriteContext, Cloneable {
 	public void bumpInto(int x, int y) {
 		byte block = level.getBlock(x, y);
 		if (((Level.TILE_BEHAVIORS[block & 0xff]) & Level.BIT_PICKUPABLE) > 0) {
+			if (!isClone)
+				mario.coinsCollected++;
 			if (!isClone)
 				Mario.gainCoin();
 			level.setBlock(x, y, (byte) 0);
@@ -544,7 +553,6 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		bonusPoints = -1;
 
 		mario = new Mario(this);
-		// log.debug("mario = " + mario);
 		memo = "";
 
 		sprites.add(mario);
@@ -629,7 +637,6 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		LevelScene clone = (LevelScene) super.clone();
 		clone.mario = (Mario) this.mario.clone();
 		clone.level = (Level) this.level.clone();
-		// clone.mario.world = clone;
 		clone.isClone = true;
 		List<Sprite> clonedSprites = new ArrayList<Sprite>(this.sprites.size());
 		for (Sprite item : this.sprites) {

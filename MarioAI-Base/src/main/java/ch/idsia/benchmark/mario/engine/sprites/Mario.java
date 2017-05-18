@@ -75,6 +75,8 @@ public final class Mario extends Sprite implements Cloneable {
 	public static int mushroomsDevoured = 0;
 	public static int greenMushroomsDevoured = 0;
 	public static int flowersDevoured = 0;
+	
+	public int coinsCollected = 0;
 
 	private static boolean isTrace;
 
@@ -161,6 +163,7 @@ public final class Mario extends Sprite implements Cloneable {
 		kind = KIND_MARIO;
 		// Mario.instance = this;
 		this.levelScene = levelScene;
+		this.levelScene.isClone = true;
 		Mario.bonusPointsAppender = new BonusPointsAppender(levelScene);
 		x = levelScene.getMarioInitialPos().x;
 		y = levelScene.getMarioInitialPos().y;
@@ -896,7 +899,6 @@ public final class Mario extends Sprite implements Cloneable {
 	public static void gainCoin() {
 		coins++;
 		bonusPointsAppender.appendBonusPoints(MarioEnvironment.IntermediateRewardsSystemOfValues.coins);
-		//score += MarioEnvironment.IntermediateRewardsSystemOfValues.coins;
 	}
 
 	public static void gainHiddenBlock() {
@@ -957,6 +959,7 @@ public final class Mario extends Sprite implements Cloneable {
 		// add/subtract points for each pixel travelled
 		int distanceScore = (int)x / 16;
 		int killScore = 0;
+		int collectionScore = 0;
 		
 		// calculate kill scores
 		MarioEntity entity = MarioEnvironment.getInstance().getMario();
@@ -965,8 +968,12 @@ public final class Mario extends Sprite implements Cloneable {
 		killScore += entity.killsByStomp * MarioEnvironment.IntermediateRewardsSystemOfValues.killedByStomp;
 		killScore += entity.killsTotal * MarioEnvironment.IntermediateRewardsSystemOfValues.kills;
 		
-	
+		// calculate collection scores
+		collectionScore += greenMushroomsDevoured * MarioEnvironment.IntermediateRewardsSystemOfValues.greenMushroom;
+		collectionScore += mushroomsDevoured * MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom;
+		collectionScore += flowersDevoured * MarioEnvironment.IntermediateRewardsSystemOfValues.flowerFire;
+		collectionScore += coinsCollected * MarioEnvironment.IntermediateRewardsSystemOfValues.coins;
 		
-		return score + distanceScore + killScore;
+		return score + distanceScore + killScore + collectionScore;
 	}
 }

@@ -15,7 +15,9 @@ public enum LevelConfig {
 
 	LEVEL_5(FastOpts.VIS_ON_2X + FastOpts.L_COINS_ON + FastOpts.L_GAPS_ON + FastOpts.L_BLOCKS_ON +  FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_TUBES_ON + FastOpts.L_PLATFORMS_ON + FastOpts.L_HIDDEN_BLOCKS_OFF),
 
-	LEVEL_6(LEVEL_5.getOptions() + FastOpts.L_CANNONS_ON + FastOpts.L_ENEMY(Enemy.GOOMBA, Enemy.GREEN_KOOPA, Enemy.SPIKY));
+	LEVEL_6(LEVEL_5.getOptions() + FastOpts.L_CANNONS_ON + FastOpts.L_ENEMY(Enemy.GOOMBA, Enemy.GREEN_KOOPA, Enemy.SPIKY)),
+	
+	LEVEL_7(FastOpts.VIS_ON_2X + FastOpts.L_COINS_ON);
 	
 	private String options;
 
