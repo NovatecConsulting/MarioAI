@@ -33,6 +33,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 
@@ -485,6 +487,37 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		return ret;
 	}
 
+	/** 
+	 * Gets all creature sprites on screen.
+	 * 
+	 * @return all creature sprites on screen.
+	 */
+	public Collection<Sprite> getCreatureSprites() {
+		Collection<Sprite> creatureSprites = new HashSet<Sprite>();
+		for (Sprite sprite : sprites) {
+			// TODO:[M]: add unit tests for getEnemiesFloatPos involving all
+			// kinds of creatures
+			if (sprite.isDead())
+				continue;
+			switch (sprite.kind) {
+			case Sprite.KIND_GOOMBA:
+			case Sprite.KIND_BULLET_BILL:
+			case Sprite.KIND_ENEMY_FLOWER:
+			case Sprite.KIND_GOOMBA_WINGED:
+			case Sprite.KIND_GREEN_KOOPA:
+			case Sprite.KIND_GREEN_KOOPA_WINGED:
+			case Sprite.KIND_RED_KOOPA:
+			case Sprite.KIND_RED_KOOPA_WINGED:
+			case Sprite.KIND_SPIKY:
+			case Sprite.KIND_SPIKY_WINGED:
+			case Sprite.KIND_SHELL: {
+				creatureSprites.add(sprite);
+			}
+			}
+		}
+		return creatureSprites;
+	}
+	
 	public boolean isMarioOnGround() {
 		return mario.isOnGround();
 	}

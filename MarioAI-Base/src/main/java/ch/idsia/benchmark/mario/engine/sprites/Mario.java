@@ -163,7 +163,7 @@ public final class Mario extends Sprite implements Cloneable {
 		kind = KIND_MARIO;
 		// Mario.instance = this;
 		this.levelScene = levelScene;
-		this.levelScene.isClone = true;
+		//this.levelScene.isClone = true;
 		Mario.bonusPointsAppender = new BonusPointsAppender(levelScene);
 		x = levelScene.getMarioInitialPos().x;
 		y = levelScene.getMarioInitialPos().y;
