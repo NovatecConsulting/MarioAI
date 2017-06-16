@@ -109,10 +109,8 @@ public void spawn(LevelScene levelScene, int x, int y, int dir)
         sprite = new Princess(levelScene, x * 16 - 16, y * 16 - 15, x, y);
     } else
     {
-//            sprite = new Enemy(levelScene, x*16+8, y*16+15, dir, type, winged);
         sprite = new Enemy(levelScene, x * 16 + 8, y * 16 + 15, dir, type, winged, x, y);
     }
-    //sprite.spriteTemplate = this;
     levelScene.addSprite(sprite);
 }
 
@@ -120,8 +118,6 @@ public void spawn(LevelScene levelScene, int x, int y, int dir)
 	public Object clone() throws CloneNotSupportedException {
 		SpriteTemplate clone = (SpriteTemplate)super.clone();
 		clone.isClone = true;
-		//clone.sprite = null;
-		//clone.sprite = (Sprite) this.sprite.clone();
 		return clone;
 	}
 

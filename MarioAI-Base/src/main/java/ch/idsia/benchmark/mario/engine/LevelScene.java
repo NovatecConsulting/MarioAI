@@ -97,10 +97,6 @@ public final class LevelScene implements SpriteContext, Cloneable {
 	private Point marioInitialPos;
 	private int bonusPoints = -1;
 	
-	private int score = 0;
-
-	// public int getTimeLimit() { return timeLimit; }
-
 	public void setTimeLimit(int timeLimit) {
 		this.timeLimit = timeLimit;
 	}
@@ -133,13 +129,9 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		}
 	}
 
-	// TODO: !H!: Move to MarioEnvironment !!
-
 	public float[] getEnemiesFloatPos() {
 		enemiesFloatsList.clear();
 		for (Sprite sprite : sprites) {
-			// TODO:[M]: add unit tests for getEnemiesFloatPos involving all
-			// kinds of creatures
 			if (sprite.isDead())
 				continue;
 			switch (sprite.kind) {
@@ -495,8 +487,6 @@ public final class LevelScene implements SpriteContext, Cloneable {
 	public Collection<Sprite> getCreatureSprites() {
 		Collection<Sprite> creatureSprites = new HashSet<Sprite>();
 		for (Sprite sprite : sprites) {
-			// TODO:[M]: add unit tests for getEnemiesFloatPos involving all
-			// kinds of creatures
 			if (sprite.isDead())
 				continue;
 			switch (sprite.kind) {
@@ -543,12 +533,9 @@ public final class LevelScene implements SpriteContext, Cloneable {
 
 		if (replayer != null) {
 			try {
-				// replayer.openNextReplayFile();
 				replayer.openFile("level.lvl");
 				level = (Level) replayer.readObject();
 				level.counters.resetUncountableCounters();
-				// replayer.closeFile();
-				// replayer.closeRecorder();
 			} catch (IOException e) {
 				log.error("[Mario AI Exception] ~ level reading failed");
 				e.printStackTrace();

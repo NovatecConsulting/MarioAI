@@ -91,8 +91,6 @@ public class VisualizationComponent extends JComponent {
 	final private static DecimalFormat df = new DecimalFormat("00");
 	final private static DecimalFormat df2 = new DecimalFormat("000");
 
-	private static String[] LEVEL_TYPES = { "Overground(0)", "Underground(1)", "Castle(2)" };
-
 	private long tm = System.currentTimeMillis();
 	private long tm0;
 	int delay;
@@ -172,8 +170,6 @@ public class VisualizationComponent extends JComponent {
 	}
 	
 	public void tick() {
-		// this.render(thisVolatileImageGraphics,
-		// CheaterKeyboardAgent.isObserveLevel ? level.length : 0);
 		this.render(thisVolatileImageGraphics);
 
 		String msg = "Agent: " + this.agentNameStr;
@@ -197,21 +193,11 @@ public class VisualizationComponent extends JComponent {
 			String msgClick = "CLICK TO PLAY";
 			drawString(thisVolatileImageGraphics, msgClick,
 					160 - msgClick.length() * 4, 110, 2);
-			// drawString(thisVolatileImageGraphics, msgClick, 160 -
-			// msgClick.length() * 4, 110, 7);
 		}
-		// thisVolatileImageGraphics.setColor(Color.DARK_GRAY);
 		drawStringDropShadow(thisVolatileImageGraphics, "FPS: ", 33, 2, 7);
 		drawStringDropShadow(thisVolatileImageGraphics,
 				((SimulatorOptions.FPS > 99) ? "\\infty" : "  "
 						+ SimulatorOptions.FPS.toString()), 33, 3, 7);
-
-		// msg = totalNumberOfTrials == -2 ? "" : currentTrial + "(" +
-		// ((totalNumberOfTrials == -1) ? "\\infty" : totalNumberOfTrials) +
-		// ")";
-
-		// drawStringDropShadow(thisVolatileImageGraphics, "Trial:", 33, 4, 7);
-		// drawStringDropShadow(thisVolatileImageGraphics, msg, 33, 5, 7);
 
 		if (SimulatorOptions.isScale2x) {
 			// TODO: handle this (what?)
@@ -221,12 +207,10 @@ public class VisualizationComponent extends JComponent {
 			thisGraphics.drawImage(thisVolatileImage, 0, 0, null);
 		}
 
-		// thisGraphics.drawImage(thisVolatileImage, 0, 0, null);
 		if (this.gameViewer != null)
 			this.gameViewer.tick();
 		// Delay depending on how far we are behind.
 		if (delay > 0) {
-			// log.debug("delay = " + delay);
 			try {
 				tm += delay;
 				Thread.sleep(Math.max(0, tm - System.currentTimeMillis()));
@@ -300,7 +284,7 @@ public class VisualizationComponent extends JComponent {
 		g.setColor(Color.BLACK);
 
 		drawStringDropShadow(g,
-				"LEVEL:" + LEVEL_TYPES[marioEnvironment.getLevelType()], 0, 0, 7);
+				"LEVEL:" + level.randomSeed, 0, 0, 7);
 		drawStringDropShadow(g,
 				"ALL KILLS: " + marioEnvironment.getMario().killsTotal, 19,
 				0, 1);

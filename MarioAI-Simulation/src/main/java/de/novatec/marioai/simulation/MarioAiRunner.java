@@ -7,6 +7,8 @@ import ch.idsia.agents.IAgent;
 import ch.idsia.benchmark.mario.MarioSimulator;
 import ch.idsia.benchmark.mario.engine.SimulatorOptions.ReceptiveFieldMode;
 import ch.idsia.benchmark.mario.options.FastOpts;
+import ch.idsia.benchmark.mario.options.MarioOptions;
+import ch.idsia.benchmark.mario.options.MarioOptions.IntOption;
 import ch.idsia.tools.EvaluationInfo;
 
 /**
@@ -40,7 +42,7 @@ public class MarioAiRunner {
         
         if (randomize) {
 			options += level.getOptionsRandomized();
-        }
+        }  
         
         simulator = new MarioSimulator(options);
 

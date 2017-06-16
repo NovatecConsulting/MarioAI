@@ -120,7 +120,6 @@ public class Level implements Serializable, Cloneable {
 
 	public static objCounters counters;
 
-	// private final int FILE_HEADER = 0x271c4178;
 	public int length;
 	public int height;
 	public int randomSeed;
@@ -129,7 +128,6 @@ public class Level implements Serializable, Cloneable {
 
 	public byte[][] map;
 	public byte[][] data;
-	// Experimental feature: Mario TRACE
 	public int[][] marioTrace;
 
 	public SpriteTemplate[][] spriteTemplates;
@@ -138,21 +136,14 @@ public class Level implements Serializable, Cloneable {
 	public int yExit;
 
 	public Level(int length, int height) {
-		// ints = new Vector();
-		// booleans = new Vector();
 		this.length = length;
 		this.height = height;
 
 		xExit = 50;
 		yExit = 10;
-		// log.debug("Java: Level: lots of news here...");
-		// log.debug("length = " + length);
-		// log.debug("height = " + height);
 		try {
 			map = new byte[length][height];
-			// log.debug("map = " + map);
 			data = new byte[length][height];
-			// log.debug("data = " + data);
 			spriteTemplates = new SpriteTemplate[length][height];
 
 			marioTrace = new int[length][height + 1];

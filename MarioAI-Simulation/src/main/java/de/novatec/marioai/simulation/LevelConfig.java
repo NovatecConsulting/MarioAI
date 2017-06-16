@@ -2,6 +2,7 @@ package de.novatec.marioai.simulation;
 
 import ch.idsia.benchmark.mario.engine.generalization.Enemy;
 import ch.idsia.benchmark.mario.options.FastOpts;
+import ch.idsia.benchmark.mario.options.MarioOptions.IntOption;
 
 public enum LevelConfig {
 	
@@ -17,14 +18,20 @@ public enum LevelConfig {
 
 	LEVEL_6(LEVEL_5.getOptions() + FastOpts.L_CANNONS_ON + FastOpts.L_ENEMY(Enemy.GOOMBA, Enemy.GREEN_KOOPA, Enemy.SPIKY)),
 	
-	LEVEL_7(FastOpts.VIS_ON_2X + FastOpts.L_COINS_ON);
+	LEVEL_7(FastOpts.VIS_ON_2X + FastOpts.L_COINS_ON),
+	
+	LEVEL_COMPETITION_1(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_COINS_ON + FastOpts.L_GAPS_ON + FastOpts.L_BLOCKS_OFF +  FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_TUBES_ON + FastOpts.L_RANDOM_SEED(1)),
+	
+	LEVEL_COMPETITION_2(FastOpts.VIS_ON_2X + FastOpts.L_FLAT_OFF + FastOpts.L_COINS_ON + FastOpts.L_GAPS_ON + FastOpts.L_BLOCKS_OFF +  FastOpts.L_DEAD_ENDS_OFF + FastOpts.L_TUBES_ON + FastOpts.L_ENEMY(Enemy.GOOMBA, Enemy.GREEN_KOOPA, Enemy.SPIKY) + FastOpts.L_RANDOM_SEED(2)),
+	
+	LEVEL_COMPETITION_3(LEVEL_6.getOptions() + FastOpts.L_RANDOM_SEED(3));
 	
 	private String options;
 
 	private LevelConfig(String options) {
 		this.options = options;
 	}
-
+	
 	public String getOptions() {
 		return options;
 	}
