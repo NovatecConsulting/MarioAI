@@ -315,7 +315,7 @@ public class VisualizationComponent extends JComponent {
 				19, 2, 1);
 		// COINS:
 		g.drawImage(Art.level[0][2], 2, 20, 10, 10, null);
-		drawStringDropShadow(g, "x" + df.format(mario.coinsCollected), 1, 2, 4);
+		drawStringDropShadow(g, "x" + df.format(mario.coins), 1, 2, 4);
 		g.drawImage(Art.items[0][0], 47, 20, 11, 11, null);
 		drawStringDropShadow(g, "x" + df.format(Mario.mushroomsDevoured), 7, 2,
 				4);

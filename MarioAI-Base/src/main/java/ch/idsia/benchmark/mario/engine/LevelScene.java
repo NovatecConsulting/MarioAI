@@ -374,7 +374,7 @@ public final class LevelScene implements SpriteContext, Cloneable {
 				}
 			} else {
 				if (!isClone)
-					mario.coinsCollected++;
+					mario.coins++;
 				if (!isClone) 
 					Mario.gainCoin();
 				addSprite(new CoinAnim(x, y));
@@ -399,7 +399,7 @@ public final class LevelScene implements SpriteContext, Cloneable {
 		byte block = level.getBlock(x, y);
 		if (((Level.TILE_BEHAVIORS[block & 0xff]) & Level.BIT_PICKUPABLE) > 0) {
 			if (!isClone)
-				mario.coinsCollected++;
+				mario.coins++;
 			if (!isClone)
 				Mario.gainCoin();
 			level.setBlock(x, y, (byte) 0);

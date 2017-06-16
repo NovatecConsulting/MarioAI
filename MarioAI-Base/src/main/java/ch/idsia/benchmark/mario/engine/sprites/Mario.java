@@ -75,8 +75,6 @@ public final class Mario extends Sprite implements Cloneable {
 	public static int mushroomsDevoured = 0;
 	public static int greenMushroomsDevoured = 0;
 	public static int flowersDevoured = 0;
-	
-	public int coinsCollected = 0;
 
 	private static boolean isTrace;
 
@@ -972,7 +970,7 @@ public final class Mario extends Sprite implements Cloneable {
 		collectionScore += greenMushroomsDevoured * MarioEnvironment.IntermediateRewardsSystemOfValues.greenMushroom;
 		collectionScore += mushroomsDevoured * MarioEnvironment.IntermediateRewardsSystemOfValues.mushroom;
 		collectionScore += flowersDevoured * MarioEnvironment.IntermediateRewardsSystemOfValues.flowerFire;
-		collectionScore += coinsCollected * MarioEnvironment.IntermediateRewardsSystemOfValues.coins;
+		collectionScore += coins * MarioEnvironment.IntermediateRewardsSystemOfValues.coins; 
 		
 		return score + distanceScore + killScore + collectionScore;
 	}
