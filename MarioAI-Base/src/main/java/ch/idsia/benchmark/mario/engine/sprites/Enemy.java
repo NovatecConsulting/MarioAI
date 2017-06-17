@@ -113,8 +113,6 @@ public Enemy(LevelScene levelScene, int x, int y, int dir, int type, boolean win
             break;
     }
 
-    avoidCliffs = kind == KIND_RED_KOOPA;
-
     noFireballDeath = (kind == KIND_SPIKY || kind == KIND_SPIKY_WINGED);
     if (yPic > 1) height = 12;
     facing = dir;
