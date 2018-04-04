@@ -38,7 +38,6 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
     private int delay;
     private int ZLevelEnemies = 1;
     private int ZLevelScene = 1;
-
     public void setGameViewer(GameViewer gameViewer) {
         this.gameViewer = gameViewer;
     }
@@ -178,11 +177,16 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 levelScene.render(og, alpha);
             }
             boolean[] action = {false,false,false,false,false};
-            if(!levelScene.isPaused()) action = getAgent().getAction(this);
+//            if(!levelScene.isPaused()) {
+            	action = getAgent().getAction(this);
+            	//lastAction=action;
+//           }
+           //else action=lastAction;
+            
             
             if (action != null)
             {
-                for (int i = 0; i < Environment.numberOfButtons; ++i)
+              if(!levelScene.isPaused()) for (int i = 0; i < Environment.numberOfButtons; ++i)
                     if (action[i])
                     {
                         ++totalActionsPerfomed;
@@ -195,7 +199,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 stop();
             }
 
-             levelScene.setMarioKeys(action);
+            if(!levelScene.isPaused()) levelScene.setMarioKeys(action);
              levelScene.setMarioCheatKeys(cheatAgent.getAction(this)); 
 
             if (rOptions.isViewable()) {
@@ -309,7 +313,6 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
         LevelScene.drawStringDropShadow(og, "       Kills: "+levelScene.getKilledCreaturesTotal(), start-6, actualRow, 6);
         LevelScene.drawStringDropShadow(og, "    Coins: "+levelScene.getMarioCoins(), start+19, actualRow++, 6);
         
-        System.out.println(levelScene.getKilledCreaturesByStomp()+" ("+(df.format((double)levelScene.getKilledCreaturesByStomp()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)");
         if(levelScene.getKilledCreaturesByStomp()>0) LevelScene.drawStringDropShadow(og, "    by stomp: "+levelScene.getKilledCreaturesByStomp()+" ("+(df.format((double)levelScene.getKilledCreaturesByStomp()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow, 6);
         else LevelScene.drawStringDropShadow(og, "    by stomp: 0",start-6,actualRow,6);
         	
@@ -534,5 +537,15 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 	@Override
 	public void togglePaused() {
 		levelScene.togglePaused();
+	}
+
+	@Override
+	public int getMarioX() {
+		return levelScene.getMarioMapX();
+	}
+
+	@Override
+	public int getMarioY() {
+		return levelScene.getMarioMapY();
 	}
 }

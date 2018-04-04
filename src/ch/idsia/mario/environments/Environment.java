@@ -30,9 +30,6 @@ public interface Environment
     // always the same dimensionality: 22x22
     // always centered on the agent
 
-    // KILLS
-    
-
     // Chaning ZLevel during the game on-the-fly;
     // if your agent recieves too ambiguous observation, it might request for more precise one for the next step
     public void setRunnerOptions(RunnerOptions rOptions);
@@ -49,6 +46,8 @@ public interface Environment
     public Map<Coordinates,List<Entity>> getEntities();
 
     public float[] getMarioFloatPos();
+    public int getMarioX();
+    public int getMarioY();
 
     public Mario.MODE getMarioMode();
     

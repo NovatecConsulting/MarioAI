@@ -55,7 +55,7 @@ public abstract class Sprite
     	
     }
     
-    protected Sprite(LevelScene alreadyCopied,Sprite toCopy) { //TODO SPRITE CONTEXT(LEVELSCENE) copyable
+    protected Sprite(LevelScene alreadyCopied,Sprite toCopy) { 
     	//spritecontext=toCopy.levelscenecopy
     	
     	this.kind = toCopy.kind;

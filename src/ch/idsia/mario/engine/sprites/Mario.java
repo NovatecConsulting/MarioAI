@@ -242,7 +242,7 @@ public class Mario extends Sprite // cloneable
 			}
 
 			if (powerUpTime == 0)
-				spriteContext.setPaused(false);
+				//spriteContext.setPaused(false);
 
 			calcPic();
 			return;
@@ -324,7 +324,7 @@ public class Mario extends Sprite // cloneable
 		if (keys[KEY_SPEED] && canShoot && this.fire && spriteContext.getFireballsOnScreen() < 2) {
 			spriteContext.addSprite(new Fireball(spriteContext, x + facing * 6, y - 20, facing));
 		}
-		spriteContext.setPaused(false);
+		//spriteContext.setPaused(false);
 //		if (cheatKeys[KEY_WIN])
 //			win();
 		

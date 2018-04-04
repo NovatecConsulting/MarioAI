@@ -66,7 +66,6 @@ public abstract class MarioNtAgent implements Agent{
 	
 	public abstract MarioInput doAiLogic(); // must be implemented by agents who extend this!
 		
-	
 	public final MarioInput getMarioInput() {
 		return input;
 	}
@@ -138,12 +137,24 @@ public abstract class MarioNtAgent implements Agent{
 		return isBrick(0,1)&&isEmpty(1, 1)&&isEmpty(2, 1);
 	}
 	
+	public final boolean isDeepSlopeAhead() {
+		return isSlopeAhead()&&isEmpty(1,2)&&isEmpty(2, 2);
+	}
+	
 	public final boolean isEnemyAhead() {
 
 		for(int i=1;i<ENEMY_CHECK_DISTANCE;i++) {
 			if(isDangerousAt(i, 0)||isDangerousAt(i, 1)) return true;
 		}
 		return false;
+	}
+	
+	public final boolean isHoleAhead() { //TODO IMPLEMENT
+		return false;
+	}
+	
+	public final boolean isQuestionbrickAbove() {
+		return getTile(0,-1)==TileType.QUESTION_BRICK||getTile(0,-2)==TileType.QUESTION_BRICK||getTile(0,-3)==TileType.QUESTION_BRICK;
 	}
 	
 	////--- Tiles - Abstracted Level Information
@@ -226,11 +237,6 @@ public abstract class MarioNtAgent implements Agent{
 	
 	public final LevelScene getDeepCopyOfLevelScene(){
 		return env.getLevelScene().getDeepCopy();
-	}
-	
-	@Deprecated
-	public final LevelScene getLevelScene() { //SHOULD BE REMOVED, JUST FOR DEBUG!!!
-		return env.getLevelScene();
 	}
 	
 	public final void setMarioInput(LevelScene alreadyCopied,MarioInput input) { //RLY NEEDED?

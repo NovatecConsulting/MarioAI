@@ -15,7 +15,7 @@ import de.novatec.mario.engine.generalization.Entities.EntityType;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
 import de.novatec.mario.engine.generalization.Tiles.TileType;
-import de.novatec.marioai.tools.MarioAiRunner.LevelConfig;
+import de.novatec.marioai.tools.LevelConfig;
 
 import java.awt.*;
 import java.io.DataInputStream;
@@ -830,16 +830,15 @@ public class LevelScene extends Scene implements SpriteContext {
 		}
 
 		LevelConfig config=renderer.getRunnerOptions().getConfig();
-		System.out.println(config);
-			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType().getType()); // LEVEL-GENERATION
-		if(config.isUseStandardGenerator()) {
 			
+		if(config.isUseStandardGenerator()) {
+			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType().getType()); // Standard level-generation
 		}
+		else if(config.isFlat()) {
+			level=LevelGenerator.createFlatLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.isEnemies(), config.isBricks(), config.isCoins()); // flat level generation
+		}
+		else level=LevelGenerator.createCustomLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType().getType(), config.getOdds(),config.isEnemies(), config.isBricks(), config.isCoins()); //custom level generation
 		
-		
-		//level = LevelGenerator.createCustomLevel(levelLength, 15, levelSeed, levelDifficulty, 0, odds,renderer.getRunnerOptions().isSpawnEnemies(),renderer.getRunnerOptions().isSpawnBricks() );
-		
-		//level=LevelGenerator.createFlatLevel(levelLength,15, levelSeed, levelDifficulty, renderer.getRunnerOptions().isSpawnEnemies(),renderer.getRunnerOptions().isSpawnBricks());
 		setPaused(false);
 		sprites.clear();
 		layer = new LevelRenderer(level, graphicsConfiguration, 320, 240);
@@ -874,6 +873,8 @@ public class LevelScene extends Scene implements SpriteContext {
 
 	public void tick() {
 	
+		//if(paused) return; TODO COULD BE USEFULL
+		
 		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING&&!paused)
 			timeLeft--;
 		

@@ -23,6 +23,7 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
     private Integer prevFPS = 24;
     
     private Environment env;
+    private long millis=0;
 
     public CheaterKeyboardAgent()
     {
@@ -31,7 +32,7 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
 
     public void reset()
     {
-        // Just check you keyboard.
+        // Just check your keyboard.
         Action = new boolean[16];
     }
 
@@ -79,8 +80,10 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
                 if (isPressed)
                 {
                     LOGGER.println("Pause On/Off", LOGGER.VERBOSE_MODE.INFO);
-                    if(env!=null) env.togglePaused();
-                    //Action[Mario.KEY_PAUSE] = GlobalOptions.pauseWorld;
+                    if(env!=null&&System.currentTimeMillis()-millis>100) {
+                    	millis=System.currentTimeMillis();
+                    	env.togglePaused();
+                    }
                 }
                 break;
             case KeyEvent.VK_L:

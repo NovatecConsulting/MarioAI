@@ -20,15 +20,15 @@ public class LevelGenerator
         return levelGenerator.createLevel(seed, difficulty, type);
     }
     
-    public static Level createCustomLevel(int width, int height, long seed, int difficulty, int type, int[] odds, boolean enemies,boolean bricks)
+    public static Level createCustomLevel(int width, int height, long seed, int difficulty, int type, int[] odds, boolean enemies,boolean bricks,boolean coins)
     {
         LevelGenerator levelGenerator = new LevelGenerator(width, height);
-        return levelGenerator.createLevel(seed, difficulty, type, odds,enemies,bricks);
+        return levelGenerator.createLevel(seed, difficulty, type, odds,enemies,bricks,coins);
     }
     
-    public static Level createFlatLevel(int width,int height,long seed,int difficulty,boolean enemies,boolean bricks) {
+    public static Level createFlatLevel(int width,int height,long seed,int difficulty,boolean enemies,boolean bricks,boolean coins) {
     	LevelGenerator levelGenerator = new LevelGenerator(width, height);
-        return levelGenerator.createFlatLevel(seed, difficulty,enemies,bricks);
+        return levelGenerator.createFlatLevel(seed, difficulty,enemies,bricks,coins);
     }
 
     private int width;
@@ -36,11 +36,11 @@ public class LevelGenerator
     private Level level = new Level(width, height);
     private Random random;
 
-    private static final int ODDS_STRAIGHT = 0;
-    private static final int ODDS_HILL_STRAIGHT = 1;
-    private static final int ODDS_TUBES = 2;
-    private static final int ODDS_JUMP = 3;
-    private static final int ODDS_CANNONS = 4;
+    public static final int ODDS_STRAIGHT = 0;
+    public static final int ODDS_HILL_STRAIGHT = 1;
+    public static final int ODDS_TUBES = 2;
+    public static final int ODDS_JUMP = 3;
+    public static final int ODDS_CANNONS = 4;
     private int[] odds = new int[5];
     private int totalOdds;
     private int difficulty;
@@ -79,10 +79,10 @@ public class LevelGenerator
         random = new Random(seed);
 
         int length = 0;
-        length += buildStraight(0, level.getWidth(), false,false);
+        length += buildStraight(0, level.getWidth(), false,false,false);
         while (length < level.getWidth() - 64)
         {
-            length += buildZone(length, level.getWidth() - length,true,true);
+            length += buildZone(length, level.getWidth() - length,true,true,true);
         }
 
         int floor = height - 1 - random.nextInt(4);
@@ -126,7 +126,7 @@ public class LevelGenerator
         return level;
     }
     
-    private Level createLevel(long seed, int difficulty, int type,int[] odds,boolean enemies,boolean bricks) {
+    private Level createLevel(long seed, int difficulty, int type,int[] odds,boolean enemies,boolean bricks,boolean coins) {
     	 this.type = type;
          this.difficulty = difficulty;
          this.odds=odds;
@@ -148,9 +148,9 @@ public class LevelGenerator
          random = new Random(seed);
 
          int length = 0;
-         length += buildStraight(0, level.getWidth(), false,false);
+         length += buildStraight(0, level.getWidth(), false,false,false);
          while (length < level.getWidth() - 64) {
-             length += buildZone(length, level.getWidth() - length,enemies,bricks); 
+             length += buildZone(length, level.getWidth() - length,enemies,bricks,coins); 
          }
 
          int floor = height - 1 - random.nextInt(4);
@@ -190,7 +190,7 @@ public class LevelGenerator
          return level;
     }
 
-    private Level createFlatLevel(long seed, int difficulty,boolean enemies,boolean bricks) {
+    private Level createFlatLevel(long seed, int difficulty,boolean enemies,boolean bricks,boolean coins) {
     	 this.type = 0;
          this.difficulty = difficulty;
          
@@ -199,11 +199,11 @@ public class LevelGenerator
          random = new Random(seed);
          
          int floor=12;
-         int length=builFlat(0, floor, level.getWidth()-64, false,false);
+         int length=builFlat(0, floor, level.getWidth()-64, false,false,false);
          
          while(length < level.getWidth() - 64)
          {
-        	 length+=builFlat(length, floor, level.getWidth()-length, enemies,bricks);
+        	 length+=builFlat(length, floor, level.getWidth()-length, enemies,bricks,coins);
          }
          
          for (int x = level.getWidth()-64; x < level.getWidth(); x++) //floor at the end of the level
@@ -223,7 +223,7 @@ public class LevelGenerator
          fixWalls();
          return level;
     }
-    private int buildZone(int x, int maxLength, boolean enemies,boolean bricks)
+    private int buildZone(int x, int maxLength, boolean enemies,boolean bricks,boolean coins)
     {
         int t = random.nextInt(totalOdds);
         int type = 0;
@@ -238,11 +238,11 @@ public class LevelGenerator
         switch (type)
         {
             case ODDS_STRAIGHT:
-                return buildStraight(x, maxLength,enemies,bricks);
+                return buildStraight(x, maxLength,enemies,bricks,coins);
             case ODDS_HILL_STRAIGHT:
-                return buildHillStraight(x, maxLength,enemies,bricks);
+                return buildHillStraight(x, maxLength,enemies,bricks,coins);
             case ODDS_TUBES:
-                return buildTubes(x, maxLength,true);
+                return buildTubes(x, maxLength,enemies);
             case ODDS_JUMP:
                 return buildJump(x, maxLength);
             case ODDS_CANNONS:
@@ -340,7 +340,7 @@ public class LevelGenerator
         return length;
     }
 
-    private int buildHillStraight(int xo, int maxLength, boolean enemies,boolean bricks)
+    private int buildHillStraight(int xo, int maxLength, boolean enemies,boolean bricks,boolean coins)
     {
         int length = random.nextInt(10) + 10;
         if (length > maxLength) length = maxLength;
@@ -388,7 +388,7 @@ public class LevelGenerator
                     if(enemies)addEnemyLine(xxo, xxo + l, h - 1);
                     if (random.nextInt(4) == 0)
                     {
-                        decorate(xxo - 1, xxo + l + 1, h,enemies,bricks);
+                        decorate(xxo - 1, xxo + l + 1, h,enemies,bricks,coins);
                         keepGoing = false;
                     }
                     for (int x = xxo; x < xxo + l; x++)
@@ -488,7 +488,7 @@ public class LevelGenerator
         return length;
     }
 
-    private int buildStraight(int xo, int maxLength, boolean enemies,boolean bricks)
+    private int buildStraight(int xo, int maxLength, boolean enemies,boolean bricks,boolean coins)
     {
         int length = random.nextInt(10) + 2;
         if (!enemies) length = 10 + random.nextInt(5);
@@ -506,18 +506,17 @@ public class LevelGenerator
             }
         }
 
-        if (enemies)
-        {
+        
             if (length > 5)
             {
-                decorate(xo, xo + length, floor,enemies,bricks);
+                decorate(xo, xo + length, floor,enemies,bricks,coins);
             }
-        }
+        
 
         return length;
     }
     
-    private int builFlat(int xo,int y_,int maxLength,boolean enemies,boolean bricks) {
+    private int builFlat(int xo,int y_,int maxLength,boolean enemies,boolean bricks,boolean coins) {
     	int length=random.nextInt(10) + 2;
     			
     	int floor = y_;
@@ -533,41 +532,34 @@ public class LevelGenerator
         }
 
         
-            if (maxLength > 5)
-            {
-                decorate(xo, xo + length,floor,enemies,bricks);
+            if (maxLength > 5) {
+                decorate(xo, xo + length,floor,enemies,bricks,coins);
             }
         
         return length;
     }
 
-    private void decorate(int x0, int x1, int floor,boolean enemies,boolean bricks)
-    {
-    	if(!enemies&&!bricks) return;
+    private void decorate(int x0, int x1, int floor,boolean enemies,boolean bricks, boolean coins) {
+    	if(!enemies&&!bricks&&!coins) return;
         if (floor < 1) return;
 
 
         if(enemies)addEnemyLine(x0 + 1, x1 - 1, floor - 1);
 
-        if(bricks) {
-        int s = random.nextInt(4);
-        int e = random.nextInt(4);
-
-        if (floor - 2 > 0)
-	        {
-	            if ((x1 - 1 - e) - (x0 + 1 + s) > 1)
-	            {
-	                for (int x = x0 + 1 + s; x < x1 - 1 - e; x++)
-	                {
-	                    level.setBlock(x, floor - 2, (byte) (2 + 2 * 16));
-	                }
+        if(coins) {
+	        int s = random.nextInt(4);
+	        int e = random.nextInt(4);
+	
+	        if (floor - 2 > 0) {//TODO CHECK
+	            if ((x1 - 1 - e) - (x0 + 1 + s) > 1){
+	                for (int x = x0 + 1 + s; x < x1 - 1 - e; x++) level.setBlock(x, floor - 2, (byte) (2 + 2 * 16)); //coins? //coins!!
 	            }
-	        }
+	       }
+        }
         
-
-        
-	        s = random.nextInt(4);
-	        e = random.nextInt(4);
+        if(bricks) {
+	       int s = random.nextInt(4);
+	       int e = random.nextInt(4);
 	
 	        if (floor - 4 > 0)
 	        {

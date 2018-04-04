@@ -8,7 +8,7 @@ import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.MODE;
-import de.novatec.marioai.tools.MarioAiRunner.LevelConfig;
+import de.novatec.marioai.tools.LevelConfig;
 
 public class RunnerOptions {
 
