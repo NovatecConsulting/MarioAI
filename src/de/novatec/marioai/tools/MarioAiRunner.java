@@ -45,7 +45,9 @@ public class MarioAiRunner {
 			System.err.println("LevelConfig can only be null if randomize==true!\n Please choose a valid LevelConfig or activate Random-Level-Generation");
 			return;
 			}
-			else run(agent, levelConfig, -1, 24, true, true);
+			else {
+				run(agent, levelConfig, -1, 24, true, true);
+			}
 		}
 		else 
 		
@@ -56,14 +58,14 @@ public class MarioAiRunner {
 		//run(new AStar_RGU(),LevelConfig.Level2,3,48,false,true);
 		//run(new ExampleAgent(),LevelConfig.Level1,1,24,true,true);
 		//run(new ExampleAgent(),LevelConfig.Level1,1,48,false,true);
-		//run(new HumanKeyboardAgent(), LevelConfig.Level2,10,24*6,false,true);
+		run(new HumanKeyboardAgent(), LevelConfig.Level2,10,24,false,true);
 		//run(new ExampleAgent(), null, true);
-		run(new AStarAgent(), LevelConfig.Level2,1,48,false,true);
+		//run(new AStarAgent(), LevelConfig.Level2,1,48,false,true);
 	}
 	
 	public enum LevelConfig{
 		Level1(797938204,256,4,LEVEL_TYPES.OVERGROUND),
-		Level2(958938223,256,15,LEVEL_TYPES.CASTLE),
+		Level2(958938223,256,0,LEVEL_TYPES.CASTLE),
 		Level3(1193454339,256,2,LEVEL_TYPES.OVERGROUND),
 		LevelFLAT1(1193454339,256,2,LEVEL_TYPES.OVERGROUND,true,false,false,true,null)
 		;

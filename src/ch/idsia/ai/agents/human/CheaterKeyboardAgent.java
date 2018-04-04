@@ -21,6 +21,8 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
 
     private String Name = "Instance of CheaterKeyboardAgent";
     private Integer prevFPS = 24;
+    
+    private Environment env;
 
     public CheaterKeyboardAgent()
     {
@@ -33,8 +35,8 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
         Action = new boolean[16];
     }
 
-    public boolean[] getAction(Environment observation)
-    {
+    public boolean[] getAction(Environment observation){
+    	this.env=observation;
         return Action;
     }
 
@@ -77,7 +79,7 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
                 if (isPressed)
                 {
                     LOGGER.println("Pause On/Off", LOGGER.VERBOSE_MODE.INFO);
-                    //GlobalOptions.pauseWorld = !GlobalOptions.pauseWorld;
+                    if(env!=null) env.togglePaused();
                     //Action[Mario.KEY_PAUSE] = GlobalOptions.pauseWorld;
                 }
                 break;

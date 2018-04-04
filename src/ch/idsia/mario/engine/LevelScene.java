@@ -874,16 +874,14 @@ public class LevelScene extends Scene implements SpriteContext {
 
 	public void tick() {
 	
-		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING)
+		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING&&!paused)
 			timeLeft--;
 		
 		if (timeLeft == 0) {
-			mario.die();
-			//renderer.levelFailed();
-			
+			mario.die();			
 		}
 		
-		if (startTime > 0&&mario.getStatus()==STATUS.RUNNING) {
+		if (startTime > 0&&mario.getStatus()==STATUS.RUNNING&&!paused) {
 			startTime++;
 		}
 
@@ -920,11 +918,11 @@ public class LevelScene extends Scene implements SpriteContext {
 
 		if (isPaused()) {
 			for (Sprite sprite : sprites) {
-				if (sprite == mario) {
-					sprite.tick();
-				} else {
+//				if (sprite == mario) {
+//					sprite.tick();
+//				} else {
 					sprite.tickNoMove();
-				}
+//				}
 			}
 		} else {
 			tick++;
@@ -1072,7 +1070,7 @@ public class LevelScene extends Scene implements SpriteContext {
 
 		drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0,
 				this.levelDifficulty > 6 ? 1 : this.levelDifficulty > 2 ? 4 : 7);
-		drawStringDropShadow(g, "CREATURES:" + (this.isPaused() ? "OFF" : "ON"), 19, 0, 7);
+		drawStringDropShadow(g, "World " + (this.isPaused() ? "paused" : "running"), 19, 0, 7);
 		drawStringDropShadow(g, "SEED:" + this.levelSeed, 0, 1, 7);
 		drawStringDropShadow(g, "TYPE:" + levelType.toString(), 0, 2, 7);
 		drawStringDropShadow(g, "ALL KILLS: " + killedCreaturesTotal, 19, 1, 1);
@@ -1550,6 +1548,9 @@ public class LevelScene extends Scene implements SpriteContext {
 		return levelSeed;
 	}
 
+	public void togglePaused() {
+		this.paused=!paused;
+	}
 
 
 }

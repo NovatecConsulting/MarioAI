@@ -624,7 +624,7 @@ public class Mario extends Sprite // cloneable
 
 		timesHurt++;
 		if (isLarge()) {
-			spriteContext.setPaused(true);
+			//spriteContext.setPaused(true);
 			powerUpTime = -3 * FractionalPowerUpTime;
 			if (fire) {
 				setLarge(true, false);
@@ -640,7 +640,7 @@ public class Mario extends Sprite // cloneable
 	private void win() {
 		xDeathPos = ((int) x);
 		yDeathPos = ((int) y);
-		spriteContext.setPaused(true);
+		//spriteContext.setPaused(true);
 		winTime = 1;
 		status = STATUS.WIN;
 	}
@@ -648,7 +648,7 @@ public class Mario extends Sprite // cloneable
 	public void die() {
 		xDeathPos = ((int) x);
 		yDeathPos = ((int) y);
-		spriteContext.setPaused(true);
+		//spriteContext.setPaused(true);
 		deathTime = (25);
 		status = STATUS.LOOSE;
 	}
@@ -658,7 +658,7 @@ public class Mario extends Sprite // cloneable
 			return;
 
 		if (!fire) {
-			spriteContext.setPaused(true);
+			//spriteContext.setPaused(true);
 			powerUpTime = 3 * FractionalPowerUpTime;
 			setLarge(true, true);
 		}
@@ -671,7 +671,7 @@ public class Mario extends Sprite // cloneable
 			return;
 
 		if (!isLarge()) {
-			spriteContext.setPaused(true);
+			//spriteContext.setPaused(true);
 			powerUpTime = 3 * FractionalPowerUpTime;
 			setLarge(true, false);
 		}
@@ -680,7 +680,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void kick(Shell shell) {
-		// if (deathTime > 0 || world.paused) return;
+		 if (deathTime > 0 || spriteContext.isPaused()) return;
 
 		if (keys[KEY_SPEED]) {
 			setCarried(shell);

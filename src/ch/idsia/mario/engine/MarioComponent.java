@@ -177,8 +177,9 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 og.fillRect(0, 0, 320, 240);
                 levelScene.render(og, alpha);
             }
-
-            boolean[] action = getAgent().getAction(this);
+            boolean[] action = {false,false,false,false,false};
+            if(!levelScene.isPaused()) action = getAgent().getAction(this);
+            
             if (action != null)
             {
                 for (int i = 0; i < Environment.numberOfButtons; ++i)
@@ -195,7 +196,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
             }
 
              levelScene.setMarioKeys(action);
-             levelScene.setMarioCheatKeys(cheatAgent.getAction(null)); 
+             levelScene.setMarioCheatKeys(cheatAgent.getAction(this)); 
 
             if (rOptions.isViewable()) {
 
@@ -221,9 +222,6 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
                 	 LevelScene.drawStringDropShadow(og, "FPS: ", 33, 2, 7);
                 	 LevelScene.drawStringDropShadow(og, ((rOptions.getFPS() > 99) ? "\\infty" : ""+rOptions.getFPS()), 33, 3, 7);
                      LevelScene.drawStringDropShadow(og, "Score: "+levelScene.getScore(), 1,27, 4);
-                }
-                else {
-                	//LevelScene.drawStringDropShadow(og, "Test", 1, 1, 1);
                 }
 
                 g.drawImage(image, 0, 0, width, height, null); // set size to frame size
@@ -531,5 +529,10 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 	@Override
 	public LevelScene getLevelScene() {
 		return levelScene;
+	}
+
+	@Override
+	public void togglePaused() {
+		levelScene.togglePaused();
 	}
 }

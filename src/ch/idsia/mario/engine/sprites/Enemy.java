@@ -141,7 +141,7 @@ public class Enemy extends Sprite //cloneable
                 }
                 else
                 {
-                    spriteContext.getMarioHurt();;
+                    spriteContext.getMarioHurt();
                 }
             }
         }

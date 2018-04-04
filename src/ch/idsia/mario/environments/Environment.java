@@ -36,6 +36,8 @@ public interface Environment
     // Chaning ZLevel during the game on-the-fly;
     // if your agent recieves too ambiguous observation, it might request for more precise one for the next step
     public void setRunnerOptions(RunnerOptions rOptions);
+    public void setPaused(boolean paused);
+    public void togglePaused();
 
     public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 0
 

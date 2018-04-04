@@ -138,8 +138,6 @@ public class Entities {
 		
 		private EntityKind kind;
 		
-		private byte type;
-		
 		private boolean winged;
 		
 		private EntityType (EntityKind kind, boolean winged) {
