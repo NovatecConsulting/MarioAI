@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ch.idsia.mario.engine.LevelScene;
+import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import de.novatec.marioai.tools.MarioInput;
 
 public class Node {
@@ -27,15 +28,19 @@ public class Node {
 		this.usedInput=usedInput;
 		int tmpHurtStatus=this.usedLevelScene.getTimesMarioHurt();
 		
+		
+			
+		
 		this.usedLevelScene.setMarioKeys(usedInput.toArray());
 		//System.out.println("X before Tick"+this.usedLevelScene.getMarioX());
 		//System.out.println("Y before Tick"+this.usedLevelScene.getMarioY());
-		this.usedLevelScene.tick(); //goOneTick
+		if(usedLevelScene.getMarioStatus()==STATUS.RUNNING) this.usedLevelScene.tick(); //goOneTick
 		//System.out.println("X after Tick"+this.usedLevelScene.getMarioX());
 		//System.out.println("Y after Tick"+this.usedLevelScene.getMarioY());
 		if(tmpHurtStatus!=this.usedLevelScene.getTimesMarioHurt()) gotHurt=true; 
 		
 		this.coords=new Coordinates(this.usedLevelScene.getMarioX(), this.usedLevelScene.getMarioY());
+		
 	}
 	
 	public Node(LevelScene levelScene) { // for start-nodes

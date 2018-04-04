@@ -8,6 +8,7 @@ import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.MODE;
+import de.novatec.marioai.tools.MarioAiRunner.LevelConfig;
 
 public class RunnerOptions {
 
@@ -43,32 +44,19 @@ public class RunnerOptions {
 	
 	private boolean viewAlwaysOnTop=true;
 	
-	private int difficulty=0;
-	
-	private int levelLength=256;
-	
-	private int levelSeed=new Random().nextInt(); //random levelSeed per default
-	
-	private Level.LEVEL_TYPES levelType=Level.LEVEL_TYPES.getLevelTypebyType(new Random().nextInt(3)); //random levelType
+	private LevelConfig config;
 	
 	private int trials=0,maxTrials=1; //number of trials
 	
 	private int ZLevelEnemies=1, ZLevelMap=1;
-	
-	public RunnerOptions(Agent agent) {
-		Random r=new Random();
-		
-		int[] length= {256,512,1024};
-		int[] timeLimits= {200,400,800};
-		int tmp=r.nextInt(length.length);
-		this.levelLength=length[tmp];
-		this.timeLimit=timeLimits[tmp];
-		
+
+	public RunnerOptions(Agent agent,LevelConfig config) {
+		this.config=config;		
 		this.agent=agent;
 	}
 	
 	public RunnerOptions(RunnerOptions toCopy) {
-		this.agent=toCopy.agent; //could be problematic
+		this.agent=toCopy.agent; //could be problematic (but till now it isn't)
 		//agent.reset();
 		this.windowHeigth=toCopy.getWindowHeigth();
 		this.windowWidth=toCopy.getWindowWidth();
@@ -82,15 +70,12 @@ public class RunnerOptions {
 		this.marioInvulnerable=toCopy.isMarioInvulnerable();
 		this.exitWhenFinished=toCopy.isExitWhenFinished();
 		this.viewAlwaysOnTop=toCopy.isViewAlwaysOnTop();
-		this.difficulty=toCopy.getDifficulty();
-		this.levelLength=toCopy.getLevelLength();
-		this.levelSeed=toCopy.getLevelSeed();
-		this.levelType=toCopy.getLevelType();
 		this.trials=toCopy.trials;
 		this.maxTrials=toCopy.getMaxTrials();
 		this.ZLevelEnemies=toCopy.getZLevelEnemies();
 		this.ZLevelMap=toCopy.getZLevelMap();
 		this.viewLocation=toCopy.getViewLocation();
+		this.config=toCopy.config;
 	}
 	
 	public Agent getAgent() {
@@ -193,39 +178,6 @@ public class RunnerOptions {
 		this.viewAlwaysOnTop = viewAlwaysOnTop;
 	}
 
-	public int getDifficulty() {
-		return difficulty;
-	}
-
-	public void setDifficulty(int difficulty) {
-		this.difficulty = difficulty;
-	}
-
-	public int getLevelLength() {
-		return levelLength;
-	}
-
-	public void setLevelLength(int levelLength) {
-		this.levelLength = levelLength;
-		this.timeLimit=200; //TODO find better way
-	}
-
-	public int getLevelSeed() {
-		return levelSeed;
-	}
-
-	public void setLevelSeed(int levelSeed) {
-		this.levelSeed = levelSeed;
-	}
-
-	public Level.LEVEL_TYPES getLevelType() {
-		return levelType;
-	}
-
-	public void setLevelType(Level.LEVEL_TYPES levelType) {
-		this.levelType = levelType;
-	}
-
 	public int getTrials() {
 		return trials;
 	}
@@ -265,25 +217,6 @@ public class RunnerOptions {
 	public int incrementTrials() {
 		return trials++;
 	}
-	
-	@Override
-	public String toString() {
-		return "RunnerOptions [agent=" + agent + ", FPS=" + FPS + ", viewable=" + viewable + ", timeLimit=" + timeLimit
-				+ ", timer=" + timer + ", paused=" + paused + ", powerRestauration=" + powerRestauration
-				+ ", marioStartMode=" + marioStartMode + ", marioInvulnerable=" + marioInvulnerable
-				+ ", exitWhenFinished=" + exitWhenFinished + ", viewAlwaysOnTop=" + viewAlwaysOnTop + ", difficulty="
-				+ difficulty + ", levelLength=" + levelLength + ", levelSeed=" + levelSeed + ", levelType=" + levelType
-				+ ", trials=" + trials + ", ZLevelEnemies=" + ZLevelEnemies + ", ZLevelMap=" + ZLevelMap
-				+ ", getAgent()=" + getAgent() + ", getFPS()=" + getFPS() + ", isViewable()=" + isViewable()
-				+ ", getTimeLimit()=" + getTimeLimit() + ", isTimer()=" + isTimer() + ", isPaused()=" + isPaused()
-				+ ", isPowerRestauration()=" + isPowerRestauration() + ", getMarioStartMode()=" + getMarioStartMode()
-				+ ", isMarioInvulnerable()=" + isMarioInvulnerable() + ", isExitWhenFinished()=" + isExitWhenFinished()
-				+ ", isViewAlwaysOnTop()=" + isViewAlwaysOnTop() + ", getDifficulty()=" + getDifficulty()
-				+ ", getLevelLength()=" + getLevelLength() + ", getLevelSeed()=" + getLevelSeed() + ", getLevelType()="
-				+ getLevelType() + ", getTrials()=" + getTrials() + ", getZLevelEnemies()=" + getZLevelEnemies()
-				+ ", getZLevelMap()=" + getZLevelMap() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
-	}
 
 	public int getMaxTrials() {
 		return maxTrials;
@@ -304,9 +237,25 @@ public class RunnerOptions {
 	public boolean isLabels() {
 		return labels;
 	}
+	
+	public LEVEL_TYPES getLevelType() {
+		return config.getType();
+	}
+	
+	public int getDifficulty() {
+		return config.getPresetDifficulty();
+	}
+	
+	public int getLevelSeed() {
+		return config.getSeed();
+	}
+	
+	public int getLevelLength() {
+		return config.getLength();
+	}
 
-	public void setLabels(boolean labels) {
-		this.labels = labels;
+	public LevelConfig getConfig() {
+		return config;
 	}
 
 	

@@ -5,7 +5,7 @@ public class Coordinates {
 
 private float x,y;
 
-private static final float EPSILON=0.25f;
+private static final float EPSILON=2f;
  
  public Coordinates () {
 	 this.x=0;

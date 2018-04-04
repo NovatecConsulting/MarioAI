@@ -2,6 +2,7 @@ package ch.idsia.mario.engine;
 
 import ch.idsia.mario.engine.level.BgLevelGenerator;
 import ch.idsia.mario.engine.level.Level;
+import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.level.LevelGenerator;
 import ch.idsia.mario.engine.level.SpriteTemplate;
 import ch.idsia.mario.engine.sprites.*;
@@ -14,6 +15,7 @@ import de.novatec.mario.engine.generalization.Entities.EntityType;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
 import de.novatec.mario.engine.generalization.Tiles.TileType;
+import de.novatec.marioai.tools.MarioAiRunner.LevelConfig;
 
 import java.awt.*;
 import java.io.DataInputStream;
@@ -826,19 +828,18 @@ public class LevelScene extends Scene implements SpriteContext {
 			e.printStackTrace();
 			System.exit(0);
 		}
-		/*
-		 * if (replayer!=null) { level = LevelGenerator.createLevel(2048, 15,
-		 * replayer.nextLong()); } else {
-		 */
-		// level = LevelGenerator.createLevel(320, 15, levelSeed);
-		level = LevelGenerator.createLevel(levelLength, 15, levelSeed, levelDifficulty, levelType.getType()); // LEVEL
-																												// GENERATION
-		// }
 
-		/*
-		 * if (recorder != null) { recorder.addLong(LevelGenerator.lastSeed); }
-		 */
-
+		LevelConfig config=renderer.getRunnerOptions().getConfig();
+		System.out.println(config);
+			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType().getType()); // LEVEL-GENERATION
+		if(config.isUseStandardGenerator()) {
+			
+		}
+		
+		
+		//level = LevelGenerator.createCustomLevel(levelLength, 15, levelSeed, levelDifficulty, 0, odds,renderer.getRunnerOptions().isSpawnEnemies(),renderer.getRunnerOptions().isSpawnBricks() );
+		
+		//level=LevelGenerator.createFlatLevel(levelLength,15, levelSeed, levelDifficulty, renderer.getRunnerOptions().isSpawnEnemies(),renderer.getRunnerOptions().isSpawnBricks());
 		setPaused(false);
 		sprites.clear();
 		layer = new LevelRenderer(level, graphicsConfiguration, 320, 240);
@@ -873,13 +874,16 @@ public class LevelScene extends Scene implements SpriteContext {
 
 	public void tick() {
 	
-		if (renderer.getRunnerOptions().isTimer())
+		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING)
 			timeLeft--;
+		
 		if (timeLeft == 0) {
 			mario.die();
+			//renderer.levelFailed();
+			
 		}
 		
-		if (startTime > 0) {
+		if (startTime > 0&&mario.getStatus()==STATUS.RUNNING) {
 			startTime++;
 		}
 
@@ -1081,7 +1085,7 @@ public class LevelScene extends Scene implements SpriteContext {
 		drawStringDropShadow(g, "FLOWERS  : " + df.format(mario.getGainedFlowers()), 0, 6, 4);
 
 		drawStringDropShadow(g, "TIME", 33, 0, 7);
-		int time = (timeLeft + 15 - 1) / 15;
+		int time = (timeLeft) / 15;
 		if (time < 0)
 			time = 0;
 		drawStringDropShadow(g, " " + df2.format(time), 33, 1, 7);
@@ -1104,28 +1108,29 @@ public class LevelScene extends Scene implements SpriteContext {
 			float t = mario.getWinTime() + alpha;
 			t = t * t * 0.2f;
 
-			if (t > 900) {
+			if (t > 500) {
 				renderer.levelWon();
-				// replayer = new Replayer(recorder.getBytes());
-				// init();
 			}
 
 			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (320 - t));
 		}
 
-		if (mario.getDeathTime() > 0) {
-			// float t = mario.deathTime + alpha;
-			// t = t * t * 0.4f;
-			//
-			// if (t > 1800)
-			// {
-			renderer.levelFailed();
-			// replayer = new Replayer(recorder.getBytes());
-			// init();
+		if (mario.getDeathTime() > 0||timeLeft<=0||mario.getStatus()==STATUS.LOOSE) {
+			 float t = mario.getDeathTime() + alpha;
+			 t = t * t * 0.4f;
+			 //System.out.println(alpha);
+//			 System.out.println(mario.getDeathTime());
+//			 System.out.println(mario.getStatus());
+//			 System.out.println(t);
+			// if (t > 500){
+			 renderer.levelFailed();
+			// System.out.println("used");
 			// }
+			 
+			 renderBlackout(g, (int) (mario.getxDeathPos() - xCam), (int) (mario.getyDeathPos() - yCam), (int) (320 - t));
+			 
 
-			// renderBlackout(g, (int) (mario.xDeathPos - xCam), (int) (mario.yDeathPos -
-			// yCam), (int) (320 - t));
+			
 		}
 	}
 
@@ -1150,14 +1155,14 @@ public class LevelScene extends Scene implements SpriteContext {
 		drawString(g, text, x * 8 + 4, y * 8 + 4, c);
 	}
 
-	private static void drawString(Graphics g, String text, int x, int y, int c) {
+	private static void drawString(Graphics g, String text, int x, int y, int c) { //c: 0=black,1=red,2=green,3=blue,4=yellow
 		char[] ch = text.toCharArray();
 		for (int i = 0; i < ch.length; i++) {
 			g.drawImage(Art.font[ch[i] - 32][c], x + i * 8, y, null);
 		}
 	}
 
-	private void renderBlackout(Graphics g, int x, int y, int radius) {
+	public void renderBlackout(Graphics g, int x, int y, int radius) {
 		if (radius > 320)
 			return;
 
@@ -1275,7 +1280,7 @@ public class LevelScene extends Scene implements SpriteContext {
 	}
 	
 	public int getStartTime() {
-		return startTime / 15;
+		return totalTime-timeLeft / 15;
 	}
 
 	public int getTimeLeft() {
@@ -1401,7 +1406,7 @@ public class LevelScene extends Scene implements SpriteContext {
 	}
 	
 	public boolean marioIsFalling() {
-		return mario.getYa()<0;
+		return mario.getYa()>0;
 	}
 	
 	public void setMarioCarried(Sprite carried) {
@@ -1539,6 +1544,10 @@ public class LevelScene extends Scene implements SpriteContext {
 		if(timesHurt>=0) res-=timesHurt*42;
 	
 		return res;
+	}
+
+	public long getLevelSeed() {
+		return levelSeed;
 	}
 
 

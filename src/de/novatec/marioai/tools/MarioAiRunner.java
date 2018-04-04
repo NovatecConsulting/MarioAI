@@ -21,27 +21,18 @@ public class MarioAiRunner {
 		}
 		if(levelConfig==null&&!randomize) System.err.println("LevelConfig is null, Level will be randomized!");
 		
-		RunnerOptions rOptions=new RunnerOptions(agent);
-		
-		rOptions.setDifficulty(difficulty);
+		RunnerOptions rOptions=new RunnerOptions(agent,levelConfig);
 		
 		rOptions.setViewable(viewable);
 		rOptions.setFPS(fps);
-		rOptions.setWindowHeigth(320*6);
-		rOptions.setWindowWidth(240*6);
+		rOptions.setWindowHeigth(320*5);
+		rOptions.setWindowWidth(240*5);
 		rOptions.setMarioStartMode(MODE.MODE_FIRE);
 		//rOptions.setLevelLength(100);
-		
-		if(!randomize&&levelConfig!=null) {
-			rOptions.setLevelSeed(levelConfig.getSeed());
-			rOptions.setLevelType(levelConfig.getType());
-			rOptions.setLevelLength(levelConfig.getLength());
-			
-		}
 
 		Task task=new ProgressTask(rOptions);
 		
-		System.out.println(task.evaluteWithExtendedInfo().toString()); 
+		System.out.println(task.evaluteWithExtendedInfo()); 
 	}
 	
 	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize) {
@@ -54,7 +45,7 @@ public class MarioAiRunner {
 			System.err.println("LevelConfig can only be null if randomize==true!\n Please choose a valid LevelConfig or activate Random-Level-Generation");
 			return;
 			}
-			else run(agent, levelConfig, 0, 24, true, true);
+			else run(agent, levelConfig, -1, 24, true, true);
 		}
 		else 
 		
@@ -62,28 +53,48 @@ public class MarioAiRunner {
 	}
 	
 	public static void main(String[]args) {
-		//run(new AStar_RGU(),LevelConfig.Level1,5,24,false,true);
-		run(new ExampleAgent(),LevelConfig.Level1,1,48,false,false);
-		run(new ExampleAgent(),LevelConfig.Level1,1,48,false,true);
-		//run(new HumanKeyboardAgent(), LevelConfig.Level2,10,24,true,true);
+		//run(new AStar_RGU(),LevelConfig.Level2,3,48,false,true);
+		//run(new ExampleAgent(),LevelConfig.Level1,1,24,true,true);
+		//run(new ExampleAgent(),LevelConfig.Level1,1,48,false,true);
+		//run(new HumanKeyboardAgent(), LevelConfig.Level2,10,24*6,false,true);
 		//run(new ExampleAgent(), null, true);
-		//run(new AStarAgent(), LevelConfig.Level1,1,48,false,true);
+		run(new AStarAgent(), LevelConfig.Level2,1,48,false,true);
 	}
 	
 	public enum LevelConfig{
-		Level1(797938204,256,2,LEVEL_TYPES.OVERGROUND),
-		Level2(958938223,256,2,LEVEL_TYPES.CASTLE),
-		Level3(1193454339,256,2,LEVEL_TYPES.OVERGROUND);
+		Level1(797938204,256,4,LEVEL_TYPES.OVERGROUND),
+		Level2(958938223,256,15,LEVEL_TYPES.CASTLE),
+		Level3(1193454339,256,2,LEVEL_TYPES.OVERGROUND),
+		LevelFLAT1(1193454339,256,2,LEVEL_TYPES.OVERGROUND,true,false,false,true,null)
+		;
 		
-		private LevelConfig(int seed,int length,int presetDifficulty,LEVEL_TYPES type) {
-			this.seed=seed;
-			this.type=type;
-			this.length=length;
-			this.presetDifficulty=presetDifficulty;
+		private LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type,boolean enemies, boolean bricks,boolean coins,boolean flat, int[] odds) {
+			this.seed = seed;
+			this.length = length;
+			this.presetDifficulty = presetDifficulty;
+			this.type = type;
+			this.useStandardGenerator=false;
+			this.enemies = enemies;
+			this.bricks = bricks;
+			this.coins=coins;
+			this.flat=flat;
+			this.odds = odds;
 		}
 		
+		private LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type) {
+			this.seed = seed;
+			this.length = length;
+			this.presetDifficulty = presetDifficulty;
+			this.type = type;
+			this.useStandardGenerator=true;
+		}
+
+
+
 		private int seed,length,presetDifficulty;
 		private LEVEL_TYPES type;
+		private boolean useStandardGenerator,enemies,bricks,coins,flat;
+		private int[] odds;
 		
 		public int getSeed() {
 			return seed;
@@ -99,6 +110,38 @@ public class MarioAiRunner {
 
 		public int getPresetDifficulty() {
 			return presetDifficulty;
+		}
+
+		public void setPresetDifficulty(int difficulty) {
+			presetDifficulty=difficulty;
+		}
+
+		public boolean isUseStandardGenerator() {
+			return useStandardGenerator;
+		}
+
+		public boolean isEnemies() {
+			return enemies;
+		}
+
+
+
+		public boolean isBricks() {
+			return bricks;
+		}
+
+
+
+		public int[] getOdds() {
+			return odds;
+		}
+
+		public boolean isCoins() {
+			return coins;
+		}
+
+		public boolean isFlat() {
+			return flat;
 		}
 	}
 	

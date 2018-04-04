@@ -141,10 +141,17 @@ public class EvaluationInfo
         ret += "\n                   Total time given : " + totalTimeGiven;
         ret += "\n                       Coins Gained : " + numberOfGainedCoins;
         ret += "\n                        Total Kills : " + killsTotal;
-        ret += "\n                          killed by   ";
-        ret += "\n                              stomp : " + killedCreaturesbyStomp+" (" + df.format((double)killedCreaturesbyStomp/killsTotal*100) + "%)";
-        ret += "\n                              shell : " + killedCreaturesbyShell+" (" + df.format((double)killedCreaturesbyShell/killsTotal*100) + "%)";;
-        ret += "\n                               fire : " + killedCreaturesbyFire+" (" + df.format((double)killedCreaturesbyFire/killsTotal*100) + "%)";;
+        //ret += "\n                          killed by   ";
+        if(killsTotal>0) {
+        	ret += "\n                           by stomp : " + killedCreaturesbyStomp+" (" + df.format((double)killedCreaturesbyStomp/killsTotal*100) + "%)";
+        	ret += "\n                           by shell : " + killedCreaturesbyShell+" (" + df.format((double)killedCreaturesbyShell/killsTotal*100) + "%)";
+        	ret += "\n                           by  fire : " + killedCreaturesbyFire+" (" + df.format((double)killedCreaturesbyFire/killsTotal*100) + "%)";
+        }
+        else { 
+        	ret += "\n                           by stomp : 0 (0.0%)";
+        	ret += "\n                           by shell : 0 (0.0%)";
+        	ret += "\n                           by  fire : 0 (0.0%)";
+        }
         ret += "\n             Total Actions Perfomed : " + totalActionsPerfomed;
         ret += "\n              Total Frames Perfomed : " + totalFramesPerfomed;
         ret += "\n               Simple Basic Fitness : " + df.format(computeBasicFitness());

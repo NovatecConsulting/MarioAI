@@ -47,7 +47,7 @@ public class ExampleAgent extends MarioNtAgent{
 //				
 //				System.out.println(test);
 //		
-			System.out.println(getLevelScene().getScore());
+
 			
 		}
 		

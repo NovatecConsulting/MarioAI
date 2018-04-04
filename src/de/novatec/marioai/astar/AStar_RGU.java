@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import ch.idsia.mario.engine.LevelScene;
+import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import de.novatec.marioai.tools.MarioInput;
 import de.novatec.marioai.tools.MarioKey;
@@ -15,14 +16,12 @@ import de.novatec.marioai.tools.MarioNtAgent;
 
 public class AStar_RGU extends MarioNtAgent{
 	
-	private static final double TargetOffset=Environment.HalfObsWidth*16;
-	private static final long timeLimit=120;
+	private static final double TargetOffset=Environment.HalfObsWidth;
+	private static final long timeLimit=2400;
 	private List<Node> openSet;
 	private List<Node> closedSet;
 	private Map<Node,Double> gMap;
 	private Map<Node,Double> fMap;
-	
-	private List<Node> nodes;
 
 	@Override
 	public MarioInput doAiLogic() {
@@ -38,7 +37,6 @@ public class AStar_RGU extends MarioNtAgent{
 		
 		if(openSet!=null) openSet.clear();
 		if(closedSet!=null) closedSet.clear();
-		if(nodes!=null) nodes.clear();
 	}
 
 	@Override
@@ -50,37 +48,50 @@ public class AStar_RGU extends MarioNtAgent{
 		long timeSinceStart=System.currentTimeMillis();
 		Node start=new Node(scene);
 		
-		if(openSet==null||closedSet==null||nodes==null||gMap==null||fMap==null) {
+		if(openSet==null||closedSet==null||gMap==null||fMap==null) {
 			openSet=new ArrayList<>();
 			closedSet=new ArrayList<>();
-			nodes=new ArrayList<>();	
 			gMap=new HashMap<>();
 			fMap=new HashMap<>();
 		}
 		else {
 			openSet.clear();
 			closedSet.clear();
-			nodes.clear();
 			gMap.clear();
 			fMap.clear();
 		}
 		
+		
+		
 		openSet.add(start);
 		gMap.put(start, 0.0); //cost for start is 0
-		fMap.put(start, getDistanceFromTo(scene.getMarioX(), scene.getMarioY(), scene.getLevelXExit()*16, scene.getMarioY())); //heuristic estimate
+		fMap.put(start, getDistanceFromTo(scene.getMarioX(), scene.getMarioY(), scene.getLevelXExit()*16+16, 0)); //heuristic estimate
 		
 		Node old_actual=start;// fallback
 		Node actual=null;
 		
 		List<Node> nextNodes;
 		while(!openSet.isEmpty()&&System.currentTimeMillis()-timeSinceStart<timeLimit) { //while open set is not empty or planing target reached
-			//System.out.println(openSet);
 			//pick best node from open list with lowest cost and no damage (if all damage go back one step?)
 			
-			actual=getBestNode(openSet, fMap);
+			actual=getBestNode(openSet,closedSet, fMap);
 			
-			
-			if(old_actual!=null&&actual.getUsedLevelScene().getMarioX()>old_actual.getUsedLevelScene().getMarioX()+TargetOffset) {
+//			while(actual==null) {
+//				System.out.println("used");
+//				
+//				openSet.add(old_actual);
+//				closedSet.remove(old_actual);
+//				old_actual=old_actual.getParent();
+//				
+//			}
+	
+			if(actual.getUsedLevelScene().getMarioStatus()==STATUS.WIN) { //TODO FIND WAY BETTER SOLUTION
+				MarioInput input=new MarioInput();
+				input.press(MarioKey.RIGHT);
+				input.press(MarioKey.SPEED);
+				return input;
+			}
+			if((old_actual!=null&&actual.getUsedLevelScene().getMarioX()>=old_actual.getUsedLevelScene().getMarioX()+TargetOffset)) {
 				break;
 			}
 			//generate next node list;
@@ -101,13 +112,13 @@ public class AStar_RGU extends MarioNtAgent{
 				double tmpGScore=gMap.get(actual)+actual.getDistanceTo(next);
 				
 				//check scores -> if path from actual to neighbor better than old way replace
-				if(gMap.get(next)!=null&&tmpGScore>=gMap.get(next)) continue; //check if old path is better
+				if(gMap.get(next)!=null&&tmpGScore<=gMap.get(next)) continue; //check if old path is better
 				
 				next.setParent(actual);
 				//gMap.remove(next);
 				gMap.put(next, tmpGScore);
 				//fMap.remove(next);
-				fMap.put(next, tmpGScore+getDistanceFromTo(next.getUsedLevelScene().getMarioX(), next.getUsedLevelScene().getMarioY(), scene.getLevelXExit()*16, next.getUsedLevelScene().getMarioY()));
+				fMap.put(next, tmpGScore+getDistanceFromTo(next.getUsedLevelScene().getMarioX(), next.getUsedLevelScene().getMarioY(), (scene.getLevelXExit()+2)*16,0));
 
 				old_actual=actual;
 				
@@ -139,7 +150,7 @@ public class AStar_RGU extends MarioNtAgent{
 		return res;
 	}
 	
- 	protected Node getBestNode(List<Node> openSet, Map<Node,Double> fMap) { //gets the Node in openSet with the lowest fScore in fMap
+ 	protected Node getBestNode(List<Node> openSet,List<Node> closedSet, Map<Node,Double> fMap) { //gets the Node in openSet with the lowest fScore in fMap
 		if(openSet==null||openSet.isEmpty()) {
 			System.err.println("Can't get best Node, openSet is null/empty!");
 			return new Node();
@@ -149,13 +160,18 @@ public class AStar_RGU extends MarioNtAgent{
 			return new Node();
 		}
 		
+		List<Node> toRemove=new ArrayList<>();
+
 		Node lowestScore=null;
 		
 		for(int i=0; i<openSet.size();i++) {
-			if(openSet.get(i).gotHurt()) {
-				System.out.println("GOT HURT STATUS");
+			
+			if(openSet.get(i).gotHurt()||openSet.get(i).getUsedLevelScene().getMarioStatus()==STATUS.LOOSE) {
+				toRemove.add(openSet.get(i));
+				//System.out.println("GOT HURT STATUS");
 				continue;
 			}
+				
 			if(lowestScore==null) lowestScore=openSet.get(i);
 			if(fMap.get(lowestScore)>=fMap.get(openSet.get(i))) {
 				lowestScore=openSet.get(i);
@@ -164,10 +180,9 @@ public class AStar_RGU extends MarioNtAgent{
 		
 		if(lowestScore==null) {
 			System.err.println("Mario will be hurt in every way he goes!");
-//			Random r=new Random();
-//			lowestScore=openSet.get(r.nextInt(openSet.size()));
 		}
-		
+		openSet.removeAll(toRemove);
+		closedSet.addAll(toRemove);
 		return lowestScore;
 	}
 	
@@ -180,61 +195,55 @@ public class AStar_RGU extends MarioNtAgent{
 		
 		MarioInput tmp=new MarioInput();
 		
-		tmp=new MarioInput();
-		tmp.press(MarioKey.RIGHT);
-		res.add(tmp);
-		
-		//if(!scene.marioIsFalling()) {
-			tmp=new MarioInput();
-			tmp.press(MarioKey.RIGHT);
-			tmp.press(MarioKey.JUMP);
-			res.add(tmp);
-			
-			tmp=new MarioInput();
-			tmp.press(MarioKey.RIGHT);
-			tmp.press(MarioKey.SPEED);
-			tmp.press(MarioKey.JUMP);
-			res.add(tmp);
-			
-			tmp=new MarioInput();
-			tmp.press(MarioKey.LEFT);
-			tmp.press(MarioKey.JUMP);
-			res.add(tmp);
-			
-			tmp=new MarioInput();
-			tmp.press(MarioKey.LEFT);
-			tmp.press(MarioKey.SPEED);
-			tmp.press(MarioKey.JUMP);
-			res.add(tmp);
-			
-			tmp=new MarioInput();
-			tmp.press(MarioKey.JUMP);		
-			res.add(tmp);
-		//}
-		
-		
+//		tmp=new MarioInput();
+//		tmp.press(MarioKey.RIGHT);
+//		res.add(tmp);
 		
 		tmp=new MarioInput();
 		tmp.press(MarioKey.RIGHT);		
 		tmp.press(MarioKey.SPEED);
 		res.add(tmp);
 		
+		System.out.println();
+		
+		if(scene.mayMarioJump()||!scene.marioIsFalling()) {
+//			tmp=new MarioInput();
+//			tmp.press(MarioKey.RIGHT);
+//			tmp.press(MarioKey.JUMP);
+//			res.add(tmp);
+			
+			tmp=new MarioInput();
+			tmp.press(MarioKey.RIGHT);
+			tmp.press(MarioKey.SPEED);
+			tmp.press(MarioKey.JUMP);
+			res.add(tmp);
+			
+//			tmp=new MarioInput();
+//			tmp.press(MarioKey.LEFT);
+//			tmp.press(MarioKey.JUMP);
+//			res.add(tmp);
+			
+			tmp=new MarioInput();
+			tmp.press(MarioKey.LEFT);
+			tmp.press(MarioKey.SPEED);
+			tmp.press(MarioKey.JUMP);
+			res.add(tmp);
+			
+//			tmp=new MarioInput();
+//			tmp.press(MarioKey.JUMP);		
+//			res.add(tmp);
+		}
 
-		
-
-		
-		
-		
 //		tmp=new MarioInput();
 //		tmp.press(MarioKey.LEFT);		
 //		res.add(tmp);
-		
+//		
 		tmp=new MarioInput();
 		tmp.press(MarioKey.LEFT);
 		tmp.press(MarioKey.SPEED);
 		res.add(tmp);
 		
-//		
+		
 //		tmp=new MarioInput();
 //		tmp.press(MarioKey.DOWN);		
 //		res.add(tmp);
