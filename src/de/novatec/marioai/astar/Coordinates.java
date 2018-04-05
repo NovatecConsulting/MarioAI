@@ -2,10 +2,9 @@ package de.novatec.marioai.astar;
 
 public class Coordinates {
 
-
 private float x,y;
 
-private static final float EPSILON=2f;
+private static final float EPSILON=0.00001f;
  
  public Coordinates () {
 	 this.x=0;
@@ -54,9 +53,4 @@ public boolean equals(Object obj) {
 	return true;
 }
 
-
-//	public static void main(String [] args) {
-//		Coordinates c1=new Coordinates(1.2f,1.9f ),c2=new Coordinates(1.2f,1.7f );
-//		System.out.println(c1.equals(c2));
-//	}
 }

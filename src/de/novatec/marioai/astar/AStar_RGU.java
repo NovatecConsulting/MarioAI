@@ -16,8 +16,8 @@ import de.novatec.marioai.tools.MarioNtAgent;
 
 public class AStar_RGU extends MarioNtAgent{
 	
-	private static final double TargetOffset=Environment.HalfObsWidth;
-	private static final long timeLimit=2400;
+	private static final double TargetOffset=Environment.HalfObsWidth*16;
+	private static final long timeLimit=10000;
 	private List<Node> openSet;
 	private List<Node> closedSet;
 	private Map<Node,Double> gMap;
@@ -60,9 +60,7 @@ public class AStar_RGU extends MarioNtAgent{
 			gMap.clear();
 			fMap.clear();
 		}
-		
-		
-		
+
 		openSet.add(start);
 		gMap.put(start, 0.0); //cost for start is 0
 		fMap.put(start, getDistanceFromTo(scene.getMarioX(), scene.getMarioY(), scene.getLevelXExit()*16+16, 0)); //heuristic estimate
@@ -70,60 +68,45 @@ public class AStar_RGU extends MarioNtAgent{
 		Node old_actual=start;// fallback
 		Node actual=null;
 		
-		List<Node> nextNodes;
+		List<Node> nextNodes=new ArrayList<>();
 		while(!openSet.isEmpty()&&System.currentTimeMillis()-timeSinceStart<timeLimit) { //while open set is not empty or planing target reached
+			
 			//pick best node from open list with lowest cost and no damage (if all damage go back one step?)
-			
-			actual=getBestNode(openSet,closedSet, fMap);
-			
-//			while(actual==null) {
-//				System.out.println("used");
-//				
-//				openSet.add(old_actual);
-//				closedSet.remove(old_actual);
-//				old_actual=old_actual.getParent();
-//				
-//			}
-	
-			if(actual.getUsedLevelScene().getMarioStatus()==STATUS.WIN) { //TODO FIND WAY BETTER SOLUTION
-				MarioInput input=new MarioInput();
-				input.press(MarioKey.RIGHT);
-				input.press(MarioKey.SPEED);
-				return input;
-			}
-			if((old_actual!=null&&actual.getUsedLevelScene().getMarioX()>=old_actual.getUsedLevelScene().getMarioX()+TargetOffset)) {
+			actual=getBestNode(openSet,closedSet,fMap);
+			if((actual.getUsedLevelScene().getMarioX()>=scene.getMarioX()+TargetOffset)||actual.getUsedLevelScene().getMarioMapX()>=actual.getUsedLevelScene().getLevelWidth()*16) { //reached right field of view OR reached target
+				System.out.println("reached target at: "+actual.getUsedLevelScene().getMarioX());
 				break;
+				
 			}
-			//generate next node list;
-			nextNodes=getNextNodeList(actual);
-			//System.out.println(nextNodes);
+			nextNodes.clear();
+			nextNodes=getNextNodeList(actual,false); //generate next node list;
 			
+		
 			openSet.remove(actual);
 			closedSet.add(actual);
 			//for each neighbour
 				// if not in closed list ->continue
 				// if not in open list ->add to open list
 			
-			for(Node next: nextNodes) { 
+			for(Node neighbor: nextNodes) { 
 				
-				if(closedSet.contains(next)) continue;
-				if(!openSet.contains(next)) openSet.add(next);
+				if(closedSet.contains(neighbor)) continue;
+				if(!openSet.contains(neighbor)) openSet.add(neighbor);
 				
-				double tmpGScore=gMap.get(actual)+actual.getDistanceTo(next);
+				double distance=actual.getDistanceTo(neighbor);
+
+				double tmpGScore=gMap.get(actual)+distance;
 				
 				//check scores -> if path from actual to neighbor better than old way replace
-				if(gMap.get(next)!=null&&tmpGScore<=gMap.get(next)) continue; //check if old path is better
+				if(gMap.get(neighbor)!=null&&tmpGScore>gMap.get(neighbor)) continue; //check if old path is better
 				
-				next.setParent(actual);
-				//gMap.remove(next);
-				gMap.put(next, tmpGScore);
-				//fMap.remove(next);
-				fMap.put(next, tmpGScore+getDistanceFromTo(next.getUsedLevelScene().getMarioX(), next.getUsedLevelScene().getMarioY(), (scene.getLevelXExit()+2)*16,0));
-
-				old_actual=actual;
-				
-				
+				//else set this way
+				neighbor.setParent(actual);
+				gMap.put(neighbor, tmpGScore);
+				fMap.put(neighbor, tmpGScore+getDistanceFromTo(neighbor.getUsedLevelScene().getMarioX(), neighbor.getUsedLevelScene().getMarioY(), scene.getLevelWidth()*16,scene.getLevelHight()*16/2));
 			} //for each nextNodes
+			
+			old_actual=actual;
 			
 		} //while
 		List<MarioInput> tmp=reconstructPath(actual);
@@ -135,16 +118,17 @@ public class AStar_RGU extends MarioNtAgent{
 		
 		Node current=actual;
 		while(current!=null) {
-			//System.out.println(actual);
+			System.out.print(current+" ");
 			res.add(current.getUsedInput());
 			current=current.getParent();
 		}
+		if(res.size()<=2) res.add(new MarioInput());
 		return res;
 	}
 	
-	protected List<Node> getNextNodeList(Node parent){
+	protected List<Node> getNextNodeList(Node parent,boolean extended){ //get all possible child-nodes for the given actions
 		List<Node> res=new ArrayList<>();
-		for(MarioInput next:getMarioInputs(parent.getUsedLevelScene())) {
+		for(MarioInput next:getMarioInputs(parent.getUsedLevelScene(),extended)) {
 			res.add(new Node(next,parent.getUsedLevelScene(),parent));
 		}
 		return res;
@@ -164,17 +148,17 @@ public class AStar_RGU extends MarioNtAgent{
 
 		Node lowestScore=null;
 		
-		for(int i=0; i<openSet.size();i++) {
+		for(Node next:openSet) {
 			
-			if(openSet.get(i).gotHurt()||openSet.get(i).getUsedLevelScene().getMarioStatus()==STATUS.LOOSE) {
-				toRemove.add(openSet.get(i));
-				//System.out.println("GOT HURT STATUS");
+			if(next.gotHurt()||next.getUsedLevelScene().getMarioStatus()==STATUS.LOOSE) {
+				toRemove.add(next);
+				System.out.println("GOT HURT STATUS");
 				continue;
 			}
 				
-			if(lowestScore==null) lowestScore=openSet.get(i);
-			if(fMap.get(lowestScore)>=fMap.get(openSet.get(i))) {
-				lowestScore=openSet.get(i);
+			if(lowestScore==null) lowestScore=next;
+			if(fMap.get(lowestScore)>fMap.get(next)) {
+				lowestScore=next;
 			}
 		}
 		
@@ -190,28 +174,29 @@ public class AStar_RGU extends MarioNtAgent{
 		return Math.sqrt(Math.pow(x2-x1, 2)+Math.pow(y2-y1, 2));
 	}
 	
-	protected static List<MarioInput> getMarioInputs(LevelScene scene){
+	protected static List<MarioInput> getMarioInputs(LevelScene scene,boolean extended){
 		List<MarioInput> res=new LinkedList<>();
 		
-		MarioInput tmp=new MarioInput();
-		
-//		tmp=new MarioInput();
-//		tmp.press(MarioKey.RIGHT);
-//		res.add(tmp);
-		
-		tmp=new MarioInput();
-		tmp.press(MarioKey.RIGHT);		
-		tmp.press(MarioKey.SPEED);
-		res.add(tmp);
-		
-		System.out.println();
-		
-		if(scene.mayMarioJump()||!scene.marioIsFalling()) {
+		MarioInput tmp;
+
+			tmp=new MarioInput();
+			tmp.press(MarioKey.RIGHT);
+			res.add(tmp);
+
 //			tmp=new MarioInput();
-//			tmp.press(MarioKey.RIGHT);
-//			tmp.press(MarioKey.JUMP);
+//			tmp.press(MarioKey.DOWN);		
 //			res.add(tmp);
+
+//		else {
+//			tmp=new MarioInput();
+//		tmp.press(MarioKey.RIGHT);		
+//		tmp.press(MarioKey.SPEED);
+//		res.add(tmp);
+//		}
+		
+		if(scene.mayMarioJump()||!scene.isMarioFalling()) {
 			
+//			if(!extended) {
 			tmp=new MarioInput();
 			tmp.press(MarioKey.RIGHT);
 			tmp.press(MarioKey.SPEED);
@@ -219,35 +204,45 @@ public class AStar_RGU extends MarioNtAgent{
 			res.add(tmp);
 			
 //			tmp=new MarioInput();
-//			tmp.press(MarioKey.LEFT);
+//			tmp.press(MarioKey.RIGHT);
 //			tmp.press(MarioKey.JUMP);
 //			res.add(tmp);
-			
-			tmp=new MarioInput();
-			tmp.press(MarioKey.LEFT);
-			tmp.press(MarioKey.SPEED);
-			tmp.press(MarioKey.JUMP);
-			res.add(tmp);
-			
-//			tmp=new MarioInput();
-//			tmp.press(MarioKey.JUMP);		
-//			res.add(tmp);
-		}
 
+
+//			}
+//			else {
+			if(extended) {
+				tmp=new MarioInput();
+				tmp.press(MarioKey.LEFT);
+				tmp.press(MarioKey.SPEED);
+				tmp.press(MarioKey.JUMP);
+				res.add(tmp);	
+				
+				tmp=new MarioInput();
+				tmp.press(MarioKey.LEFT);
+				tmp.press(MarioKey.JUMP);
+				res.add(tmp);
+				
+				tmp=new MarioInput();
+				tmp.press(MarioKey.JUMP);		
+				res.add(tmp);
+				
+				tmp=new MarioInput();
+				tmp.press(MarioKey.LEFT);
+				tmp.press(MarioKey.JUMP);
+				res.add(tmp);
+			}
+		}
+		
+//		tmp=new MarioInput();
+//		tmp.press(MarioKey.LEFT);
+//		tmp.press(MarioKey.SPEED);
+//		res.add(tmp);
+		
 //		tmp=new MarioInput();
 //		tmp.press(MarioKey.LEFT);		
 //		res.add(tmp);
-//		
-		tmp=new MarioInput();
-		tmp.press(MarioKey.LEFT);
-		tmp.press(MarioKey.SPEED);
-		res.add(tmp);
-		
-		
-//		tmp=new MarioInput();
-//		tmp.press(MarioKey.DOWN);		
-//		res.add(tmp);
-		
+
 		return res;
 	}
 	

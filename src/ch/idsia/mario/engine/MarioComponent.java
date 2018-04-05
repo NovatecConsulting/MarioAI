@@ -3,7 +3,6 @@ package ch.idsia.mario.engine;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.agents.human.CheaterKeyboardAgent;
 import ch.idsia.mario.engine.level.Level;
-import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
@@ -13,11 +12,12 @@ import ch.idsia.tools.RunnerOptions;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
+import de.novatec.marioai.tools.MarioNtAgent;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyListener;
 import java.awt.image.VolatileImage;
 import java.text.DecimalFormat;
@@ -33,6 +33,8 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
     private int width, height;
     private GraphicsConfiguration graphicsConfiguration;
     private RunnerOptions rOptions;
+    
+    private boolean debugView;
 
     private int frame;
     private int delay;
@@ -179,6 +181,8 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
             boolean[] action = {false,false,false,false,false};
 //            if(!levelScene.isPaused()) {
             	action = getAgent().getAction(this);
+            	
+            	if(debugView&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og, this);
             	//lastAction=action;
 //           }
            //else action=lastAction;
@@ -446,7 +450,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
     }
     
     public boolean isFalling() {
-    	return ((LevelScene) levelScene).getMarioYA()<0;
+    	return this.levelScene.isMarioFalling();
     }
 
     public void setPaused(boolean paused) {
@@ -507,6 +511,7 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 	@Override
 	public void setRunnerOptions(RunnerOptions rOptions) {
 		this.rOptions=rOptions;
+		this.debugView=rOptions.isDebugView();
 		rOptions.getAgent().reset();
 		 adjustFPS();
 		 
@@ -548,4 +553,42 @@ public class MarioComponent extends JComponent implements Runnable, /*KeyListene
 	public int getMarioY() {
 		return levelScene.getMarioMapY();
 	}
+
+	@Override
+	public boolean isDebugView() {
+		return debugView;
+	}
+
+	@Override
+	public void setDebugView(boolean debugView) {		
+		this.debugView=debugView;
+	}
+
+	@Override
+	public void toggleDebugView() {
+		debugView=!debugView;
+	}
+
+	@Override
+	public void showMarioViewAsAscii() {
+		byte[][] tmp=getCompleteObservation();
+		System.out.println(" --------------------------------Marios Receptive Field:--------------------------------");
+    	for(int i=0;i<tmp.length;i++) {
+    		for(int j=0;j<tmp[i].length;j++) {
+    			if(i==11&&j==11) System.out.print("   M");
+    			
+    			else
+    			if(tmp[i][j]<10&&tmp[i][j]>=0)  System.out.print("   "+tmp[i][j]);
+    			
+    			else if(tmp[i][j]<0) System.out.print(" "+tmp[i][j]);
+    			else System.out.print("  "+tmp[i][j]);
+    		}
+    		System.out.println();
+    	}
+    	System.out.println(" ----------------------------------------------------------------------------------------");
+    	System.out.println();
+		
+	}
+		
+	
 }

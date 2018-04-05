@@ -1,8 +1,5 @@
 package de.novatec.marioai.astar;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import de.novatec.marioai.tools.MarioInput;
@@ -10,8 +7,6 @@ import de.novatec.marioai.tools.MarioInput;
 public class Node {
 	
 	private Coordinates coords;
-	
-	private List<Edge> edgesToChilds=new ArrayList<>();
 	private Node parent;
 	
 	private MarioInput usedInput;
@@ -43,6 +38,14 @@ public class Node {
 		
 	}
 	
+	public Node (Node toCopy) {
+		this.usedLevelScene=toCopy.usedLevelScene;
+		this.coords=toCopy.coords;
+		this.usedInput=toCopy.usedInput;
+		this.parent=toCopy.parent;
+		this.gotHurt=toCopy.gotHurt;
+	}
+	
 	public Node(LevelScene levelScene) { // for start-nodes
 			this.usedLevelScene=levelScene.getDeepCopy();
 			this.coords=new Coordinates(this.usedLevelScene.getMarioMapX(),this.usedLevelScene.getMarioMapY());
@@ -61,26 +64,11 @@ public class Node {
 		return this.gotHurt;
 	}
 	
-	public List<Node> getChilds(){
-		List<Node> res=new ArrayList<>();
-		for(Edge next:edgesToChilds) res.add(next.getTo());
-		
-		return res;
-	}
-	
-	public void addEdge(Edge edge) {
-		this.edgesToChilds.add(edge);
-	}
-	
-	public void removeEdge(Edge edge) {
-		this.edgesToChilds.remove(edge);
-	}
-	
 	public Node getParent() {
 		return parent;
 	}
 	
-	public void setParent(Node parent) { //TODO RLY NEEDED?
+	public void setParent(Node parent) { 
 		this.parent=parent;
 	}
 	

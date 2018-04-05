@@ -70,11 +70,15 @@ public class CheaterKeyboardAgent extends KeyAdapter implements Agent {
                 if (isPressed)
                     //GlobalOptions.VisualizationOn = !GlobalOptions.VisualizationOn;
                 break;                        
-            case KeyEvent.VK_U:
-                Action[Mario.KEY_LIFE_UP] = isPressed;
+            case KeyEvent.VK_O:
+            	 if (isPressed) if(env!=null) {
+            		 env.toggleDebugView();
+            	 }
                 break;
-            case KeyEvent.VK_W:
-                Action[Mario.KEY_WIN] = isPressed;
+            case KeyEvent.VK_I:
+            	 if (isPressed) if(env!=null) {
+            		 env.showMarioViewAsAscii();
+            	 }
                 break;
             case KeyEvent.VK_P:
                 if (isPressed)

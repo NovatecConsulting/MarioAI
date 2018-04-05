@@ -20,11 +20,11 @@ public class Entity{
 		return coords;
 	}
 	
-	public int getX() {
+	public float getX() {
 		return coords.getX();
 	}
 	
-	public int getY() {
+	public float getY() {
 		return coords.getY();
 	}
 

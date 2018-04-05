@@ -1,10 +1,14 @@
 package de.novatec.marioai.tools;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.List;
 
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.environments.Environment;
+import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entities;
 import de.novatec.mario.engine.generalization.Tiles;
 import de.novatec.mario.engine.generalization.Entities.EntityType;
@@ -25,6 +29,8 @@ public abstract class MarioNtAgent implements Agent{
 	private Entities entities;
 	
 	private static final int ENEMY_CHECK_DISTANCE=4/*,BRICK_CHECK_DISTANCE=3*/;
+	
+	private ArrayList<Coordinates> coordList=new ArrayList<>();
 
 	@Override
 	public void reset() {		
@@ -246,23 +252,26 @@ public abstract class MarioNtAgent implements Agent{
 	// Debug methods
 	////////////////////////////////
 
-	public void showMarioViewAsAscii() {
-		byte[][] tmp=env.getCompleteObservation();
-		System.out.println(" --------------------------------Marios Receptive Field:--------------------------------");
-    	for(int i=0;i<tmp.length;i++) {
-    		for(int j=0;j<tmp[i].length;j++) {
-    			if(i==11&&j==11) System.out.print("   M");
-    			
-    			else
-    			if(tmp[i][j]<10&&tmp[i][j]>=0)  System.out.print("   "+tmp[i][j]);
-    			
-    			else if(tmp[i][j]<0) System.out.print(" "+tmp[i][j]);
-    			else System.out.print("  "+tmp[i][j]);
-    		}
-    		System.out.println();
-    	}
-    	System.out.println(" ----------------------------------------------------------------------------------------");
-    	System.out.println();
+	public final void showMarioViewAsAscii() {
+		env.showMarioViewAsAscii();
+	}
+	
+	protected final void addCoordToDraw(Coordinates coord) {
+		if(env.isDebugView()) this.coordList.add(coord);
+		else this.coordList.clear();
+	}
+	
+	
+	public void debugDraw(Graphics og,Environment env) {
+		Coordinates oldCoords=new Coordinates((env.getLevelScene().getMarioX()),env.getLevelScene().getMarioY()-8);
+		Color oldColor=og.getColor();
+		og.setColor(Color.RED);
+		for(Coordinates next:coordList) {
+			og.drawLine((int) (oldCoords.getX()-env.getLevelScene().getMarioXCam()), (int) oldCoords.getY(), (int) (next.getX()-env.getLevelScene().getMarioXCam()), (int) next.getY());
+			oldCoords=next;
+		}
+		og.setColor(oldColor);
+		coordList.clear();
 	}
 	
 }

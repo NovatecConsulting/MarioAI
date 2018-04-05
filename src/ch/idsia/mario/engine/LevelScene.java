@@ -1380,6 +1380,10 @@ public class LevelScene extends Scene implements SpriteContext {
 		return mario.getYa();
 	}
 	
+	public float getMarioXCam() {
+		return xCam;
+	}
+	
 	public int getMarioFacing() {
 		return mario.getFacing();
 	}
@@ -1404,8 +1408,8 @@ public class LevelScene extends Scene implements SpriteContext {
 		return mario.mayJump();
 	}
 	
-	public boolean marioIsFalling() {
-		return mario.getYa()>0;
+	public boolean isMarioFalling() {
+		return !isMarioOnGround()&&!(getMarioYA()<=0);
 	}
 	
 	public void setMarioCarried(Sprite carried) {
@@ -1552,6 +1556,5 @@ public class LevelScene extends Scene implements SpriteContext {
 	public void togglePaused() {
 		this.paused=!paused;
 	}
-
 
 }

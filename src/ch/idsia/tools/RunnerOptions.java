@@ -32,6 +32,8 @@ public class RunnerOptions {
 	
 	private boolean labels=false;
 	
+	private boolean debugView=false;
+	
 	private boolean marioAlwaysCentered=false;
 	
 	private boolean powerRestauration=false;
@@ -76,6 +78,7 @@ public class RunnerOptions {
 		this.ZLevelMap=toCopy.getZLevelMap();
 		this.viewLocation=toCopy.getViewLocation();
 		this.config=toCopy.config;
+		this.debugView=toCopy.debugView;
 	}
 	
 	public Agent getAgent() {
@@ -256,6 +259,14 @@ public class RunnerOptions {
 
 	public LevelConfig getConfig() {
 		return config;
+	}
+
+	public boolean isDebugView() {
+		return debugView;
+	}
+
+	public void setDebugView(boolean debugView) {
+		this.debugView = debugView;
 	}
 
 	

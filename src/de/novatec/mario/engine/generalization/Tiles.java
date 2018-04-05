@@ -41,8 +41,9 @@ public class Tiles {
 		case FLOWER_POT:
 		case CANON:
 			return true;
+		default:
+			return false;
 		}
-		return false;
 	}
 	
 	public List<Tile> getTiles(){

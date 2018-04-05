@@ -27,6 +27,7 @@ public class MarioAiRunner {
 		rOptions.setFPS(fps);
 		rOptions.setWindowHeigth(320*5);
 		rOptions.setWindowWidth(240*5);
+		rOptions.setDebugView(true);
 
 		Task task=new ProgressTask(rOptions);
 		
@@ -53,10 +54,11 @@ public class MarioAiRunner {
 	}
 	
 	public static void main(String[]args) {
-		//run(new AStar_RGU(),null,24,false,true);
-		//run(new ExampleAgent(),LevelConfig.Level1,24,true,true);
+		//run(new AStar_RGU(),LevelConfig.LevelCUSTOM1,24,true,true);
+		//run(new AStar_RGU(),LevelConfig.LevelFLAT1,24,true,true);
+		run(new ExampleAgent(),LevelConfig.Level1,1,true,true);
 		//run(new ExampleAgent(),LevelConfig.Level1,48,false,true);
-		run(new ExampleAgent2(),LevelConfig.LevelCUSTOM3,24,true,true);
+		//run(new ExampleAgent2(),LevelConfig.LevelCUSTOM3,24,true,true);
 		//run(new HumanKeyboardAgent(), LevelConfig.LevelCUSTOM1,24,true,true);
 		//run(new ExampleAgent(), null, true);
 	    //run(new AStarAgent(), LevelConfig.ASTARKILLER,24,true,true);
