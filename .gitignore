@@ -1,17 +1,9 @@
-/MarioAI4J/bin
-/MarioAI4J-Agents/bin
 .metadata
 .settings
-bin
-/MarioAI4J-Playground/results
-/MarioAI4J-Tournament/results
+.project
+.classpath
 
-*/.idea/*
+.idea
 *.iml
 *.log
-*/target/
-.idea/*
-.classpath
-.project
-.DS_STORE
 /target/
