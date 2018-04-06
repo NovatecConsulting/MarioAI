@@ -1,17 +1,17 @@
 package de.novatec.marioai.astar;
 
-public class Coordinates {
+public class AStarCoordinates {
 
 private float x,y;
 
-private static final float EPSILON=0.00001f;
+private static final float EPSILON=0.001f;
  
- public Coordinates () {
+ public AStarCoordinates () {
 	 this.x=0;
 	 this.y=0;
  }
  
- public Coordinates (float x,float y) {
+ public AStarCoordinates (float x,float y) {
 	 this.x=x;
 	 this.y=y;
  }
@@ -45,7 +45,7 @@ public boolean equals(Object obj) {
 		return false;
 	if (getClass() != obj.getClass())
 		return false;
-	Coordinates other = (Coordinates) obj;
+	AStarCoordinates other = (AStarCoordinates) obj;
 	if (Math.abs(x-other.x)>EPSILON) //CHANGE THAT!!
 		return false;
 	if (Math.abs(y-other.y)>EPSILON)

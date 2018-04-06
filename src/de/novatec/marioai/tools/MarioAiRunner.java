@@ -54,9 +54,9 @@ public class MarioAiRunner {
 	}
 	
 	public static void main(String[]args) {
-		//run(new AStar_RGU(),LevelConfig.LevelCUSTOM1,24,true,true);
+		run(new AStar_RGU(),LevelConfig.LevelCUSTOM1,24,false,true);
 		//run(new AStar_RGU(),LevelConfig.LevelFLAT1,24,true,true);
-		run(new ExampleAgent(),LevelConfig.Level1,1,true,true);
+		//run(new ExampleAgent(),LevelConfig.Level1,24,true,true);
 		//run(new ExampleAgent(),LevelConfig.Level1,48,false,true);
 		//run(new ExampleAgent2(),LevelConfig.LevelCUSTOM3,24,true,true);
 		//run(new HumanKeyboardAgent(), LevelConfig.LevelCUSTOM1,24,true,true);

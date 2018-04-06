@@ -12,7 +12,7 @@ public class Entity{
 		this.coords=coords;
 	}
 	
-	public EntityType geType() {
+	public EntityType getType() {
 		return type;
 	}
 	

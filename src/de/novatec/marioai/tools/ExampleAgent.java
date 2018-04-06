@@ -55,8 +55,6 @@ public class ExampleAgent extends MarioNtAgent{
 		addCoordToDraw(new Coordinates((scene.getMarioX())+15, scene.getMarioY()-10));
 		addCoordToDraw(new Coordinates((scene.getMarioX())+30, scene.getMarioY()-25));
 		addCoordToDraw(new Coordinates((scene.getMarioX())+45, scene.getMarioY()-10));
-		System.out.println(getDeepCopyOfLevelScene().isMarioFalling());
-		System.out.println(isFalling());
 		
 		c=(++c)%(24*5);
 		

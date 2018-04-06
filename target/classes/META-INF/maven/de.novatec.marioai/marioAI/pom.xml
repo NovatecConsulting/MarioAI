@@ -41,7 +41,7 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-					<mainClass>ch.idsia.scenarios.Play</mainClass>
+					<mainClass>de.novatec.marioai.tools.MarioAiRunner</mainClass>
             </manifest>
           </archive>
         </configuration>

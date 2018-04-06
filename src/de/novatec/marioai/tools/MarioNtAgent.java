@@ -260,14 +260,13 @@ public abstract class MarioNtAgent implements Agent{
 		if(env.isDebugView()) this.coordList.add(coord);
 		else this.coordList.clear();
 	}
-	
-	
+		
 	public void debugDraw(Graphics og,Environment env) {
-		Coordinates oldCoords=new Coordinates((env.getLevelScene().getMarioX()),env.getLevelScene().getMarioY()-8);
+		Coordinates oldCoords=null; //new Coordinates((env.getLevelScene().getMarioX()),env.getLevelScene().getMarioY()-8);
 		Color oldColor=og.getColor();
 		og.setColor(Color.RED);
 		for(Coordinates next:coordList) {
-			og.drawLine((int) (oldCoords.getX()-env.getLevelScene().getMarioXCam()), (int) oldCoords.getY(), (int) (next.getX()-env.getLevelScene().getMarioXCam()), (int) next.getY());
+			if(oldCoords!=null)og.drawLine((int) (oldCoords.getX()-env.getLevelScene().getMarioXCam()), (int) oldCoords.getY(), (int) (next.getX()-env.getLevelScene().getMarioXCam()), (int) next.getY());
 			oldCoords=next;
 		}
 		og.setColor(oldColor);

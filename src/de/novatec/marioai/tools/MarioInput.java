@@ -175,4 +175,18 @@ public class MarioInput {
 		return result;
 	}
 	
+	public static MarioInput arrayToMarioInput(boolean[] toInput) {
+		MarioInput res=new MarioInput();
+		
+		if(toInput.length!=5) return res;
+		
+		if(toInput[0]) res.press(MarioKey.LEFT);
+		if(toInput[1]) res.press(MarioKey.RIGHT);
+		if(toInput[2]) res.press(MarioKey.DOWN);
+		if(toInput[3]) res.press(MarioKey.JUMP);
+		if(toInput[4]) res.press(MarioKey.SPEED);
+		
+		return res;
+	}
+	
 }

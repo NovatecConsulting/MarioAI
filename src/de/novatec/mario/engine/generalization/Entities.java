@@ -69,13 +69,13 @@ public class Entities {
 		List<Entity> tmp=getEntities(x, y);
 
 		if(tmp.isEmpty()) return EntityType.NONE;
-		if(tmp.size()==1) return tmp.get(0).geType();
+		if(tmp.size()==1) return tmp.get(0).getType();
 		Entity mostDangerous=null;
 		for(Entity e:tmp) {
 			if(mostDangerous==null) mostDangerous=e;
 			else if(mostDangerous.getDangerLevel()<e.getDangerLevel()) mostDangerous=e;
 		}
-		return mostDangerous.geType();
+		return mostDangerous.getType();
 	}
 	
 	public double getDistance(Entity entity) {

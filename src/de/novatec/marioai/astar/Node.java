@@ -1,15 +1,17 @@
 package de.novatec.marioai.astar;
 
+import java.util.Arrays;
+
 import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import de.novatec.marioai.tools.MarioInput;
 
 public class Node {
 	
-	private Coordinates coords;
+	private AStarCoordinates coords;
 	private Node parent;
 	
-	private MarioInput usedInput;
+	private boolean[] usedInput;
 	private LevelScene usedLevelScene;
 	
 	private boolean gotHurt=false;
@@ -18,7 +20,7 @@ public class Node {
 		
 	}
 	
-	public Node(MarioInput usedInput, LevelScene usedLevelScene, Node parent) { //for search-nodes		
+	public Node(boolean[] usedInput, LevelScene usedLevelScene, Node parent) { //for search-nodes		
 		this.usedLevelScene=usedLevelScene.getDeepCopy();
 		this.usedInput=usedInput;
 		int tmpHurtStatus=this.usedLevelScene.getTimesMarioHurt();
@@ -26,7 +28,7 @@ public class Node {
 		
 			
 		
-		this.usedLevelScene.setMarioKeys(usedInput.toArray());
+		this.usedLevelScene.setMarioKeys(usedInput);
 		//System.out.println("X before Tick"+this.usedLevelScene.getMarioX());
 		//System.out.println("Y before Tick"+this.usedLevelScene.getMarioY());
 		if(usedLevelScene.getMarioStatus()==STATUS.RUNNING) this.usedLevelScene.tick(); //goOneTick
@@ -34,7 +36,7 @@ public class Node {
 		//System.out.println("Y after Tick"+this.usedLevelScene.getMarioY());
 		if(tmpHurtStatus!=this.usedLevelScene.getTimesMarioHurt()) gotHurt=true; 
 		
-		this.coords=new Coordinates(this.usedLevelScene.getMarioX(), this.usedLevelScene.getMarioY());
+		this.coords=new AStarCoordinates(this.usedLevelScene.getMarioX(), this.usedLevelScene.getMarioY());
 		
 	}
 	
@@ -48,8 +50,8 @@ public class Node {
 	
 	public Node(LevelScene levelScene) { // for start-nodes
 			this.usedLevelScene=levelScene.getDeepCopy();
-			this.coords=new Coordinates(this.usedLevelScene.getMarioMapX(),this.usedLevelScene.getMarioMapY());
-			this.usedInput=new MarioInput();
+			this.coords=new AStarCoordinates(this.usedLevelScene.getMarioX(),this.usedLevelScene.getMarioY());
+			this.usedInput=new boolean[] {false,false,false,false,false};
 	}
 	
 	public float getX() {
@@ -76,7 +78,7 @@ public class Node {
 		return this.usedLevelScene;
 	}
 	
-	public MarioInput getUsedInput() {
+	public boolean[] getUsedInput() {
 		return this.usedInput;
 	}
 	
@@ -111,6 +113,6 @@ public class Node {
 
 	@Override
 	public String toString() {
-		return "Node [coords=" + coords + ", usedInput="+usedInput+"]"; 
+		return "Node [coords=" + coords + ", usedInput="+Arrays.toString(usedInput)+"]"; 
 	}
 }

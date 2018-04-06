@@ -6,13 +6,13 @@ import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.level.LevelGenerator;
 
 public class LevelConfig{
-	public static final LevelConfig Level1=new LevelConfig(797938204,256,0,LEVEL_TYPES.OVERGROUND);
+	public static final LevelConfig Level1=new LevelConfig(797938204,256,1,LEVEL_TYPES.OVERGROUND);
 	public static final LevelConfig Level2=new LevelConfig(958938223,256,0,LEVEL_TYPES.CASTLE);
 	public static final LevelConfig Level3=new LevelConfig(1193454339,256,2,LEVEL_TYPES.OVERGROUND);
-	public static final LevelConfig ASTARKILLER=new LevelConfig(652649838,256,15,LEVEL_TYPES.OVERGROUND);
+	public static final LevelConfig ASTARKILLER=new LevelConfig(652649838,1024,15,LEVEL_TYPES.OVERGROUND);
 	public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,false,true);
 	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
-	public static final LevelConfig LevelCUSTOM1=new LevelConfig(12345678,256,10,LEVEL_TYPES.OVERGROUND,false,true,true,new int[]{10,0,0,0,0});
+	public static final LevelConfig LevelCUSTOM1=new LevelConfig(1236445678,512,4,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,0,0,0,0});
 	public static final LevelConfig LevelCUSTOM2=new LevelConfig(12345678,256,4,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{1,0,0,10,0});
 	public static final LevelConfig LevelCUSTOM3=new LevelConfig(12345678,256,10,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{1,0,0,10,0});
 	

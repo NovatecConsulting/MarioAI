@@ -21,11 +21,11 @@ public class Tile {
 		return type;
 	}
 	
-	public float getX() {
+	public float getRelX() {
 		return this.coords.getX();
 	}
 	
-	public float getY() {
+	public float getRelY() {
 		return this.coords.getY();
 	}
 	

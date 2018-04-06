@@ -136,7 +136,7 @@ public class MarioControl {
 	 * Mario will JUMP if able.
 	 */
 	public void jump() {
-		if (!env.mayMarioJump() && env.isFalling()) {
+		if (!env.mayMarioJump()&&env.isMarioOnGround() || env.isFalling()) {
 			return;
 		}
 		input.press(MarioKey.JUMP);
