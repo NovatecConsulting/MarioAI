@@ -1,9 +1,5 @@
 package de.novatec.marioai.agents;
 
-import ch.idsia.mario.engine.LevelScene;
-import ch.idsia.mario.engine.Scene;
-import ch.idsia.mario.engine.sprites.Mario;
-import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.marioai.tools.MarioInput;
 import de.novatec.marioai.tools.MarioNtAgent;
 
@@ -22,10 +18,12 @@ public class ExampleAgent extends MarioNtAgent{
 
 	@Override
 	public MarioInput doAiLogic() {
+		
+		if(isSlopeAhead()&&!isHoleAhead()) return getMarioInput();
 	
 		moveRight();
-
-		if(isSlopeAhead()||isBrickAhead()) jump();
+		
+		if(isHoleAhead()||isBrickAhead()) jump();
 
 		if(mayShoot()&&isEnemyAhead()) {
 			shoot();

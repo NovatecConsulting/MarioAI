@@ -199,11 +199,11 @@ public class LevelGenerator
          random = new Random(seed);
          
          int floor=12;
-         int length=builFlat(0, floor, level.getWidth()-64, false,false,false);
+         int length=buildFlat(0, floor,16, level.getWidth()-64, false,false,false);
          
          while(length < level.getWidth() - 64)
          {
-        	 length+=builFlat(length, floor, level.getWidth()-length, enemies,bricks,coins);
+        	 length+=buildFlat(length, floor,0, level.getWidth()-length, enemies,bricks,coins);
          }
          
          for (int x = level.getWidth()-64; x < level.getWidth(); x++) //floor at the end of the level
@@ -516,9 +516,10 @@ public class LevelGenerator
         return length;
     }
     
-    private int builFlat(int xo,int y_,int maxLength,boolean enemies,boolean bricks,boolean coins) {
+    private int buildFlat(int xo,int y_,int minLength,int maxLength,boolean enemies,boolean bricks,boolean coins) {
     	int length=random.nextInt(10) + 2;
-    			
+    	if(length<minLength) length=minLength;
+    	
     	int floor = y_;
         for (int x = xo; x < xo + length; x++)
         {

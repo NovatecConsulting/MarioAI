@@ -5,17 +5,145 @@ import java.util.Random;
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.level.LevelGenerator;
 
+/**
+ * Stores information for the LevelGenerator
+ * @author rgu
+ *
+ */
 public class LevelConfig{
-	public static final LevelConfig Level1=new LevelConfig(797938204,256,1,LEVEL_TYPES.OVERGROUND);
-	public static final LevelConfig Level2=new LevelConfig(958938223,256,0,LEVEL_TYPES.CASTLE);
-	public static final LevelConfig Level3=new LevelConfig(1193454339,256,2,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Flat level without enemies, coins or bricks.
+	 */
+	public static final LevelConfig Level_1=new LevelConfig(0,256,0,false,false,false);
+	/**
+	 * Level with plains and without enemies, coins or bricks.
+	 */
+	public static final LevelConfig Level_2=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{10,0,0,0,0});
+	/**
+	 * Same as {@link #Level_1} but with enemies.
+	 */
+	public static final LevelConfig Level_3=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{10,0,0,0,0});
+	/**
+	 * Level with plains, tubes, enemies and without coins or bricks.
+	 */
+	public static final LevelConfig Level_4=new LevelConfig(2,256,3,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{10,0,2,0,0});
+	/**
+	 * Level with plains, hills, pipes, coins, bricks and without enemies.
+	 */
+	public static final LevelConfig Level_5=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,false,true,true,new int[]{10,5,2,0,0});
+	/**
+	 * Same as {@link #Level_5} but with enemies.
+	 */
+	public static final LevelConfig Level_6=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,5,2,0,0});
+	/**
+	 * Training level with tubes.
+	 */
+	public static final LevelConfig TubeTraining=new LevelConfig(0,256,0,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{0,0,10,0,0});
+	/**
+	 * Training level with holes
+	 */
+	public static final LevelConfig JumpTraining=new LevelConfig(1,256,0,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{0,0,0,10,0});
+	/**
+	 * Training level with bullet bills
+	 */
+	public static final LevelConfig BulletTraining=new LevelConfig(0,256,0,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{0,0,0,0,10});
+	/**
+	 * Easy enemy training level
+	 */
+	public static final LevelConfig EasyEnemyTraining=new LevelConfig(42,256,1,true,false,false);
+	/**
+	 * Medium enemy training level
+	 */
+	public static final LevelConfig MediumEnemyTraining=new LevelConfig(42,256,4,true,false,false);
+	/**
+	 * Hard enemy training level
+	 */
+	public static final LevelConfig HardEnemyTraining=new LevelConfig(42,256,6,true,false,false);
+	/**
+	 * Want to torchure your A*-Agent? Try this.
+	 */
 	public static final LevelConfig ASTARKILLER=new LevelConfig(652649838,1024,15,LEVEL_TYPES.OVERGROUND);
-	public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,false,true);
-	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
-	public static final LevelConfig LevelCUSTOM1=new LevelConfig(1236445678,512,4,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,0,0,0,0});
-	public static final LevelConfig LevelCUSTOM2=new LevelConfig(12345678,256,4,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{1,0,0,10,0});
-	public static final LevelConfig LevelCUSTOM3=new LevelConfig(12345678,256,10,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{1,0,0,10,0});
+	/**
+	 * Well.. just try it.
+	 */
+	public static final LevelConfig GoodLuck=new LevelConfig(666,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,2,4});
 	
+//	public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,false,true);
+//	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
+//	public static final LevelConfig LevelCUSTOM1=new LevelConfig(1236445678,512,4,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,0,0,0,0});
+//	public static final LevelConfig LevelCUSTOM2=new LevelConfig(12345678,256,4,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{0,0,0,10,0});
+//	public static final LevelConfig LevelCUSTOM3=new LevelConfig(12345678,256,10,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{1,0,0,10,0});
+	
+	/**
+	 * Standard level with difficulty 0
+	 */
+	public static final LevelConfig Standard00=new LevelConfig(42,256,0,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 1
+	 */
+	public static final LevelConfig Standard01=new LevelConfig(42,256,1,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 2
+	 */
+	public static final LevelConfig Standard02=new LevelConfig(42,256,2,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 3
+	 */
+	public static final LevelConfig Standard03=new LevelConfig(42,256,3,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 4
+	 */
+	public static final LevelConfig Standard04=new LevelConfig(42,256,4,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 5
+	 */
+	public static final LevelConfig Standard05=new LevelConfig(42,256,5,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 6
+	 */
+	public static final LevelConfig Standard06=new LevelConfig(42,256,6,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 7
+	 */
+	public static final LevelConfig Standard07=new LevelConfig(42,256,7,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 8
+	 */
+	public static final LevelConfig Standard08=new LevelConfig(42,256,8,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 9
+	 */
+	public static final LevelConfig Standard09=new LevelConfig(42,256,9,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 10
+	 */
+	public static final LevelConfig Standard10=new LevelConfig(42,256,10,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 11
+	 */
+	public static final LevelConfig Standard11=new LevelConfig(42,256,11,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 12
+	 */
+	public static final LevelConfig Standard12=new LevelConfig(42,256,12,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 13
+	 */
+	public static final LevelConfig Standard13=new LevelConfig(42,256,13,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 14
+	 */
+	public static final LevelConfig Standard14=new LevelConfig(42,256,14,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Standard level with difficulty 15
+	 */
+	public static final LevelConfig Standard15=new LevelConfig(42,256,15,LEVEL_TYPES.OVERGROUND);
+	
+	/**
+	 * Randomizes the given LevelConfig
+	 * @param toRandomize
+	 * @return
+	 */
 	public static LevelConfig randomize(LevelConfig toRandomize) {
 		if(toRandomize!=null) {
 			int[] odds=toRandomize.getOdds();
@@ -39,6 +167,17 @@ public class LevelConfig{
 	private boolean useStandardGenerator,enemies=true,bricks=true,coins=true,flat;
 	private int[] odds;
 	
+	/**
+	 * Creates a custom level with the given parameters.
+	 * @param seed seed for random()
+	 * @param length length of the level
+	 * @param presetDifficulty difficulty
+	 * @param type LevelType 
+	 * @param enemies should enemies be spawned?
+	 * @param bricks should bricks be spawned?
+	 * @param coins should coins be spawned?
+	 * @param odds array with length 5, determines the percentage of level parts [STRAIGHT, HILLS, TUBES, HOLES, BULLETBILL]
+	 */
 	public LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type,boolean enemies, boolean bricks,boolean coins, int[] odds) { //custom level generation
 		this.seed = seed;
 		this.length = length;
@@ -52,6 +191,15 @@ public class LevelConfig{
 		this.flat=false;
 	}
 	
+	/**
+	 * Creates a level with the given parameters.
+	 * @param seed seed for random()
+	 * @param length length of the level
+	 * @param presetDifficulty difficulty
+	 * @param enemies should enemies be spawned?
+	 * @param bricks should bricks be spawned?
+	 * @param coins should coins be spawned?
+	 */
 	public LevelConfig(int seed, int length, int presetDifficulty,boolean enemies,boolean bricks,boolean coins) { //flat level
 		this.seed = seed;
 		this.length = length;
@@ -65,6 +213,13 @@ public class LevelConfig{
 		this.type=LEVEL_TYPES.OVERGROUND;
 	}
 	
+	/**
+	 * Creates a level with the standard level generation and the given parameters.
+	 * @param seed seed for random()
+	 * @param length length of the level
+	 * @param presetDifficulty difficulty
+	 * @param type LevelType 
+	 */
 	public LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type) { //standard level generation
 		this.seed = seed;
 		this.length = length;

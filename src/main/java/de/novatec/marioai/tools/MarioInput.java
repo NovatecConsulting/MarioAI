@@ -7,7 +7,7 @@ import java.util.TreeSet;
 import ch.idsia.mario.environments.Environment;
 
 /**
- * Used by {@link IAgent} to represent the state of pressed key by the agent.
+ * Represents the state of pressed keys by the agent.
  * 
  * @author Jakub 'Jimmy' Gemrot, gemrot@gamedev.cuni.cz
  */
@@ -175,10 +175,16 @@ public class MarioInput {
 		return result;
 	}
 	
+	
+	/**
+	 * Converts the given array to a useable MarioInput. 
+	 * @param toInput Array that will be converted, size should be 5
+	 * @return instance of MarioInput based on toInput 
+	 */
 	public static MarioInput arrayToMarioInput(boolean[] toInput) {
 		MarioInput res=new MarioInput();
 		
-		if(toInput.length!=5) return res;
+		if(toInput==null||toInput.length!=5) return res;
 		
 		if(toInput[0]) res.press(MarioKey.LEFT);
 		if(toInput[1]) res.press(MarioKey.RIGHT);
