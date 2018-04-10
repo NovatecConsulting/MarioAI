@@ -18,16 +18,17 @@ public class ExampleAgent extends MarioNtAgent{
 
 	@Override
 	public MarioInput doAiLogic() {
-		
-		if(isSlopeAhead()&&!isHoleAhead()) return getMarioInput();
-	
-		moveRight();
-		
-		if(isHoleAhead()||isBrickAhead()) jump();
-
 		if(mayShoot()&&isEnemyAhead()) {
 			shoot();
 		}
+		
+		if(isSlopeAhead()&&!isHoleAhead()&&!(getDeepCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
+	
+		moveRight();
+		
+		if(isHoleAhead()||isBrickAhead()||isQuestionbrickAbove()) jump();
+
+		
 		else if(isEnemyAhead()) jump();
 		
 		return getMarioInput();

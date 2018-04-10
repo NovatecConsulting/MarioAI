@@ -2,12 +2,14 @@ package ch.idsia.mario.engine.level;
 
 import java.util.Random;
 
+import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
+
 
 public class BgLevelGenerator
 {
     private static Random levelSeedRandom = new Random();
 
-    public static Level createLevel(int width, int height, boolean distant, int type)
+    public static Level createLevel(int width, int height, boolean distant, LEVEL_TYPES type)
     {
         BgLevelGenerator levelGenerator = new BgLevelGenerator(width, height, distant, type);
         return levelGenerator.createLevel(levelSeedRandom.nextLong());
@@ -16,9 +18,9 @@ public class BgLevelGenerator
     private int width;
     private int height;
     private boolean distant;
-    private int type;
+    private LEVEL_TYPES type;
 
-    private BgLevelGenerator(int width, int height, boolean distant, int type)
+    private BgLevelGenerator(int width, int height, boolean distant, LEVEL_TYPES type)
     {
         this.width = width;
         this.height = height;
@@ -33,7 +35,7 @@ public class BgLevelGenerator
 
         switch (type)
         {
-            case LevelGenerator.TYPE_OVERGROUND:
+            case OVERGROUND:
             {
 
                 int range = distant ? 4 : 6;
@@ -87,7 +89,7 @@ public class BgLevelGenerator
                 }
                 break;
             }
-            case LevelGenerator.TYPE_UNDERGROUND:
+            case UNDERGROUND:
             {
                 if (distant)
                 {
@@ -132,7 +134,7 @@ public class BgLevelGenerator
                 }
                 break;
             }
-            case LevelGenerator.TYPE_CASTLE:
+            case CASTLE:
             {
                 if (distant)
                 {

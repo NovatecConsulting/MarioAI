@@ -46,6 +46,10 @@ public class Tiles {
 		}
 	}
 	
+	public boolean isQuestionbrick(int x,int y) {
+		return getTile(x, y)==TileType.QUESTION_BRICK;
+	}
+	
 	public List<Tile> getTiles(){
 	List<Tile> res=new LinkedList<>();
 		

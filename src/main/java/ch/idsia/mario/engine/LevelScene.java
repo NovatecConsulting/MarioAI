@@ -833,12 +833,12 @@ public class LevelScene extends Scene implements SpriteContext {
 		LevelConfig config=renderer.getRunnerOptions().getConfig();
 			
 		if(config.isUseStandardGenerator()) {
-			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType().getType()); // Standard level-generation
+			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType()); // Standard level-generation
 		}
 		else if(config.isFlat()) {
 			level=LevelGenerator.createFlatLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.isEnemies(), config.isBricks(), config.isCoins()); // flat level generation
 		}
-		else level=LevelGenerator.createCustomLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType().getType(), config.getOdds(),config.isEnemies(), config.isBricks(), config.isCoins()); //custom level generation
+		else level=LevelGenerator.createCustomLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType(), config.getOdds(),config.isEnemies(), config.isBricks(), config.isCoins()); //custom level generation
 		
 		setPaused(false);
 		sprites.clear();
@@ -847,7 +847,7 @@ public class LevelScene extends Scene implements SpriteContext {
 			int scrollSpeed = 4 >> i;
 			int w = ((level.getWidth() * 16) - 320) / scrollSpeed + 320;
 			int h = ((level.getHeight() * 16) - 240) / scrollSpeed + 240;
-			Level bgLevel = BgLevelGenerator.createLevel(w / 32 + 1, h / 32 + 1, i == 0, levelType.getType());
+			Level bgLevel = BgLevelGenerator.createLevel(w / 32 + 1, h / 32 + 1, i == 0, levelType);
 			bgLayer[i] = new BgRenderer(bgLevel, graphicsConfiguration, 320, 240, scrollSpeed);
 		}
 		mario = new Mario(this,renderer.getRunnerOptions().getMarioStartMode());
@@ -1115,7 +1115,7 @@ public class LevelScene extends Scene implements SpriteContext {
 			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (320 - t));
 		}
 
-		if (mario.getDeathTime() > 0||timeLeft<=0||mario.getStatus()==STATUS.LOOSE) {
+		if (mario.getDeathTime() > 0||timeLeft<=0||mario.getStatus()==STATUS.LOSE) {
 			 float t = mario.getDeathTime() + alpha;
 			 t = t * t * 0.4f;
 			 //System.out.println(alpha);

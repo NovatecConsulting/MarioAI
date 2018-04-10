@@ -1,5 +1,6 @@
 package ch.idsia.mario.environments;
 
+import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +31,6 @@ public interface Environment
     // always the same dimensionality: 22x22
     // always centered on the agent
 
-    // Chaning ZLevel during the game on-the-fly;
-    // if your agent recieves too ambiguous observation, it might request for more precise one for the next step
-    //public RunnerOptions getRunnerOptions();
     public void setRunnerOptions(RunnerOptions rOptions);
     public void setPaused(boolean paused);
     public void togglePaused();
@@ -40,6 +38,8 @@ public interface Environment
     public boolean isDebugView();
     public void setDebugView(boolean debugView);
     public void toggleDebugView();
+    
+    public void registerKeyboardListener(KeyListener listener);
 
     public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 0
 

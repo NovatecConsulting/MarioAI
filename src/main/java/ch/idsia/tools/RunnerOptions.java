@@ -44,7 +44,7 @@ public class RunnerOptions {
 	
 	private boolean exitWhenFinished=false;
 	
-	private boolean viewAlwaysOnTop=true;
+	private boolean viewAlwaysOnTop=false;
 	
 	private LevelConfig config;
 	

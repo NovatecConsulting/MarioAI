@@ -24,6 +24,7 @@ public class EvaluationInfo
     public int lengthOfLevelPassedCells = MagicNumberUndef;
     public int totalLengthOfLevelCells = MagicNumberUndef;
     public double totalLengthOfLevelPhys = MagicNumberUndef;
+    public int levelXExit=MagicNumberUndef;
     public int timeSpentOnLevel = MagicNumberUndef;
     public int totalTimeGiven = MagicNumberUndef;
     public int numberOfGainedCoins = MagicNumberUndef;
@@ -132,15 +133,14 @@ public class EvaluationInfo
         ret += "\n                         Level Type : " + levelType;
         ret += "\n                   Level Difficulty : " + levelDifficulty;
         ret += "\n                    Level Rand Seed : " + levelRandSeed;
-        ret += "\nTotal Length of Level (Phys, Cells) : " + "(" + totalLengthOfLevelPhys + "," + totalLengthOfLevelCells + ")";
-        ret += "\n                      Passed (Phys) : " + df.format(lengthOfLevelPassedPhys / totalLengthOfLevelPhys *100) + "% (" + df.format(lengthOfLevelPassedPhys) + " of " + totalLengthOfLevelPhys + ")";
-        ret += "\n                     Passed (Cells) : " + df.format((double)lengthOfLevelPassedCells / totalLengthOfLevelCells *100) + "% (" + lengthOfLevelPassedCells + " of " + totalLengthOfLevelCells + ")";
+        ret += "\nTotal Length of Level (Phys, Cells) : " + "(" + levelXExit*16 + "," + levelXExit + ")";
+        ret += "\n                      Passed (Phys) : " + df.format(lengthOfLevelPassedPhys / (levelXExit*16) *100) + "% (" + df.format(lengthOfLevelPassedPhys) + " of " + df.format(levelXExit*16) + ")";
+        ret += "\n                     Passed (Cells) : " + df.format((double)lengthOfLevelPassedCells / levelXExit *100) + "% (" + lengthOfLevelPassedCells + " of " + levelXExit + ")";
         ret += "\n             Time Spent(Fractioned) : " + timeSpentOnLevel + " (" + df.format((double)timeSpentOnLevel/totalTimeGiven*100) + "%)";
         ret += "\n              Time Left(Fractioned) : " + timeLeft + " (" + df.format((double)timeLeft/totalTimeGiven*100) + "%)";
         ret += "\n                   Total time given : " + totalTimeGiven;
         ret += "\n                       Coins Gained : " + numberOfGainedCoins;
         ret += "\n                        Total Kills : " + killsTotal;
-        //ret += "\n                          killed by   ";
         if(killsTotal>0) {
         	ret += "\n                           by stomp : " + killedCreaturesbyStomp+" (" + df.format((double)killedCreaturesbyStomp/killsTotal*100) + "%)";
         	ret += "\n                           by shell : " + killedCreaturesbyShell+" (" + df.format((double)killedCreaturesbyShell/killsTotal*100) + "%)";

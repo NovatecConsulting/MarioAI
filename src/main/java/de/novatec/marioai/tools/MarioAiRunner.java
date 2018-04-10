@@ -5,6 +5,7 @@ import ch.idsia.ai.tasks.ProgressTask;
 import ch.idsia.ai.tasks.Task;
 import ch.idsia.tools.RunnerOptions;
 import de.novatec.marioai.agents.ExampleAgent;
+import de.novatec.marioai.agents.HumanKeyboardAgent;
 
 /**
  * Simple helper class to start the evaluation of an agent. 
@@ -55,7 +56,7 @@ public class MarioAiRunner {
 	/**
 	 *  Equals the call of @link #run(Agent, LevelConfig, boolean, int)} with attributes run(agent, levelConfig, randomize, 3).
 	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own.
+	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
 	 * @param randomize determines if the level should be randomized based on the levelConfig
 	 */
 	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize) {		
@@ -65,7 +66,7 @@ public class MarioAiRunner {
 	/**
 	 *  Hides some attributes of @link #run(Agent, LevelConfig, int,int, boolean, boolean, boolean). Standard values will be used for missing attributes.
 	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own.
+	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
 	 * @param randomize determines if the level should be randomized based on the levelConfig
 	 * @param windowMultiplier multiplier for window height/width (Standard: 320x240)
 	 */
@@ -73,16 +74,16 @@ public class MarioAiRunner {
 		run(agent, levelConfig, 24,windowMultiplier,randomize, true,false);
 	}
 	
-//	public static void main(String[]args) {
-//		//run(new ExampleAgent(),LevelConfig.Standard04,false);
-//		run(new ExampleAgent(), LevelConfig.JumpTraining, 24, 3, true, true, true);
-//		//run(new ExampleAgent(),LevelConfig.Level1,48,false,true);
-//		//run(new ExampleAgent2(),LevelConfig.LevelCUSTOM3,24,true,true);
-//		//run(new HumanKeyboardAgent(), LevelConfig.LevelCUSTOM1,24,true,true);
-//		//run(new ExampleAgent(), null, true);
-//	    //run(new AStarAgent(), LevelConfig.ASTARKILLER,24,true,true);
-//	}
-	
+/*	public static void main(String[]args) {
+		//run(new ExampleAgent(),LevelConfig.Standard04,true);
+		//run(new ExampleAgent(), LevelConfig.LevelFLAT1, 24, 3, true, true, true);
+		run(new HumanKeyboardAgent(), LevelConfig.STANDARD01, 24, 3, true, true, true);
+		run(new ExampleAgent(),LevelConfig.BULLET_TRAINING,48,3, false,true, false);
+		//run(new ExampleAgent2(),LevelConfig.LevelCUSTOM3,24,true,true);
+		//run(new HumanKeyboardAgent(), LevelConfig.LevelCUSTOM1,24,true,true);
+		//run(new ExampleAgent(), null, true);
+	}
+	*/
 }
 
 

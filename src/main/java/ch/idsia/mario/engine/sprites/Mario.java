@@ -49,7 +49,7 @@ public class Mario extends Sprite // cloneable
 	}
 	
 	public enum STATUS {
-		RUNNING(2),WIN(1),LOOSE(0),UNKNOWN(-1);
+		UNKNOWN(-1),LOSE(0),WIN(1),RUNNING(2);
 		
 		int status;
 		
@@ -650,7 +650,7 @@ public class Mario extends Sprite // cloneable
 		yDeathPos = ((int) y);
 		//spriteContext.setPaused(true);
 		deathTime = (25);
-		status = STATUS.LOOSE;
+		status = STATUS.LOSE;
 	}
 
 	public void getFlower() {

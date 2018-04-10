@@ -68,13 +68,16 @@ public abstract class MarioNtAgent implements Agent{
 		return input.toArray();
 	}
 
+	/**
+	 * Returns the AGENT_TYPE of the agent, not very useful anymore.
+	 */
 	@Override
 	public final AGENT_TYPE getType() {
 		return AGENT_TYPE.AI;
 	}
 
 	/**
-	 * Should be overriden. Naming the agent.
+	 * Should be overridden. Naming the agent.
 	 */
 	@Override
 	public String getName() {
@@ -247,7 +250,7 @@ public abstract class MarioNtAgent implements Agent{
 	public final boolean isEnemyAhead() {
 
 		for(int i=1;i<ENEMY_CHECK_DISTANCE;i++) {
-			if(isDangerousAt(i, 0)||isDangerousAt(i, 1)) return true;
+			if(isDangerousAt(i, 0)||isDangerousAt(i, -1)) return true;
 		}
 		return false;
 	}
@@ -256,8 +259,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * Is a hole ahead? Defined as: isEmpty(1,env.getLevelScene().getLevelHight()-1-(int)getMarioY()/16)&&isEmpty(2,env.getLevelScene().getLevelHight()-1-(int)getMarioY()/16)
 	 * @return
 	 */
-	public final boolean isHoleAhead() { //TODO IMPLEMENT
-		//System.out.println("(1,"+(env.getLevelScene().getLevelHight()-1-(int)getMarioY()/16)+")");
+	public final boolean isHoleAhead() { 
 		return isEmpty(1,env.getLevelScene().getLevelHight()-1-(int)getMarioY()/16)&&isEmpty(2,env.getLevelScene().getLevelHight()-1-(int)getMarioY()/16);
 	}
 	
@@ -266,7 +268,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return
 	 */
 	public final boolean isQuestionbrickAbove() {
-		return getTile(0,-1)==TileType.QUESTION_BRICK||getTile(0,-2)==TileType.QUESTION_BRICK||getTile(0,-3)==TileType.QUESTION_BRICK;
+		return isQuestionbrick(0,-1)||isQuestionbrick(0,-2)||isQuestionbrick(0,-3);
 	}
 	
 	////--- Tiles - Abstracted Level Information
@@ -327,6 +329,9 @@ public abstract class MarioNtAgent implements Agent{
 		return tiles.isNotEmpty(x, y);
 	}
 	
+	public final boolean isQuestionbrick(int x,int y) {
+		return tiles.isQuestionbrick(x, y);
+	}
 	////--- Entities - Abstracted Enemy Detection
 	
 	/**
@@ -356,7 +361,7 @@ public abstract class MarioNtAgent implements Agent{
 	}
 	
 	/**
-	 * Returns all entites defined as enemies on screen. (Goomba,Kooper, EnemyFlower etc.)
+	 * Returns all entites defined as enemies on screen. (Goomba, Kooper, EnemyFlower etc.)
 	 * @return
 	 */
 	public final List<Entity> getAllEnemiesOnScreen(){
@@ -372,8 +377,7 @@ public abstract class MarioNtAgent implements Agent{
 	public final List<Entity> getEnemies(int x,int y){
 		return entities.getEnemies(x,y);
 	}
-	
-	
+		
 	/**
 	 * Returns the EntityType of the most dangerous Entity at (x,y).
 	 * @param x

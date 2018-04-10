@@ -1,5 +1,6 @@
 package ch.idsia.mario.engine.level;
 
+import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.sprites.Enemy;
 
 import java.util.Random;
@@ -7,20 +8,17 @@ import java.util.Random;
 
 public class LevelGenerator
 {
-    public static final int TYPE_OVERGROUND = 0;
-    public static final int TYPE_UNDERGROUND = 1;
-    public static final int TYPE_CASTLE = 2;
 
     public static long lastSeed;
     public static final int LevelLengthMinThreshold = 50;
 
-    public static Level createLevel(int width, int height, long seed, int difficulty, int type)
+    public static Level createLevel(int width, int height, long seed, int difficulty, LEVEL_TYPES type)
     {
         LevelGenerator levelGenerator = new LevelGenerator(width, height);
         return levelGenerator.createLevel(seed, difficulty, type);
     }
     
-    public static Level createCustomLevel(int width, int height, long seed, int difficulty, int type, int[] odds, boolean enemies,boolean bricks,boolean coins)
+    public static Level createCustomLevel(int width, int height, long seed, int difficulty, LEVEL_TYPES type, int[] odds, boolean enemies,boolean bricks,boolean coins)
     {
         LevelGenerator levelGenerator = new LevelGenerator(width, height);
         return levelGenerator.createLevel(seed, difficulty, type, odds,enemies,bricks,coins);
@@ -44,7 +42,7 @@ public class LevelGenerator
     private int[] odds = new int[5];
     private int totalOdds;
     private int difficulty;
-    private int type;
+    private LEVEL_TYPES type;
 
     private LevelGenerator(int width, int height)
     {
@@ -52,7 +50,7 @@ public class LevelGenerator
         this.height = height;
     }
 
-    private Level createLevel(long seed, int difficulty, int type)
+    private Level createLevel(long seed, int difficulty, LEVEL_TYPES type)
     {
         this.type = type;
         this.difficulty = difficulty;
@@ -62,7 +60,7 @@ public class LevelGenerator
         odds[ODDS_JUMP] = 2 * difficulty;
         odds[ODDS_CANNONS] = -10 + 5 * difficulty;
 
-        if (type != LevelGenerator.TYPE_OVERGROUND)
+        if (type != LEVEL_TYPES.OVERGROUND)
         {
             odds[ODDS_HILL_STRAIGHT] = 0;
         }
@@ -101,7 +99,7 @@ public class LevelGenerator
             }
         }
 
-        if (type == LevelGenerator.TYPE_CASTLE || type == LevelGenerator.TYPE_UNDERGROUND)
+        if (type ==LEVEL_TYPES.CASTLE || type == LEVEL_TYPES.UNDERGROUND)
         {
             int ceiling = 0;
             int run = 0;
@@ -126,12 +124,12 @@ public class LevelGenerator
         return level;
     }
     
-    private Level createLevel(long seed, int difficulty, int type,int[] odds,boolean enemies,boolean bricks,boolean coins) {
+    private Level createLevel(long seed, int difficulty, LEVEL_TYPES type,int[] odds,boolean enemies,boolean bricks,boolean coins) {
     	 this.type = type;
          this.difficulty = difficulty;
          this.odds=odds;
          
-         if (type != LevelGenerator.TYPE_OVERGROUND)
+         if (type != LEVEL_TYPES.OVERGROUND)
          {
              odds[ODDS_HILL_STRAIGHT] = 0;
          }
@@ -166,7 +164,7 @@ public class LevelGenerator
              }
          }
 
-         if (type == LevelGenerator.TYPE_CASTLE || type == LevelGenerator.TYPE_UNDERGROUND) {
+         if (type == LEVEL_TYPES.CASTLE || type == LEVEL_TYPES.UNDERGROUND) {
              int ceiling = 0;
              int run = 0;
              for (int x = 0; x < level.getWidth(); x++)
@@ -191,7 +189,7 @@ public class LevelGenerator
     }
 
     private Level createFlatLevel(long seed, int difficulty,boolean enemies,boolean bricks,boolean coins) {
-    	 this.type = 0;
+    	 this.type = LEVEL_TYPES.OVERGROUND;
          this.difficulty = difficulty;
          
          lastSeed = seed;
@@ -217,7 +215,7 @@ public class LevelGenerator
              }
          }
          
-         level.setXExit(level.getWidth()-64+8);
+         level.setXExit(length+8);
          level.setYExit(floor);
          
          fixWalls();
@@ -628,11 +626,11 @@ public class LevelGenerator
     private void blockify(Level level, boolean[][] blocks, int width, int height)
     {
         int to = 0;
-        if (type == LevelGenerator.TYPE_CASTLE)
+        if (type == LEVEL_TYPES.CASTLE)
         {
             to = 4 * 2;
         }
-        else if (type == LevelGenerator.TYPE_UNDERGROUND)
+        else if (type ==LEVEL_TYPES.UNDERGROUND)
         {
             to = 4 * 3;
         }
