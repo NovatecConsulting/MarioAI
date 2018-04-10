@@ -38,7 +38,7 @@ public class LevelScene extends Scene implements SpriteContext {
 	private Level level;
 	private Mario mario;
 	private float xCam, yCam;
-	private int tick;
+	private int tick,lastTickFireball;
 
 	//- Renderer
 	private LevelRenderer layer;
@@ -858,6 +858,7 @@ public class LevelScene extends Scene implements SpriteContext {
 		timeLeft = totalTime * 15;
 
 		tick = 0;
+		lastTickFireball=-1;
 	}
 
 	List<Shell> shellsToCheck = new ArrayList<Shell>();
@@ -1413,6 +1414,11 @@ public class LevelScene extends Scene implements SpriteContext {
 		return mario.mayJump();
 	}
 	
+	public boolean mayMarioShoot() {
+		if(lastTickFireball==tick-1) return false;
+		return mario.getMode()==MODE.MODE_FIRE&&fireballsOnScreen<2;
+	}
+	
 	public boolean isMarioFalling() {
 		return !isMarioOnGround()&&!(getMarioYA()<=0);
 	}
@@ -1560,6 +1566,10 @@ public class LevelScene extends Scene implements SpriteContext {
 
 	public void togglePaused() {
 		this.paused=!paused;
+	}
+	
+	public void usedFireball() {
+		lastTickFireball=tick;
 	}
 
 }

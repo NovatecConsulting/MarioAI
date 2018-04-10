@@ -25,7 +25,7 @@ public class Entities {
 		return tmp;
 	}
 	
-	public List<Entity> getEntities(){
+	public List<Entity> getEntitiesOnScreen(){
 		List<Entity> res=new LinkedList<>();
 		
 		for(Map.Entry<Coordinates, List<Entity>> entry:env.getEntities().entrySet()) {
@@ -37,8 +37,8 @@ public class Entities {
 		return res;
 	}
 	
-	public List<Entity> getEnemies(int x,int y){
-		List<Entity> tmp=getEntities(),res=new LinkedList<>();
+	public List<Entity> getEnemiesAt(int x,int y){
+		List<Entity> tmp=getEntitiesOnScreen(),res=new LinkedList<>();
 		
 		for(Entity e:tmp) {
 			if(e.isDangerous()) res.add(e); 
@@ -46,18 +46,18 @@ public class Entities {
 		return res;
 	}
 	
-	public List<Entity> getEnemies(){
+	public List<Entity> getEnemiesOnScreen(){
 		List<Entity> res=new LinkedList<>();
 		
-		for(Entity next: getEntities()) {
+		for(Entity next: getEntitiesOnScreen()) {
 			if(next.isDangerous()) res.add(next);
 		}
 		
 		return res;
 	}
 	
-	public List<Entity> getCollectibles(){
-		List<Entity> tmp=getEntities(),res=new LinkedList<>();
+	public List<Entity> getCollectiblesOnScreen(){
+		List<Entity> tmp=getEntitiesOnScreen(),res=new LinkedList<>();
 		
 		for(Entity e:tmp) {
 			if(e.isCollectable()) res.add(e); 
@@ -79,7 +79,7 @@ public class Entities {
 	}
 	
 	public double getDistance(Entity entity) {
-		return Math.sqrt(Math.pow(entity.getX(), 2)+Math.pow(entity.getY(), 2));
+		return Math.sqrt(Math.pow(entity.getRelX(), 2)+Math.pow(entity.getRelY(), 2));
 	}
 
 	public boolean isNothingAt (int x,int y) {

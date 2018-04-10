@@ -5,6 +5,11 @@ import java.awt.event.KeyListener;
 
 import ch.idsia.mario.environments.Environment;
 
+/**
+ * KeyListener for executing actions on the given environment based on user input
+ * @author rgu
+ *
+ */
 public class KeyboardInterpreter implements KeyListener{
 	
 	private Environment env;
@@ -37,8 +42,20 @@ public class KeyboardInterpreter implements KeyListener{
 		case KeyEvent.VK_O:
 			env.toggleDebugView();
 			break;
-		}
+		case KeyEvent.VK_MINUS:
+		case 109:
+			env.resizeView(env.getActualDimension().width-32, env.getActualDimension().height-24);
+			break;
+		case KeyEvent.VK_PLUS:
+		case 107:
+			env.resizeView(env.getActualDimension().width+32, env.getActualDimension().height+24);
+		break;
+		case 520:
+		case 106:	
+			env.resizeView(env.getInitialDimension().height, env.getInitialDimension().width);
+		break;
 		
+		}
 		
 	}
 

@@ -158,7 +158,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return
 	 */
 	public final boolean mayShoot() {
-		return this.env.mayShoot();
+		return this.env.mayMarioShoot();
 	}
 	
 	/**
@@ -170,16 +170,40 @@ public abstract class MarioNtAgent implements Agent{
 	}
 	
 	/**
-	 * Marios Position as an array. [0] marioX [1] marioY
+	 * Mario's Map Position as Coordinates
 	 * @return
 	 */
-	public final float[] getMarioFloatPos(){
+	public final Coordinates getMarioPos(){
+		return this.env.getMarioPos();
+	}
+	
+	/**
+	 * Mario's Physical Position as Coordinates
+	 * @return
+	 */
+	public final Coordinates getMarioFloatPos() {
 		return this.env.getMarioFloatPos();
 	}
 	
 	/**
+	 * Mario's Map X Position
+	 * @return
+	 */
+	public final int getMarioMapX() {
+		return env.getMarioMapX();
+	}
+	
+	/**
+	 * Mario's Map Y Position
+	 * @return
+	 */
+	public final int getMarioMapY() {
+		return env.getMarioMapY();
+	}
+	
+	/**
 	 * 
-	 * @return Mario's X Position 
+	 * @return Mario's Physical X Position 
 	 */
 	public final float getMarioX() {
 		return env.getLevelScene().getMarioX();
@@ -187,7 +211,7 @@ public abstract class MarioNtAgent implements Agent{
 	
 	/**
 	 * 
-	 * @return Mario's Y Position
+	 * @return Mario's Physical Y Position
 	 */
 	public final float getMarioY() {
 		return env.getLevelScene().getMarioY();
@@ -206,7 +230,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return
 	 */
 	public final boolean isFalling() {
-		return this.env.isFalling();
+		return this.env.isMarioFalling();
 	}
 	
 	/**
@@ -335,7 +359,7 @@ public abstract class MarioNtAgent implements Agent{
 	////--- Entities - Abstracted Enemy Detection
 	
 	/**
-	 * Returns the entitie member.
+	 * Returns the entities member.
 	 * @return
 	 */
 	public final Entities getEntities() {
@@ -348,7 +372,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @param y
 	 * @return
 	 */
-	public final List<Entity> getEntities(int x,int y){
+	public final List<Entity> getEntitiesAt(int x,int y){
 		return entities.getEntities(x, y);
 	}
 	
@@ -357,7 +381,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return
 	 */
 	public final List<Entity> getAllEntitiesOnScreen(){
-		return entities.getEntities();
+		return entities.getEntitiesOnScreen();
 	}
 	
 	/**
@@ -365,7 +389,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return
 	 */
 	public final List<Entity> getAllEnemiesOnScreen(){
-		return entities.getEnemies();
+		return entities.getEnemiesOnScreen();
 	}
 	
 	/**
@@ -374,8 +398,12 @@ public abstract class MarioNtAgent implements Agent{
 	 * @param y
 	 * @return
 	 */
-	public final List<Entity> getEnemies(int x,int y){
-		return entities.getEnemies(x,y);
+	public final List<Entity> getEnemiesAt(int x,int y){
+		return entities.getEnemiesAt(x,y);
+	}
+	
+	public final List<Entity> getCollectiblesOnScreen(){
+		return entities.getCollectiblesOnScreen();
 	}
 		
 	/**
@@ -446,6 +474,15 @@ public abstract class MarioNtAgent implements Agent{
 	 */
 	public final boolean isCollectableAt(int x,int y) {
 		return entities.isCollectableAt(x, y);
+	}
+	
+	/**
+	 * The eucledian Distance between Mario and the given entity. 
+	 * @param entity
+	 * @return
+	 */
+	public final double getDistance(Entity entity) {
+		return Coordinates.getDistanceFromTo(0, 0, entity.getRelX(), entity.getRelY());
 	}
 	
 	//--- A* Helper Methods

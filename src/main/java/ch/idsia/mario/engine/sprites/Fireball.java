@@ -39,6 +39,8 @@ public class Fireball extends Sprite //cloneable
 
         xPic = 4;
         ya = 4;
+        
+        world.usedFireball();
     }
     
     public Fireball(LevelScene alreadyCopied,Fireball toCopy) {

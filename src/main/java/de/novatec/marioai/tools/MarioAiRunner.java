@@ -4,8 +4,6 @@ import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.ProgressTask;
 import ch.idsia.ai.tasks.Task;
 import ch.idsia.tools.RunnerOptions;
-import de.novatec.marioai.agents.ExampleAgent;
-import de.novatec.marioai.agents.HumanKeyboardAgent;
 
 /**
  * Simple helper class to start the evaluation of an agent. 
@@ -73,17 +71,6 @@ public class MarioAiRunner {
 	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize, int windowMultiplier) {		
 		run(agent, levelConfig, 24,windowMultiplier,randomize, true,false);
 	}
-	
-/*	public static void main(String[]args) {
-		//run(new ExampleAgent(),LevelConfig.Standard04,true);
-		//run(new ExampleAgent(), LevelConfig.LevelFLAT1, 24, 3, true, true, true);
-		run(new HumanKeyboardAgent(), LevelConfig.STANDARD01, 24, 3, true, true, true);
-		run(new ExampleAgent(),LevelConfig.BULLET_TRAINING,48,3, false,true, false);
-		//run(new ExampleAgent2(),LevelConfig.LevelCUSTOM3,24,true,true);
-		//run(new HumanKeyboardAgent(), LevelConfig.LevelCUSTOM1,24,true,true);
-		//run(new ExampleAgent(), null, true);
-	}
-	*/
 }
 
 

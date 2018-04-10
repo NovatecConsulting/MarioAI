@@ -1,5 +1,6 @@
 package ch.idsia.mario.environments;
 
+import java.awt.Dimension;
 import java.awt.event.KeyListener;
 import java.util.List;
 import java.util.Map;
@@ -52,28 +53,33 @@ public interface Environment
     public Map<Coordinates,Tile> getTiles();
     public Map<Coordinates,List<Entity>> getEntities();
     
-    
+    public void resizeView(int width, int height);
+    public Dimension getInitialDimension();
+    public Dimension getActualDimension();
 
-    public float[] getMarioFloatPos();
-    public int getMarioX();
-    public int getMarioY();
-
-    public Mario.MODE getMarioMode();
-    
+  
     public LevelScene getLevelScene();
 
-    public float[] getEnemiesFloatPos();
-
+    //--- Mario
     public boolean isMarioOnGround();
     public boolean mayMarioJump();
     public boolean isMarioCarrying();
-    public boolean mayShoot();
-    public boolean isFalling();
+    public boolean mayMarioShoot();
+    public boolean isMarioFalling();
+    
+    public Coordinates getMarioPos();
+    public Coordinates getMarioFloatPos();
+    public int getMarioMapX();
+    public int getMarioMapY();
 
+    public Mario.MODE getMarioMode();
+    
+    //--- Obserservations
     public byte[][] getMergedObservationZ(int ZLevelScene, int ZLevelEnemies);
     public byte[][] getLevelSceneObservationZ(int ZLevelScene);
     public byte[][] getEnemiesObservationZ(int ZLevelEnemies);
 
+    //--- Kills
     public int getKillsTotal();
     public int getKillsByFire();
     public int getKillsByStomp();

@@ -28,7 +28,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     private static final long serialVersionUID = 790878775993203817L;
 
     private boolean running = false;
-    private int width, height;
     private GraphicsConfiguration graphicsConfiguration;
     private RunnerOptions rOptions;
     
@@ -37,26 +36,20 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
     private int frame;
     private int delay;
-    private int ZLevelEnemies = 1;
-    private int ZLevelScene = 1;
-
-    //private CheaterKeyboardAgent cheatAgent = null;
+    private static final int GENERALIZATION_ENEMIES = 1;
+    private static final int GENERALIZATION_LEVELSCENE = 1;
 
     private KeyListener prevHumanKeyBoardAgent;
     private LevelScene levelScene = null;
  
+    //--- Constructor
     public MarioComponent(int width, int height) {
        
         this.setFocusable(true);
         this.setEnabled(true);
-        this.width = width; 
-        this.height = height;
-        
-        Dimension size = new Dimension(width, height);
 
+        Dimension size = new Dimension(width, height);
         setPreferredSize(size);
-        setMinimumSize(size);
-        setMaximumSize(size);
         
         new KeyboardInterpreter(this);
     }
@@ -64,16 +57,12 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     //--- Copy Constructor
     public MarioComponent(LevelScene alreadyCopied,MarioComponent toCopy) {
 
-        this.width = toCopy.width;
-        this.height = toCopy.height;
     	this.setFocusable(true);
         this.setEnabled(true);
        
-        Dimension size = new Dimension(width, height);
+        Dimension size = new Dimension((int)toCopy.getSize().getWidth(), (int)toCopy.getSize().getHeight());
 
         setPreferredSize(size);
-        setMinimumSize(size);
-        setMaximumSize(size);
         
         this.running = toCopy.running;
 		this.graphicsConfiguration = toCopy.graphicsConfiguration; //ready only
@@ -81,8 +70,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		this.frame = toCopy.frame;
 		
 		this.delay = toCopy.delay;
-		ZLevelEnemies = toCopy.ZLevelEnemies;
-		ZLevelScene = toCopy.ZLevelScene;
 		
 		this.levelScene = alreadyCopied;
 		
@@ -92,15 +79,12 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		for(KeyListener listener:toCopy.getKeyListeners()) this.registerKeyboardListener(listener);
     }
 
+    //--- FPS
 	public void adjustFPS() { //MAKING MARIO FASTER! SMALLER DELAY=FASTER RUNNING
     	if(rOptions.isViewable()) delay = (rOptions.getFPS() > 0) ? (rOptions.getFPS() >= RunnerOptions.getInfinitefps()) ? 0 : (1000/rOptions.getFPS()) : 100;
     	else delay=0;
     }
-    
-    public boolean mayShoot() {
-    	return levelScene.getFireballsOnScreen()<2&&(levelScene.getMarioMode()==Mario.MODE.MODE_FIRE);
-    }
-    
+
     //--- JComponent
     public void paint(Graphics g) {
     }
@@ -134,8 +118,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         Graphics og = null;
 
         image = createVolatileImage(320, 240);
-        g = getGraphics();
-        og = image.getGraphics();
 
         if (!rOptions.isViewable()) {
             String msgClick = "Vizualization is not available";
@@ -151,11 +133,13 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         int totalActionsPerfomed = 0;
 
         while (/*Thread.currentThread() == animator*/ running) {
+        	g=getGraphics();
+        	og=image.getGraphics();
             levelScene.tick();
             float alpha = 0;
             
             if (rOptions.isViewable()) {
-                og.fillRect(0, 0, 320, 240);
+                og.fillRect(0, 0, getSize().width, getSize().height);
                 levelScene.render(og, alpha);
             }
             boolean[] action = {false,false,false,false,false};
@@ -205,7 +189,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
                      LevelScene.drawStringDropShadow(og, "Score: "+(int)levelScene.getScore(), 1,27, 4);
                 }
 
-                g.drawImage(image, 0, 0, width, height, null); // set size to frame size
+                g.drawImage(image, 0, 0, getSize().width, getSize().height, null); // set size to frame size
                
                 } else {
                 // Win or Die without renderer!! independently.
@@ -305,16 +289,15 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         
         LevelScene.drawStringDropShadow(og, "----------------------------------", start-2, actualRow++, 1);
         LevelScene.drawStringDropShadow(og, "Score: "+(int)(levelScene.getScore()), start-2, actualRow++, 1);
-        g.drawImage(image, 0, 0, width, height, null);
+        g.drawImage(image, 0, 0, getSize().width, getSize().height, null);
     }
 
     @Override
 	public String toString() {
-		return "MarioComponent [running=" + running + ", width=" + width + ", height=" + height
+		return "MarioComponent [running=" + running + ", width=" + getSize().width + ", height=" + getSize().height
 				+  ", frame=" + frame
-				+ ", delay=" + delay + ", ZLevelEnemies=" + ZLevelEnemies + ", ZLevelScene=" + ZLevelScene
-				+ ", prevHumanKeyBoardAgent="
-				+ prevHumanKeyBoardAgent + "]";
+				+ ", delay=" + delay
+				+ "]";
 	}
 
 	private void drawString(Graphics g, String text, int x, int y, int c) {
@@ -324,6 +307,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         }
     }
 
+	//--- Control
     public void startLevel(long seed, int difficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
         levelScene = new LevelScene(graphicsConfiguration, this, seed, difficulty, type, levelLength, timeLimit);
         levelScene.init();
@@ -332,34 +316,23 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     public void levelFailed() {
         stop();
     }
+    
+    public void levelWon() {
+        stop();
+    }
 
+    //---FocusListener
     public void focusGained(FocusEvent arg0) {
     }
 
     public void focusLost(FocusEvent arg0) {
     }
 
-    public void levelWon() {
-        stop();
-    }
-
     public List<String> getTextObservation(boolean Enemies, boolean LevelMap, boolean Complete, int ZLevelMap, int ZLevelEnemies) {
             return levelScene.LevelSceneAroundMarioASCII(Enemies, LevelMap, Complete, ZLevelMap, ZLevelEnemies);
     }
-
-    // Changing ZLevel during the game on-the-fly;
-    public byte[][] getMergedObservationZ(int zLevelScene, int zLevelEnemies) {
-            return levelScene.mergedObservation(zLevelScene, zLevelEnemies);
-    }
-
-    public byte[][] getLevelSceneObservationZ(int zLevelScene) {
-            return levelScene.levelSceneObservation(zLevelScene);
-    }
-
-    public byte[][] getEnemiesObservationZ(int zLevelEnemies) {
-            return levelScene.enemiesObservation(zLevelEnemies);
-    }
-
+    
+    //--- Statistics
     public int getKillsTotal() {
     	return levelScene.getKilledCreaturesTotal();
     }
@@ -376,57 +349,34 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     		 return levelScene.getKilledCreaturesByShell();
     }
 
+    // --- Observation
+    public byte[][] getMergedObservationZ(int zLevelScene, int zLevelEnemies) {
+            return levelScene.mergedObservation(zLevelScene, zLevelEnemies);
+    }
+
+    public byte[][] getLevelSceneObservationZ(int zLevelScene) {
+            return levelScene.levelSceneObservation(zLevelScene);
+    }
+
+    public byte[][] getEnemiesObservationZ(int zLevelEnemies) {
+            return levelScene.enemiesObservation(zLevelEnemies);
+    }
+
     public byte[][] getCompleteObservation() {
-            return levelScene.mergedObservation(this.ZLevelScene, this.ZLevelEnemies);
+            return levelScene.mergedObservation(MarioComponent.GENERALIZATION_LEVELSCENE, MarioComponent.GENERALIZATION_ENEMIES);
     }
 
     public byte[][] getEnemiesObservation() {
-            return levelScene.enemiesObservation(this.ZLevelEnemies);
+            return levelScene.enemiesObservation(MarioComponent.GENERALIZATION_ENEMIES);
     }
 
     public byte[][] getLevelSceneObservation() {
-            return levelScene.levelSceneObservation(this.ZLevelScene);
-    }
-
-    public boolean isMarioOnGround() {
-        return levelScene.isMarioOnGround();
-    }
-
-    public boolean mayMarioJump() {
-        return levelScene.mayMarioJump();
-    }
-    
-    public boolean isFalling() {
-    	return this.levelScene.isMarioFalling();
+            return levelScene.levelSceneObservation(MarioComponent.GENERALIZATION_LEVELSCENE);
     }
 
     public void setPaused(boolean paused) {
         levelScene.setPaused(paused);
     } 
-
-    public void setZLevelEnemies(int ZLevelEnemies) {
-        this.ZLevelEnemies = ZLevelEnemies;
-    }
-
-    public void setZLevelScene(int ZLevelScene) {
-        this.ZLevelScene = ZLevelScene;
-    }
-
-    public float[] getMarioFloatPos() {
-        return new float[]{((LevelScene) levelScene).getMarioX(), ((LevelScene) levelScene).getMarioY()};
-    }
-
-    public float[] getEnemiesFloatPos() {
-            return levelScene.enemiesFloatPos();
-    }
-
-    public Mario.MODE getMarioMode(){
-        return levelScene.getMarioMode();
-    }
-
-    public boolean isMarioCarrying() {
-        return levelScene.getMarioCarried() != null;
-    }
 
 	@Override
 	public Map<Coordinates, Tile> getTiles() {
@@ -438,7 +388,8 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 			return levelScene.getEntities();
 	}
 	
-
+	
+	//--- RunnerOptions
 	public RunnerOptions getRunnerOptions() {
 		return rOptions;
 	}
@@ -485,16 +436,53 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		levelScene.togglePaused();
 	}
 
+	//--- Mario 
+	
 	@Override
-	public int getMarioX() {
+	public int getMarioMapX() {
 		return levelScene.getMarioMapX();
 	}
 
 	@Override
-	public int getMarioY() {
+	public int getMarioMapY() {
 		return levelScene.getMarioMapY();
 	}
+	
+    public Coordinates getMarioPos() {
+        return new Coordinates(getMarioMapX(), getMarioMapY());
+    }
+    
+    public Coordinates getMarioFloatPos() {
+        return new Coordinates(levelScene.getMarioX(), levelScene.getMarioY());
+    }
 
+    public boolean mayMarioShoot() {
+    	return levelScene.mayMarioShoot();
+    }
+    
+    public Mario.MODE getMarioMode(){
+        return levelScene.getMarioMode();
+    }
+
+    public boolean isMarioCarrying() {
+        return levelScene.getMarioCarried() != null;
+    }
+    
+    public boolean isMarioOnGround() {
+        return levelScene.isMarioOnGround();
+    }
+
+    public boolean mayMarioJump() {
+        return levelScene.mayMarioJump();
+    }
+    
+    public boolean isMarioFalling() {
+    	return this.levelScene.isMarioFalling();
+    }
+
+
+	//--- Debug View
+	
 	@Override
 	public boolean isDebugView() {
 		return debugView;
@@ -529,4 +517,36 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     	System.out.println();
 		
 	}
+	
+	//--- Screen Size
+	
+	@Override
+	public Dimension getActualDimension() {
+		return getSize();
+	}
+
+	@Override
+	public Dimension getInitialDimension() {
+		return new Dimension(rOptions.getWindowWidth(),rOptions.getWindowHeigth());
+	}
+
+	@Override
+	public void resizeView(int width, int height) {
+		if(width<320) width=320;
+		if(height<240) height=240;
+		
+		if(Toolkit.getDefaultToolkit().getScreenSize().width<width||Toolkit.getDefaultToolkit().getScreenSize().height<height) return;
+		if(levelScene.getMarioStatus()!=STATUS.RUNNING) return;
+		
+		Dimension d=new Dimension(width, height);
+		this.setPreferredSize(d);
+
+		this.revalidate();
+		
+		Container parent=getParent();
+		while(parent.getParent()!=null) {
+			parent=parent.getParent();
+		}
+		if(parent instanceof JFrame) ((JFrame)parent).pack();
+	}	
 }
