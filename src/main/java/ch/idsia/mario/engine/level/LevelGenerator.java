@@ -129,6 +129,14 @@ public class LevelGenerator
          this.difficulty = difficulty;
          this.odds=odds;
          
+         boolean allZero=true;
+         for(int i=0;i<odds.length;i++) {
+        	 if(odds[i]<0) odds[i]=0;
+        	 if(odds[i]>0) allZero=false;
+         }
+         
+         if(allZero)  odds[0]=1;
+         
          if (type != LEVEL_TYPES.OVERGROUND)
          {
              odds[ODDS_HILL_STRAIGHT] = 0;

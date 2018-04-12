@@ -19,7 +19,7 @@ public class Entities {
 		this.env=env;
 	}
 	
-	public List<Entity> getEntities(int x,int y){		
+	public List<Entity> getEntitiesAt(int x,int y){		
 		List<Entity> tmp=env.getEntities().get(new Coordinates(x,y));
 		if(tmp==null) return new LinkedList<>();
 		return tmp;
@@ -56,6 +56,13 @@ public class Entities {
 		return res;
 	}
 	
+	public List<Entity> getCollectiblesAt(int x, int y){
+		List<Entity> res=new LinkedList<>();
+		for(Entity e:getEntitiesAt(x, y)) if(e.isCollectable()) res.add(e); 
+		
+		return res;
+	}
+	
 	public List<Entity> getCollectiblesOnScreen(){
 		List<Entity> tmp=getEntitiesOnScreen(),res=new LinkedList<>();
 		
@@ -66,7 +73,7 @@ public class Entities {
 	}
 	
 	public EntityType getMostDangrousEntityTypeAt(int x,int y) {
-		List<Entity> tmp=getEntities(x, y);
+		List<Entity> tmp=getEntitiesAt(x, y);
 
 		if(tmp.isEmpty()) return EntityType.NONE;
 		if(tmp.size()==1) return tmp.get(0).getType();
@@ -83,7 +90,7 @@ public class Entities {
 	}
 
 	public boolean isNothingAt (int x,int y) {
-		return getEntities(x, y).isEmpty();
+		return getEntitiesAt(x, y).isEmpty();
 	}
 	
 	public boolean isSomethingAt (int x, int y) {
@@ -104,7 +111,7 @@ public class Entities {
 	}
 	
 	public boolean isCollectableAt(int x,int y) {
-		List<Entity> tmp=getEntities(x, y);
+		List<Entity> tmp=getEntitiesAt(x, y);
 
 		if(tmp.isEmpty()) return false;
 		boolean collectible=false;

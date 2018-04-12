@@ -43,14 +43,16 @@ public class LevelScene extends Scene implements SpriteContext {
 	//- Renderer
 	private LevelRenderer layer;
 	private BgRenderer[] bgLayer = new BgRenderer[2];
+	private boolean readyToExit=false,startReady=false;
 
 	private GraphicsConfiguration graphicsConfiguration;
 
 	//- Time 
-	private boolean paused = false;
+	private boolean paused = false,setpaused=false, performTick=false;
 	private int startTime = 0;
 	private int timeLeft;
 	private int totalTime = 200;
+	private float blackoutTimer;
 	
 	private int fireballsOnScreen = 0;
 	
@@ -856,6 +858,7 @@ public class LevelScene extends Scene implements SpriteContext {
 		startTime = 1;
 
 		timeLeft = totalTime * 15;
+		blackoutTimer=0;
 
 		tick = 0;
 		lastTickFireball=-1;
@@ -896,12 +899,6 @@ public class LevelScene extends Scene implements SpriteContext {
 			xCam = 0;
 		if (xCam > level.getWidth() * 16 - 320)
 			xCam = level.getWidth() * 16 - 320;
-
-		/*
-		 * if (recorder != null) { recorder.addTick(mario.getKeyMask()); }
-		 * 
-		 * if (replayer!=null) { mario.setKeys(replayer.nextTick()); }
-		 */
 
 		fireballsOnScreen = 0;
 
@@ -1026,7 +1023,6 @@ public class LevelScene extends Scene implements SpriteContext {
 			if (yCam > level.getHeight() * 16 - 240)
 				yCam = level.getHeight() * 16 - 240;
 		}
-		// g.drawImage(Art.background, 0, 0, null);
 
 		for (int i = 0; i < 2; i++) {
 			bgLayer[i].setCam(xCam, yCam);
@@ -1048,28 +1044,15 @@ public class LevelScene extends Scene implements SpriteContext {
 
 		g.translate(-xCam, -yCam);
 
-		// TODO: Dump out of render!
-//		if (mario.getCheatKeys()[Mario.KEY_DUMP_CURRENT_WORLD])
-//			for (int w = 0; w < level.getWidth(); w++)
-//				for (int h = 0; h < level.getHeight(); h++)
-//					level.setObservation(w, h, (byte)-1);
-
 		for (Sprite sprite : sprites) {
 			if (sprite.getLayer() == 1)
 				sprite.render(g, alpha);
-			if (mario.getCheatKeys()[Mario.KEY_DUMP_CURRENT_WORLD] && sprite.getMapX() >= 0
-					&& sprite.getMapX() < level.getObservationXLength() && sprite.getMapY() >= 0
-					&& sprite.getMapY() < level.getObservationYLength())
-				level.setObservation(sprite.getMapX(), sprite.getMapY(), sprite.getKind());
 
 		}
 
 		g.translate(xCam, yCam);
 		g.setColor(Color.BLACK);
 		layer.renderExit1(g, tick, isPaused() ? 0 : alpha);
-
-		// drawStringDropShadow(g, "MARIO: " + df.format(Mario.lives), 0, 0, 7);
-		// drawStringDropShadow(g, "#########", 0, 1, 7);
 
 		drawStringDropShadow(g, "DIFFICULTY:   " + df.format(this.levelDifficulty), 0, 0,
 				this.levelDifficulty > 6 ? 1 : this.levelDifficulty > 2 ? 4 : 7);
@@ -1098,41 +1081,35 @@ public class LevelScene extends Scene implements SpriteContext {
 			g.drawString("x : " + mario.getX() + "y: " + mario.getY(), 70, 50);
 			g.drawString("xOld : " + mario.getxOld() + "yOld: " + mario.getyOld(), 70, 60);
 		}
-
-		if (startTime > 0) {
-			float t = startTime + alpha - 2;
-			t = t * t * 0.6f;
-			renderBlackout(g, 160, 120, (int) (t));
-		}
-		// mario.x>level.xExit*16
-		if (mario.getWinTime() > 0) {
-			float t = mario.getWinTime() + alpha;
-			t = t * t * 0.2f;
-
-			if (t > 500) {
-				renderer.levelWon();
-			}
-
-			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (320 - t));
+		
+		if (!startReady&&startTime > 0) {
+			renderBlackout(g, 160, 120, (int) (blackoutTimer));
+			blackoutTimer+=10;
+			if(blackoutTimer>=320) startReady=true;
 		}
 
-		if (mario.getDeathTime() > 0||timeLeft<=0||mario.getStatus()==STATUS.LOSE) {
-			 float t = mario.getDeathTime() + alpha;
-			 t = t * t * 0.4f;
-			 //System.out.println(alpha);
-//			 System.out.println(mario.getDeathTime());
-//			 System.out.println(mario.getStatus());
-//			 System.out.println(t);
-			// if (t > 500){
-			 renderer.levelFailed();
-			// System.out.println("used");
-			// }
-			 
-			 renderBlackout(g, (int) (mario.getxDeathPos() - xCam), (int) (mario.getyDeathPos() - yCam), (int) (320 - t));
-			 
-
+		if (mario.getStatus()==STATUS.WIN) {
+			paused=true;
+			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (blackoutTimer));
+			renderer.levelWon();
+			blackoutTimer-=10;
 			
+			if (blackoutTimer < 0){
+				readyToExit=true;
+			}
 		}
+		
+		if (timeLeft<=0||mario.getStatus()==STATUS.LOSE) { 
+			paused=true;
+			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (blackoutTimer));
+			renderer.levelFailed();
+			blackoutTimer-=10;
+			
+			if (blackoutTimer < 0){
+				readyToExit=true;
+			}
+		}
+
 	}
 
 	private void drawProgress(Graphics g) {
@@ -1293,7 +1270,7 @@ public class LevelScene extends Scene implements SpriteContext {
 	}
  
 	public void setPaused(boolean paused) {
-		this.paused = paused;
+		this.setpaused = paused;
 	}
 
 	public int getKilledCreaturesTotal() {
@@ -1565,11 +1542,27 @@ public class LevelScene extends Scene implements SpriteContext {
 	}
 
 	public void togglePaused() {
-		this.paused=!paused;
+		this.setpaused=!setpaused;
 	}
 	
 	public void usedFireball() {
 		lastTickFireball=tick;
+	}
+
+	public boolean isReadyToExit() {
+		return readyToExit;
+	}
+
+	public boolean isPerformTick() {
+		return performTick;
+	}
+
+	public void setPerformTick(boolean performTick) {
+		this.performTick = performTick;
+	}
+	
+	public void checkPaused() {
+		this.paused=this.setpaused;
 	}
 
 }

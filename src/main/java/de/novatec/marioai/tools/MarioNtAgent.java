@@ -373,7 +373,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return
 	 */
 	public final List<Entity> getEntitiesAt(int x,int y){
-		return entities.getEntities(x, y);
+		return entities.getEntitiesAt(x, y);
 	}
 	
 	/**
@@ -493,6 +493,14 @@ public abstract class MarioNtAgent implements Agent{
 	 */
 	public final LevelScene getDeepCopyOfLevelScene(){
 		return env.getLevelScene().getDeepCopy();
+	}
+	
+	/**
+	 * 
+	 * @return Score of the actual LevelScene 
+	 */
+	public final double getActualScore() {
+		return env.getLevelScene().getScore();
 	}
 	
 	////////////////////////////////

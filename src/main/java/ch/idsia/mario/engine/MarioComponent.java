@@ -119,12 +119,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
         image = createVolatileImage(320, 240);
 
-        if (!rOptions.isViewable()) {
-            String msgClick = "Vizualization is not available";
-            drawString(og, msgClick, 160 - msgClick.length() * 4, 110, 1);
-            drawString(og, msgClick, 160 - msgClick.length() * 4, 110, 7);
-        }
-
         addFocusListener(this);
 
         long startTime = System.currentTimeMillis();  // Remember the starting time
@@ -132,12 +126,15 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
         int totalActionsPerfomed = 0;
 
-        while (/*Thread.currentThread() == animator*/ running) {
+        while (running||!levelScene.isReadyToExit()) {
+        	levelScene.checkPaused();
+        	        	
         	g=getGraphics();
         	og=image.getGraphics();
             levelScene.tick();
+          
             float alpha = 0;
-            
+
             if (rOptions.isViewable()) {
                 og.fillRect(0, 0, getSize().width, getSize().height);
                 levelScene.render(og, alpha);
@@ -146,7 +143,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
             	if(!levelScene.isPaused()) action = getAgent().getAction(this);
             	
-            	if(debugView&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og, this);
+            	if(rOptions.isViewable()&&debugView&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og, this);
            
             if (action != null)
             {
@@ -194,8 +191,8 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
                 } else {
                 // Win or Die without renderer!! independently.
                 marioStatus =  levelScene.getMarioStatus();
-                if (marioStatus != STATUS.RUNNING)
-                    stop();
+                if (marioStatus != STATUS.RUNNING) break;
+                
             }
            
             // Delay depending on how far we are behind.
@@ -532,11 +529,12 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
 	@Override
 	public void resizeView(int width, int height) {
+		if(levelScene.getMarioStatus()!=STATUS.RUNNING) return;
 		if(width<320) width=320;
 		if(height<240) height=240;
 		
 		if(Toolkit.getDefaultToolkit().getScreenSize().width<width||Toolkit.getDefaultToolkit().getScreenSize().height<height) return;
-		if(levelScene.getMarioStatus()!=STATUS.RUNNING) return;
+		
 		
 		Dimension d=new Dimension(width, height);
 		this.setPreferredSize(d);
