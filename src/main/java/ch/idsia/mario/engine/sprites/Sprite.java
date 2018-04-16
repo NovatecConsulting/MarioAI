@@ -101,7 +101,7 @@ public abstract class Sprite
         y+=ya;
     }
     
-    public void render(Graphics og, float alpha)
+    public void render(Graphics og)
     {
         if (!visible) return;
         

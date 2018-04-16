@@ -86,7 +86,7 @@ public class BgRenderer
         }
     }
 
-    public void render(Graphics g, int tick, float alpha)
+    public void render(Graphics g, int tick)
     {
         g.drawImage(image, 0, 0, null);
     }

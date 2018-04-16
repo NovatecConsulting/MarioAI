@@ -55,4 +55,10 @@ public class HumanKeyboardAgent extends MarioNtAgent implements KeyListener {
 		}
 	}
 
+	@Override
+	public AGENT_TYPE getType() {
+		return AGENT_TYPE.HUMAN;
+	}
+
+	
 }

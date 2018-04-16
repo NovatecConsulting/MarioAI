@@ -34,6 +34,8 @@ public interface Environment
     public void setPaused(boolean paused);
     public void togglePaused();
     
+    public void performTick();
+    
     public boolean isDebugView();
     public void setDebugView(boolean debugView);
     public void toggleDebugView();

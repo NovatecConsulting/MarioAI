@@ -579,7 +579,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void stomp(Enemy enemy) {
-		if (getDeathTime() > 0 || spriteContext.isPaused())
+		if (getDeathTime() > 0 )
 			return;
 
 		float targetY = enemy.y - enemy.height / 2;
@@ -595,7 +595,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void stomp(Shell shell) {
-		if (getDeathTime() > 0 || spriteContext.isPaused())
+		if (getDeathTime() > 0)
 			return;
 
 		if (keys[KEY_SPEED] && shell.getFacing() == 0) {
@@ -616,7 +616,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void getHurt() {
-		if (getDeathTime() > 0 || spriteContext.isPaused() || isMarioInvulnerable())
+		if (getDeathTime() > 0  || isMarioInvulnerable())
 			return;
 
 		if (invulnerableTime > 0)
@@ -654,7 +654,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void getFlower() {
-		if (getDeathTime() > 0 || spriteContext.isPaused())
+		if (getDeathTime() > 0)
 			return;
 
 		if (!fire) {
@@ -667,7 +667,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void getMushroom() {
-		if (getDeathTime() > 0 || spriteContext.isPaused())
+		if (getDeathTime() > 0)
 			return;
 
 		if (!isLarge()) {
@@ -680,7 +680,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void kick(Shell shell) {
-		 if (deathTime > 0 || spriteContext.isPaused()) return;
+		 if (deathTime > 0) return;
 
 		if (keys[KEY_SPEED]) {
 			setCarried(shell);
@@ -691,7 +691,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void stomp(BulletBill bill) {
-		if (getDeathTime() > 0 || spriteContext.isPaused())
+		if (getDeathTime() > 0)
 			return;
 
 		float targetY = bill.y - BulletBill.getHeight() / 2;

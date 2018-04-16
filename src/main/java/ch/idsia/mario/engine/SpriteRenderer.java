@@ -13,7 +13,13 @@ public class SpriteRenderer {
 		this.sprites=sprites;
 	}
 	
-	public void render(Graphics g, float alpha) {
-		
+	public void render(Graphics g,int xCam,int yCam, int layer) {
+		g.translate(-xCam, -yCam);
+
+		for (Sprite sprite : sprites) { //not used?
+			if (sprite.getLayer() == layer) {
+				sprite.render(g);
+			}
+		}
 	}
 }

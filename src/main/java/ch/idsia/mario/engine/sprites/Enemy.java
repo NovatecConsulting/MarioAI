@@ -411,12 +411,12 @@ public class Enemy extends Sprite //cloneable
         }
     }
 
-    public void render(Graphics og, float alpha)
+    public void render(Graphics og)
     {
         if (winged)
         {
-            int xPixel = (int) (xOld + (x - xOld) * alpha) - xPicO;
-            int yPixel = (int) (yOld + (y - yOld) * alpha) - yPicO;
+            int xPixel = (int) xOld - xPicO;
+            int yPixel = (int) yOld - yPicO;
 
             if (type == Enemy.ENEMY_GREEN_KOOPA || type == Enemy.ENEMY_RED_KOOPA)
             {
@@ -429,12 +429,12 @@ public class Enemy extends Sprite //cloneable
             }
         }
 
-        super.render(og, alpha);
+        super.render(og);
 
         if (winged)
         {
-            int xPixel = (int) (xOld + (x - xOld) * alpha) - xPicO;
-            int yPixel = (int) (yOld + (y - yOld) * alpha) - yPicO;
+            int xPixel = (int) xOld - xPicO;
+            int yPixel = (int) yOld - yPicO;
 
             if (type == Enemy.ENEMY_GREEN_KOOPA || type == Enemy.ENEMY_RED_KOOPA)
             {

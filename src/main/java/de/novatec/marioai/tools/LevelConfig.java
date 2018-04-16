@@ -149,6 +149,7 @@ public class LevelConfig{
 	 */
 	public static LevelConfig randomize(LevelConfig toRandomize) {
 		if(toRandomize!=null) {
+			
 			int[] odds=toRandomize.getOdds();
 			if(odds==null) {
 				odds=new int[5];
@@ -274,6 +275,7 @@ public class LevelConfig{
 	}
 
 	public int[] getOdds() { // IMPORTANT: don't return odds directly
+		if(odds==null) return null;
 		return Arrays.copyOf(odds, odds.length);
 	}
 }

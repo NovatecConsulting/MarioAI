@@ -51,7 +51,6 @@ public abstract class MarioNtAgent implements Agent{
 	@Override
 	public final boolean[] getAction(Environment observation) {
 		
-		
 		env=observation;
 		if(tiles==null) tiles=new Tiles(observation);
 		else tiles.setEnvironment(observation);
@@ -78,7 +77,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * Returns the AGENT_TYPE of the agent, not very useful anymore.
 	 */
 	@Override
-	public final AGENT_TYPE getType() {
+	public AGENT_TYPE getType() {
 		return AGENT_TYPE.AI;
 	}
 

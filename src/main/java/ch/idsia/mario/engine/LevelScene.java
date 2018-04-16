@@ -1,6 +1,5 @@
 package ch.idsia.mario.engine;
 
-import ch.idsia.mario.engine.level.BgLevelGenerator;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.level.LevelGenerator;
 import ch.idsia.mario.engine.level.SpriteTemplate;
@@ -16,17 +15,15 @@ import de.novatec.mario.engine.generalization.Tile;
 import de.novatec.mario.engine.generalization.Tiles.TileType;
 import de.novatec.marioai.tools.LevelConfig;
 
-import java.awt.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class LevelScene extends Scene implements SpriteContext {
+public class LevelScene  implements SpriteContext {
 	//- Sprites
 	private List<Sprite> sprites = new ArrayList<Sprite>();
 	private List<Sprite> spritesToAdd = new ArrayList<Sprite>();
@@ -37,30 +34,12 @@ public class LevelScene extends Scene implements SpriteContext {
 	private float xCam, yCam;
 	private int tick,lastTickFireball;
 
-	//- Renderer //TODO MOVE TO MARIOCOMPONENT
-	private LevelRenderer layer;
-	private BgRenderer[] bgLayer = new BgRenderer[2];
-	private boolean readyToExit=false,startReady=false;
-
-	private GraphicsConfiguration graphicsConfiguration;
-
 	//- Time 
 	private static final int TPS=24; // ticks per second, used for correct timing 
-	private boolean paused = false,setpaused=false, performTick=false;
 	private int startTime = 0;
 	private int timeLeft;
 	private int totalTime = 200; //standard, but will always be overridden
-	private float blackoutTimer;
-	
 	private int fireballsOnScreen = 0;
-	
-	public int getTotalTime() {
-		return totalTime; 
-	}
-
-	public void setTotalTime(int totalTime) {
-		this.totalTime = totalTime;
-	}
 	
 	private long levelSeed;
 	private MarioComponent renderer;
@@ -72,9 +51,8 @@ public class LevelScene extends Scene implements SpriteContext {
 	private int killedCreaturesByStomp;
 	private int killedCreaturesByShell;
 
-	public LevelScene(GraphicsConfiguration graphicsConfiguration, MarioComponent renderer, long seed,
+	public LevelScene(MarioComponent renderer, long seed,
 			int levelDifficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
-		this.graphicsConfiguration = graphicsConfiguration;
 		this.levelSeed = seed;
 		this.renderer = renderer;
 		this.levelDifficulty = levelDifficulty;
@@ -91,8 +69,8 @@ public class LevelScene extends Scene implements SpriteContext {
 	public String toString() {
 		return "LevelScene [sprites=" + sprites.size() + ", spritesToAdd=" + spritesToAdd.size() + ", spritesToRemove="
 				+ spritesToRemove.size() + ", level=" + level + ", mario=" + mario + ", xCam=" + xCam + ", yCam=" + yCam
-				+ ", tick=" + tick + ", layer=" + layer + ", bgLayer=" + Arrays.toString(bgLayer)
-				+ ", graphicsConfiguration=" + graphicsConfiguration + ", paused=" + paused + ", startTime=" + startTime
+				+ ", tick=" + tick 
+				+ ", startTime=" + startTime
 				+ ", timeLeft=" + timeLeft + ", fireballsOnScreen=" + fireballsOnScreen + ", totalTime=" + totalTime
 				+ ", levelSeed=" + levelSeed + ", renderer=" + renderer + ", levelType=" + levelType
 				+ ", levelDifficulty=" + levelDifficulty + ", levelLength=" + levelLength + ", killedCreaturesTotal="
@@ -121,13 +99,8 @@ public class LevelScene extends Scene implements SpriteContext {
 		this.yCam = toCopy.yCam;
 		this.tick = toCopy.tick;
 		this.lastTickFireball=toCopy.lastTickFireball;
-		this.layer = new LevelRenderer(level, toCopy.layer);
+		//this.layer = new LevelRenderer(level, toCopy.layer);
 		
-		this.bgLayer = toCopy.bgLayer; // special cloneable needed? ->nope(wont used by tick)
-		
-		this.graphicsConfiguration = toCopy.graphicsConfiguration; //read-only, shouldn't be a problem(wont used by tick)
-		
-		this.paused = toCopy.paused;
 		this.startTime = toCopy.startTime;
 		this.timeLeft = toCopy.timeLeft;
 		this.totalTime = toCopy.totalTime;
@@ -833,26 +806,15 @@ public class LevelScene extends Scene implements SpriteContext {
 			level=LevelGenerator.createFlatLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.isEnemies(), config.isBricks(), config.isCoins()); // flat level generation
 		}
 		else level=LevelGenerator.createCustomLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType(), config.getOdds(),config.isEnemies(), config.isBricks(), config.isCoins()); //custom level generation
-		
-		
-		setPaused(false);
+
 		sprites.clear();
-		layer = new LevelRenderer(level, graphicsConfiguration, 320, 240);
-		for (int i = 0; i < 2; i++) {
-			int scrollSpeed = 4 >> i;
-			int w = ((level.getWidth() * 16) - 320) / scrollSpeed + 320;
-			int h = ((level.getHeight() * 16) - 240) / scrollSpeed + 240;
-			Level bgLevel = BgLevelGenerator.createLevel(w / 32 + 1, h / 32 + 1, i == 0, levelType);
-			bgLayer[i] = new BgRenderer(bgLevel, graphicsConfiguration, 320, 240, scrollSpeed);
-		}
+		
 		mario = new Mario(this,renderer.getRunnerOptions().getMarioStartMode());
 
 		sprites.add(mario);
 		startTime = 1;
 
 		timeLeft = totalTime * TPS;
-		blackoutTimer=0;
-
 		tick = 0;
 		lastTickFireball=-1;
 	}
@@ -871,14 +833,14 @@ public class LevelScene extends Scene implements SpriteContext {
 
 	public void tick() {
 		
-		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING&&!paused)
+		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING)
 			timeLeft--;
 		
 		if (timeLeft == 0) {
 			mario.die();			
 		}
 		
-		if (startTime > 0&&mario.getStatus()==STATUS.RUNNING&&!paused) {
+		if (startTime > 0&&mario.getStatus()==STATUS.RUNNING) {
 			startTime++;
 		}
 
@@ -907,20 +869,13 @@ public class LevelScene extends Scene implements SpriteContext {
 			}
 		}
 
-		if (isPaused()) {
-			for (Sprite sprite : sprites) {
-//				if (sprite == mario) {
-//					sprite.tick();
-//				} else {
-					sprite.tickNoMove();
-//				}
-			}
-		} else {
+	
+		
 			tick++;
 			level.tick();
 
-			for (int x = (int) xCam / 16 - 1; x <= (int) (xCam + layer.getWidth()) / 16 + 1; x++)
-				for (int y = (int) yCam / 16 - 1; y <= (int) (yCam + layer.getHeight()) / 16 + 1; y++) {
+			for (int x = (int) xCam / 16 - 1; x <= (int) (xCam + 320) / 16 + 1; x++)
+				for (int y = (int) yCam / 16 - 1; y <= (int) (yCam + 240) / 16 + 1; y++) {
 					int dir = 0;
 
 					if (x * 16 + 8 > mario.getX() + 16)
@@ -989,134 +944,13 @@ public class LevelScene extends Scene implements SpriteContext {
 				}
 			}
 			fireballsToCheck.clear();
-		}
+		
 
 		sprites.addAll(0, spritesToAdd);
 		sprites.removeAll(spritesToRemove);
 		spritesToAdd.clear();
 		spritesToRemove.clear();
-	}
-
-	public void render(Graphics g, float alpha) {
-		int xCam = (int) (mario.getxOld() + (mario.getX() - mario.getxOld()) * alpha) - 160;
-		int yCam = (int) (mario.getyOld() + (mario.getY() - mario.getyOld()) * alpha) - 120;
-
-		if (!renderer.getRunnerOptions().isMarioAlwaysCentered()) {
-		
-			// int xCam = (int) (xCamO + (this.xCam - xCamO) * alpha);
-			// int yCam = (int) (yCamO + (this.yCam - yCamO) * alpha);
-			if (xCam < 0)
-				xCam = 0;
-			if (yCam < 0)
-				yCam = 0;
-			if (xCam > level.getWidth() * 16 - 320)
-				xCam = level.getWidth() * 16 - 320;
-			if (yCam > level.getHeight() * 16 - 240)
-				yCam = level.getHeight() * 16 - 240;
-		}
-
-		for (int i = 0; i < 2; i++) {
-			bgLayer[i].setCam(xCam, yCam);
-			bgLayer[i].render(g, tick, alpha);
-		}
-
-		g.translate(-xCam, -yCam);
-
-		for (Sprite sprite : sprites) {
-			if (sprite.getLayer() == 0)
-				sprite.render(g, alpha);
-		}
-
-		g.translate(xCam, yCam);
-
-		layer.setCam(xCam, yCam);
-		layer.render(g, tick, isPaused() ? 0 : alpha);
-		layer.renderExit0(g, tick, isPaused() ? 0 : alpha, mario.getWinTime() == 0);
-
-		g.translate(-xCam, -yCam);
-
-		for (Sprite sprite : sprites) {
-			if (sprite.getLayer() == 1)
-				sprite.render(g, alpha);
-
-		}
-
-		g.translate(xCam, yCam);
-		g.setColor(Color.BLACK);
-		layer.renderExit1(g, tick, isPaused() ? 0 : alpha);
-
-		if (renderer.getRunnerOptions().isLabels()) {
-			g.drawString("xCam: " + xCam + "yCam: " + yCam, 70, 40);
-			g.drawString("x : " + mario.getX() + "y: " + mario.getY(), 70, 50);
-			g.drawString("xOld : " + mario.getxOld() + "yOld: " + mario.getyOld(), 70, 60);
-		}
-		
-		if (!startReady&&startTime > 0) {
-			renderBlackout(g, 160, 120, (int) (blackoutTimer));
-			blackoutTimer+=10;
-			if(blackoutTimer>=320) startReady=true;
-		}
-
-		if (mario.getStatus()==STATUS.WIN) {
-			setpaused=true;
-			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (blackoutTimer));
-			renderer.levelWon();
-			blackoutTimer-=10;
-			
-			if (blackoutTimer < 0){
-				readyToExit=true;
-			}
-		}
-		
-		if (timeLeft<=0||mario.getStatus()==STATUS.LOSE) { 
-			setpaused=true;
-			renderBlackout(g, mario.getxDeathPos() - xCam, mario.getyDeathPos() - yCam, (int) (blackoutTimer));
-			renderer.levelFailed();
-			blackoutTimer-=10;
-			
-			if (blackoutTimer < 0){
-				readyToExit=true;
-			}
-		}
-		
-
-	}
-
-	public void renderBlackout(Graphics g, int x, int y, int radius) { //TODO MOVE TO MarioComponent
-		if (radius > 320)
-			return;
-
-		int[] xp = new int[20];
-		int[] yp = new int[20];
-		for (int i = 0; i < 16; i++) {
-			xp[i] = x + (int) (Math.cos(i * Math.PI / 15) * radius);
-			yp[i] = y + (int) (Math.sin(i * Math.PI / 15) * radius);
-		}
-		xp[16] = 320;
-		yp[16] = y;
-		xp[17] = 320;
-		yp[17] = 240;
-		xp[18] = 0;
-		yp[18] = 240;
-		xp[19] = 0;
-		yp[19] = y;
-		g.fillPolygon(xp, yp, xp.length);
-
-		for (int i = 0; i < 16; i++) {
-			xp[i] = x - (int) (Math.cos(i * Math.PI / 15) * radius);
-			yp[i] = y - (int) (Math.sin(i * Math.PI / 15) * radius);
-		}
-		xp[16] = 320;
-		yp[16] = y;
-		xp[17] = 320;
-		yp[17] = 0;
-		xp[18] = 0;
-		yp[18] = 0;
-		xp[19] = 0;
-		yp[19] = y;
-
-		g.fillPolygon(xp, yp, xp.length);
-	}
+}
 
 	public void addSprite(Sprite sprite) {
 		spritesToAdd.add(sprite);
@@ -1186,14 +1020,6 @@ public class LevelScene extends Scene implements SpriteContext {
 		return timeLeft / TPS;
 	}
 	
-	public boolean isPaused() {
-		return paused;
-	}
- 
-	public void setPaused(boolean paused) {
-		this.setpaused = paused;
-	}
-
 	public int getKilledCreaturesTotal() {
 		return killedCreaturesTotal;
 	}
@@ -1264,6 +1090,14 @@ public class LevelScene extends Scene implements SpriteContext {
 		return mario.getMapX();
 	}
 	
+	public float getMarioXA() {
+		return mario.getXa();
+	}
+	
+	public float getMarioXCam() {
+		return xCam;
+	}
+	
 	public float getMarioY() {
 		return mario.getY();
 	}
@@ -1272,16 +1106,8 @@ public class LevelScene extends Scene implements SpriteContext {
 		return mario.getMapY();
 	}
 	
-	public float getMarioXA() {
-		return mario.getXa();
-	}
-	
 	public float getMarioYA() {
 		return mario.getYa();
-	}
-	
-	public float getMarioXCam() {
-		return xCam;
 	}
 	
 	public int getMarioFacing() {
@@ -1462,43 +1288,52 @@ public class LevelScene extends Scene implements SpriteContext {
 		return levelSeed;
 	}
 
-	public void togglePaused() {
-		this.setpaused=!setpaused;
-	}
-	
 	public void usedFireball() {
 		lastTickFireball=tick;
 	}
 
-	public boolean isReadyToExit() {
-		return readyToExit;
-	}
-
-	public boolean isPerformTick() {
-		return performTick;
-	}
-
-	public void setPerformTick(boolean performTick) {
-		this.performTick = performTick;
+	protected List<Sprite> getSprites() {
+		return sprites;
 	}
 	
-	public void checkPaused() {
-		this.paused=this.setpaused;
-	}
-
-	public int getLevelDifficulty() {
-		return levelDifficulty;
-	}
-
+	//---Level
 	public Level.LEVEL_TYPES getLevelType() {
 		return levelType;
-	}
-
-	protected SpriteRenderer getInstanceOfSpriteRenderer() {
-		return new SpriteRenderer(sprites);
 	}
 	
 	public int getTotalCoins() {
 		return level.getTotalCoins();
+	}
+
+	protected Level getLevel() {
+		return level;
+	}
+	
+	public int getLevelDifficulty() {
+		return levelDifficulty;
+	}
+		
+	//--- Camera
+
+	public float getxCam() {
+		return xCam;
+	}
+
+	public float getyCam() {
+		return yCam;
+	}
+	
+	//---Time & Ticks
+
+	public int getTick() {
+		return tick;
+	}
+	
+	public int getTotalTime() {
+		return totalTime; 
+	}
+
+	public void setTotalTime(int totalTime) {
+		this.totalTime = totalTime;
 	}
 }

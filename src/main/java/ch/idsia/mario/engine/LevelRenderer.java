@@ -113,7 +113,7 @@ public class LevelRenderer
         }
     }
 
-    public void render(Graphics g, int tick, float alpha)
+    public void render(Graphics g, int tick)
     {
         g.drawImage(image, 0, 0, null);
 
@@ -137,7 +137,7 @@ public class LevelRenderer
                     }
                     int yo = 0;
                     if (x >= 0 && y >= 0 && x < level.getWidth() && y < level.getHeight()) yo = level.getData(x, y); 
-                    if (yo > 0) yo = (int) (Math.sin((yo - alpha) / 4.0f * Math.PI) * 8);
+                    if (yo > 0) yo = (int) (Math.sin((yo) / 4.0f * Math.PI) * 8);
                     g.drawImage(Art.level[(b % 16) / 4 * 4 + animTime][b / 16], (x << 4) - xCam, (y << 4) - yCam - yo, null);
                 }
                 /*                else if (b == Level.TILE_BONUS)
@@ -208,13 +208,13 @@ public class LevelRenderer
         updateArea(0, 0, width, height);
     }
 
-    public void renderExit0(Graphics g, int tick, float alpha, boolean bar) //renders exit (one of the two poles at the end)
+    public void renderExit0(Graphics g, int tick,boolean bar) //renders exit (left pole and middle thingy)
     { 
         for (int y = level.getYExit() - 8; y < level.getYExit(); y++)
         {
             g.drawImage(Art.level[12][y == level.getYExit() - 8 ? 4 : 5], (level.getXExit() << 4) - xCam - 16, (y << 4) - yCam, null);
         }
-        int yh = level.getYExit() * 16 - (int) ((Math.sin((tick + alpha) / 20) * 0.5 + 0.5) * 7 * 16) - 8;
+        int yh = level.getYExit() * 16 - (int) ((Math.sin(((double)tick) / 20) * 0.5 + 0.5) * 7 * 16) - 8;
         if (bar)
         {
             g.drawImage(Art.level[12][3], (level.getXExit() << 4) - xCam - 16, yh - yCam, null);
@@ -223,7 +223,7 @@ public class LevelRenderer
     }
 
 
-    public void renderExit1(Graphics g, int tick, float alpha)
+    public void renderExit1(Graphics g, int tick) //renders exit (right pole)
     {
         for (int y = level.getYExit() - 8; y < level.getYExit(); y++)
         {

@@ -1,6 +1,7 @@
 package ch.idsia.mario.engine;
 
 import ch.idsia.ai.agents.Agent;
+import ch.idsia.mario.engine.level.BgLevelGenerator;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
@@ -23,12 +24,18 @@ import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
-
 public class MarioComponent extends JComponent implements Runnable, FocusListener, Environment {
     private static final long serialVersionUID = 790878775993203817L;
 
     private boolean running = false;
     private GraphicsConfiguration graphicsConfiguration;
+    private LevelRenderer layer;
+    private BgRenderer[] bgLayer = new BgRenderer[2];
+    private SpriteRenderer spriteRenderer;
+    private boolean readyToExit=false,startReady=false;
+    private float blackoutTimer;
+    private boolean paused = false,setpaused=false, performTick=false;
+    
     private RunnerOptions rOptions;
     
     private boolean debugView;
@@ -36,6 +43,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
     private int frame;
     private int delay;
+    
     private static final int GENERALIZATION_ENEMIES = 1;
     private static final int GENERALIZATION_LEVELSCENE = 1;
     private static final DecimalFormat df = new DecimalFormat("0.0");
@@ -70,6 +78,11 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		this.graphicsConfiguration = toCopy.graphicsConfiguration; //ready only
 		this.rOptions = new RunnerOptions(toCopy.rOptions);
 		this.frame = toCopy.frame;
+		this.blackoutTimer=toCopy.blackoutTimer;
+		
+		this.paused=toCopy.paused;
+		this.setpaused=toCopy.setpaused;
+		this.performTick=toCopy.performTick;
 		
 		this.delay = toCopy.delay;
 		
@@ -94,7 +107,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     public void update(Graphics g) {
     }
 
-    public void init() {
+    public void init() { //needs to stay, parent container must add this before calling init()
         graphicsConfiguration = getGraphicsConfiguration();
         if (graphicsConfiguration != null) {
             Art.init(graphicsConfiguration);
@@ -107,10 +120,15 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     }
 
     public void run() {
+    }
     
+    private void checkPaused() {
+    	if(levelScene.getMarioStatus()==STATUS.RUNNING)	this.paused=setpaused;
+    	else this.paused=true;
     }
 
     public EvaluationInfo run1(int currentTrial, int totalNumberOfTrials) {
+    	
         running = true;
         adjustFPS();
         EvaluationInfo evaluationInfo = new EvaluationInfo();
@@ -128,28 +146,28 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
         int totalActionsPerfomed = 0;
 
-        while (running||!levelScene.isReadyToExit()) {
-        	levelScene.checkPaused();
-        	        	
+        while (running||!readyToExit) {
+        	boolean tmpPerformTick=performTick;
+        	checkPaused();
+
         	g=getGraphics();
         	og=image.getGraphics();
-            levelScene.tick();
+            if(!paused||tmpPerformTick)levelScene.tick();
           
-            float alpha = 0;
-
             if (rOptions.isViewable()) {
                 og.fillRect(0, 0, getSize().width, getSize().height);
-                levelScene.render(og, alpha);
+                render(og);
+                checkGameStatus(og);
             }
             boolean[] action = {false,false,false,false,false};
 
-            	if(!levelScene.isPaused()) action = getAgent().getAction(this);
+            	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
             	
             	if(rOptions.isViewable()&&debugView&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og, this);
            
             if (action != null)
             {
-              if(!levelScene.isPaused()) for (int i = 0; i < Environment.numberOfButtons; ++i)
+              if(!paused||tmpPerformTick) for (int i = 0; i < Environment.numberOfButtons; ++i)
                     if (action[i])
                     {
                         ++totalActionsPerfomed;
@@ -162,7 +180,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
                 stop();
             }
 
-            if(!levelScene.isPaused()) levelScene.setMarioKeys(action);
+            if(!paused||tmpPerformTick) levelScene.setMarioKeys(action);
 
             if (rOptions.isViewable()) {
                 if(running) {
@@ -209,6 +227,8 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
                 }
             // Advance the frame
             frame++;
+            
+            if(tmpPerformTick==true)performTick=false;
         } 
         
         //--- Show results on end screen
@@ -248,6 +268,63 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     }
     
    //--- Rendering
+    
+    private void render(Graphics g) {
+    	int xCam=(int)levelScene.getxCam();
+    	int yCam=(int)levelScene.getyCam();
+    	int tick=levelScene.getTick();
+    	for (int i = 0; i < 2; i++) {
+			bgLayer[i].setCam(xCam, yCam);
+			bgLayer[i].render(g, tick);
+		}
+    	
+    	spriteRenderer.render(g,xCam, yCam,0);
+    	
+    	g.translate((int)levelScene.getxCam(), (int)levelScene.getyCam());
+    	layer.setCam(xCam,yCam);
+		layer.render(g, tick);
+		layer.renderExit0(g, tick, levelScene.getMarioStatus()!=STATUS.WIN);
+		
+		spriteRenderer.render(g,xCam, yCam,1);
+		
+		g.translate((int)levelScene.getxCam(), (int)levelScene.getyCam());
+		g.setColor(Color.BLACK);
+		layer.renderExit1(g, tick);
+    }
+    
+    private void checkGameStatus(Graphics g) {
+    	int xCam=(int)levelScene.getxCam();
+    	int yCam=(int)levelScene.getyCam();
+    	
+    	if (!startReady&&levelScene.getStartTime() > 0) {
+			renderBlackout(g, 160, 120, (int) (blackoutTimer));
+			blackoutTimer+=10;
+			if(blackoutTimer>=320) startReady=true;
+		}
+
+		if (levelScene.getMarioStatus()==STATUS.WIN) {
+			setpaused=true;
+			renderBlackout(g, (int)levelScene.getMarioX() - xCam, (int)levelScene.getMarioY() - yCam, (int) (blackoutTimer));
+			levelWon();
+			if ((int)blackoutTimer <= 0){
+				readyToExit=true;
+			}
+			else blackoutTimer-=10;
+		}
+		
+		if (levelScene.getTimeLeft()<=0||levelScene.getMarioStatus()==STATUS.LOSE) { 
+			setpaused=true;
+			renderBlackout(g, (int)levelScene.getMarioX() - xCam, (int)levelScene.getMarioY() - yCam, (int) (blackoutTimer));
+			levelFailed();
+
+			if ((int)blackoutTimer <= 0){
+				readyToExit=true;
+			}
+			else blackoutTimer-=10;
+		}
+		
+    }
+    
     public static void drawStringDropShadow(Graphics g, String text, int x, int y, int c) {
 		drawString(g, text, x * 8 + 5, y * 8 + 5, 0);
 		drawString(g, text, x * 8 + 4, y * 8 + 4, c);
@@ -260,7 +337,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		}
 	}
 	
-	@SuppressWarnings("unused") //TODO USE
 	private void renderBlackout(Graphics g, int x, int y, int radius) {
 		if (radius > 320)
 			return;
@@ -296,12 +372,11 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
 		g.fillPolygon(xp, yp, xp.length);
 	}
-
 	
 	private void drawInfos(Graphics g) {
 		
 		MarioComponent.drawStringDropShadow(g, "DIFFICULTY: " + df2.format(levelScene.getLevelDifficulty()), 0, 0,levelScene.getLevelDifficulty() > 6 ? 1 : levelScene.getLevelDifficulty() > 2 ? 4 : 7);
-		MarioComponent.drawStringDropShadow(g, "World " + (levelScene.isPaused() ? "paused" : "running"), 19, 0, 7);
+		MarioComponent.drawStringDropShadow(g, "World " + (paused ? "paused" : "running"), 19, 0, 7);
 		MarioComponent.drawStringDropShadow(g, "SEED:" + levelScene.getLevelSeed(), 0, 1, 7);
 		MarioComponent.drawStringDropShadow(g, "TYPE:" + levelScene.getLevelType(), 0, 2, 7);
 		MarioComponent.drawStringDropShadow(g, "ALL KILLS: " + getKillsTotal(), 19, 1, 1);
@@ -391,8 +466,19 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
 	//--- Control
     public void startLevel(long seed, int difficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
-        levelScene = new LevelScene(graphicsConfiguration, this, seed, difficulty, type, levelLength, timeLimit);
+        levelScene = new LevelScene(this, seed, difficulty, type, levelLength, timeLimit);
         levelScene.init();
+        layer = new LevelRenderer(levelScene.getLevel(), graphicsConfiguration, 320, 240);
+        
+        for (int i = 0; i < 2; i++) {
+			int scrollSpeed = 4 >> i;
+			int w = ((levelScene.getLevelWidth() * 16) - 320) / scrollSpeed + 320;
+			int h = ((levelScene.getLevelHight() * 16) - 240) / scrollSpeed + 240;
+			Level bgLevel = BgLevelGenerator.createLevel(w / 32 + 1, h / 32 + 1, i == 0, levelScene.getLevelType());
+			bgLayer[i] = new BgRenderer(bgLevel, graphicsConfiguration, 320, 240, scrollSpeed);
+		}
+        
+        spriteRenderer=new SpriteRenderer(levelScene.getSprites());
     }
 
     public void levelFailed() {
@@ -457,7 +543,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     }
 
     public void setPaused(boolean paused) {
-        levelScene.setPaused(paused);
+       setpaused=paused;
     } 
 
 	@Override
@@ -515,7 +601,15 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
 	@Override
 	public void togglePaused() {
-		levelScene.togglePaused();
+		this.setpaused=!setpaused;
+	}
+	
+	@Override
+	public void performTick() {
+		if(levelScene.getMarioStatus()==STATUS.RUNNING) {
+			setPaused(true);
+			this.performTick=true;
+		}
 	}
 
 	//--- Mario 

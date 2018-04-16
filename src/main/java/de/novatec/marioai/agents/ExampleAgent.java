@@ -7,7 +7,6 @@ import de.novatec.marioai.tools.MarioNtAgent;
 
 public class ExampleAgent extends MarioNtAgent{
 	
-	
 	@Override
 	public String getName() {
 		return "Test Agent";
@@ -23,7 +22,7 @@ public class ExampleAgent extends MarioNtAgent{
 		if(mayShoot()&&isEnemyAhead()) {
 			shoot();
 		}
-		
+		if(isEnemyAhead()) jump();
 		if(isSlopeAhead()&&!isHoleAhead()&&!(getDeepCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
 	
 		moveRight();
@@ -37,8 +36,7 @@ public class ExampleAgent extends MarioNtAgent{
 	}
 	
 	public static void main(String [] args) {		
-		MarioAiRunner.run(new HumanKeyboardAgent(), LevelConfig.TEST, 24, 3, false, true, false);
-
+		MarioAiRunner.run(new HumanKeyboardAgent(), LevelConfig.HARD_ENEMY_TRAINING, 24, 3, true, true, false);
 	}
 
 
