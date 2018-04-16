@@ -198,7 +198,8 @@ public class Shell extends Sprite //cloneable
         }
     }
 
-    private boolean move(float xa, float ya)
+    @SuppressWarnings("unused")
+	private boolean move(float xa, float ya)
     {
         while (xa > 8)
         {

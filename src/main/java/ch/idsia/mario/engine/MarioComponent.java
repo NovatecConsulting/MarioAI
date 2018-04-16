@@ -38,6 +38,8 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     private int delay;
     private static final int GENERALIZATION_ENEMIES = 1;
     private static final int GENERALIZATION_LEVELSCENE = 1;
+    private static final DecimalFormat df = new DecimalFormat("0.0");
+    private static final DecimalFormat df2 = new DecimalFormat("00");
 
     private KeyListener prevHumanKeyBoardAgent;
     private LevelScene levelScene = null;
@@ -105,7 +107,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     }
 
     public void run() {
-
+    
     }
 
     public EvaluationInfo run1(int currentTrial, int totalNumberOfTrials) {
@@ -164,11 +166,13 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 
             if (rOptions.isViewable()) {
                 if(running) {
+                	 drawProgress(og);
+                	 drawInfos(og);
                 	 String msg = "Agent: " + getAgent().getName();
-                     LevelScene.drawStringDropShadow(og, msg, 0, 7, 5); // DEBUG MESSAGES
+                     drawStringDropShadow(og, msg, 0, 7, 5); // DEBUG MESSAGES
 
                      msg = "Selected Actions: ";
-                     LevelScene.drawStringDropShadow(og, msg, 0, 8, 6);
+                     drawStringDropShadow(og, msg, 0, 8, 6);
 
                      msg = "";
                      if (action != null)
@@ -181,9 +185,9 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
                      drawString(og, msg, 6, 78, 1);
 
                      og.setColor(Color.DARK_GRAY);
-                	 LevelScene.drawStringDropShadow(og, "FPS: ", 33, 2, 7);
-                	 LevelScene.drawStringDropShadow(og, ((rOptions.getFPS() > 99) ? "\\infty" : ""+rOptions.getFPS()), 33, 3, 7);
-                     LevelScene.drawStringDropShadow(og, "Score: "+(int)levelScene.getScore(), 1,27, 4);
+                	 drawStringDropShadow(og, "FPS: ", 33, 2, 7);
+                	 drawStringDropShadow(og, ((rOptions.getFPS() > 99) ? "\\infty" : ""+rOptions.getFPS()), 33, 3, 7);
+                     drawStringDropShadow(og, "Score: "+(int)levelScene.getScore(), 1,27, 4);
                 }
 
                 g.drawImage(image, 0, 0, getSize().width, getSize().height, null); // set size to frame size
@@ -225,7 +229,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         evaluationInfo.timeLeft = levelScene.getTimeLeft();
         evaluationInfo.totalTimeGiven = levelScene.getTotalTime();
         evaluationInfo.numberOfGainedCoins = levelScene.getMarioCoins();
-//      evaluationInfo.totalNumberOfCoins   = -1 ; // TODO: total Number of coins.
+        evaluationInfo.totalNumberOfCoins   = levelScene.getTotalCoins() ; 
         evaluationInfo.totalActionsPerfomed = totalActionsPerfomed; // Counted during the play/simulation process
         evaluationInfo.totalFramesPerfomed = frame;
         evaluationInfo.marioMode = levelScene.getMarioMode();
@@ -243,49 +247,137 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         return evaluationInfo;
     }
     
+   //--- Rendering
+    public static void drawStringDropShadow(Graphics g, String text, int x, int y, int c) {
+		drawString(g, text, x * 8 + 5, y * 8 + 5, 0);
+		drawString(g, text, x * 8 + 4, y * 8 + 4, c);
+	}
+
+	private static void drawString(Graphics g, String text, int x, int y, int c) { //c: 0=black,1=red,2=green,3=blue,4=yellow
+		char[] ch = text.toCharArray();
+		for (int i = 0; i < ch.length; i++) {
+			g.drawImage(Art.font[ch[i] - 32][c], x + i * 8, y, null);
+		}
+	}
+	
+	@SuppressWarnings("unused") //TODO USE
+	private void renderBlackout(Graphics g, int x, int y, int radius) {
+		if (radius > 320)
+			return;
+
+		int[] xp = new int[20];
+		int[] yp = new int[20];
+		for (int i = 0; i < 16; i++) {
+			xp[i] = x + (int) (Math.cos(i * Math.PI / 15) * radius);
+			yp[i] = y + (int) (Math.sin(i * Math.PI / 15) * radius);
+		}
+		xp[16] = 320;
+		yp[16] = y;
+		xp[17] = 320;
+		yp[17] = 240;
+		xp[18] = 0;
+		yp[18] = 240;
+		xp[19] = 0;
+		yp[19] = y;
+		g.fillPolygon(xp, yp, xp.length);
+
+		for (int i = 0; i < 16; i++) {
+			xp[i] = x - (int) (Math.cos(i * Math.PI / 15) * radius);
+			yp[i] = y - (int) (Math.sin(i * Math.PI / 15) * radius);
+		}
+		xp[16] = 320;
+		yp[16] = y;
+		xp[17] = 320;
+		yp[17] = 0;
+		xp[18] = 0;
+		yp[18] = 0;
+		xp[19] = 0;
+		yp[19] = y;
+
+		g.fillPolygon(xp, yp, xp.length);
+	}
+
+	
+	private void drawInfos(Graphics g) {
+		
+		MarioComponent.drawStringDropShadow(g, "DIFFICULTY: " + df2.format(levelScene.getLevelDifficulty()), 0, 0,levelScene.getLevelDifficulty() > 6 ? 1 : levelScene.getLevelDifficulty() > 2 ? 4 : 7);
+		MarioComponent.drawStringDropShadow(g, "World " + (levelScene.isPaused() ? "paused" : "running"), 19, 0, 7);
+		MarioComponent.drawStringDropShadow(g, "SEED:" + levelScene.getLevelSeed(), 0, 1, 7);
+		MarioComponent.drawStringDropShadow(g, "TYPE:" + levelScene.getLevelType(), 0, 2, 7);
+		MarioComponent.drawStringDropShadow(g, "ALL KILLS: " + getKillsTotal(), 19, 1, 1);
+		MarioComponent.drawStringDropShadow(g, "LENGTH:" + levelScene.getMarioMapX() + " of " + levelScene.getLevelXExit(), 0, 3, 7);
+		MarioComponent.drawStringDropShadow(g, "by Fire  : " + getKillsByFire(), 19, 2, 1);
+		MarioComponent.drawStringDropShadow(g, "COINS    : " + df2.format(levelScene.getMarioCoins()), 0, 4, 4);
+		MarioComponent.drawStringDropShadow(g, "by Shell : " + getKillsByShell(), 19, 3, 1);
+		MarioComponent.drawStringDropShadow(g, "MUSHROOMS: " + df2.format(levelScene.getMarioGainedMushrooms()), 0, 5, 4);
+		MarioComponent.drawStringDropShadow(g, "by Stomp : " + getKillsByStomp(), 19, 4, 1);
+		MarioComponent.drawStringDropShadow(g, "FLOWERS  : " + df2.format(levelScene.getMarioGainedFowers()), 0, 6, 4);
+
+		MarioComponent.drawStringDropShadow(g, "TIME", 33, 0, 7);
+		int time = (levelScene.getTimeLeft());
+		if (time < 0)
+			time = 0;
+		MarioComponent.drawStringDropShadow(g, " " + df2.format(time), 33, 1, 7);
+	}
+	
+	private void drawProgress(Graphics g) {
+		String entirePathStr = "......................................|";
+		double physLength = (levelScene.getLevelWidth() - 53) * 16;
+		int progressInChars = (int) (levelScene.getMarioX() * (entirePathStr.length() / physLength));
+		String progress_str = "";
+		for (int i = 0; i < progressInChars - 1; ++i)
+			progress_str += ".";
+		progress_str += "M";
+		try {
+			drawStringDropShadow(g, entirePathStr.substring(progress_str.length()), progress_str.length(), 28, 0);
+		} catch (StringIndexOutOfBoundsException e) {
+			//System.err.println("warning: progress line inaccuracy");
+		}
+		drawStringDropShadow(g, progress_str, 0, 28, 2);
+	}
+    
     private void drawEndScreen(Graphics g, Graphics og, VolatileImage image) {
-    	final DecimalFormat df = new DecimalFormat("0.0");
         final int start=4;
         int actualRow=3;
-        LevelScene.drawStringDropShadow(og, "Results: ", 1, actualRow++, 1);
-        LevelScene.drawStringDropShadow(og, "       Agent: "+getAgent().getName(), start, actualRow++, 2);
-        if(getAgent().getClass().getSimpleName().length()<18)LevelScene.drawStringDropShadow(og, "     of Type: "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
+        drawStringDropShadow(og, "Results: ", 1, actualRow++, 1);
+        drawStringDropShadow(og, "       Agent: "+getAgent().getName(), start, actualRow++, 2);
+        if(getAgent().getClass().getSimpleName().length()<18)drawStringDropShadow(og, "     of Type: "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
         else { 
-        	LevelScene.drawStringDropShadow(og, "     of Type: ", start, actualRow++, 2);
-        	LevelScene.drawStringDropShadow(og,"   "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
+        	drawStringDropShadow(og, "     of Type: ", start, actualRow++, 2);
+        	drawStringDropShadow(og,"   "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
         }
         actualRow++;
-        LevelScene.drawStringDropShadow(og, "Mario Status: "+levelScene.getMarioStatus(), start, actualRow++, 1);
+        drawStringDropShadow(og, "Mario Status: "+levelScene.getMarioStatus(), start, actualRow++, 1);
         actualRow++;
-        LevelScene.drawStringDropShadow(og, "       Level: "+levelScene.getLevelSeed(), start, actualRow++, 4);
-        LevelScene.drawStringDropShadow(og, " Distance to", start,actualRow++,4);
-        LevelScene.drawStringDropShadow(og, "      target: "+levelScene.getLevelXExit(), start, actualRow++, 4);
-        LevelScene.drawStringDropShadow(og, "     -passed: "+levelScene.getMarioMapX()+" ("+(df.format((double)levelScene.getMarioMapX()/(double)levelScene.getLevelXExit()*100))+"%)", start, actualRow++, 4);
+        drawStringDropShadow(og, "       Level: "+levelScene.getLevelSeed(), start, actualRow++, 4);
+        drawStringDropShadow(og, " Distance to", start,actualRow++,4);
+        drawStringDropShadow(og, "      target: "+levelScene.getLevelXExit(), start, actualRow++, 4);
+        drawStringDropShadow(og, "     -passed: "+(int)levelScene.getMarioX()/16+" ("+(df.format((double)levelScene.getMarioX()/16/(double)levelScene.getLevelXExit()*100))+"%)", start, actualRow++, 4);
         actualRow++;
-        LevelScene.drawStringDropShadow(og, "  Total Time: "+levelScene.getTotalTime(), start, actualRow++, 4);
-        LevelScene.drawStringDropShadow(og, "     -passed: "+levelScene.getStartTime(), start, actualRow++, 4);
-        LevelScene.drawStringDropShadow(og, "     -  left: "+levelScene.getTimeLeft(), start, actualRow++, 4);
+        drawStringDropShadow(og, "  Total Time: "+levelScene.getTotalTime(), start, actualRow++, 4);
+        drawStringDropShadow(og, "     -passed: "+levelScene.getStartTime(), start, actualRow++, 4);
+        drawStringDropShadow(og, "     -  left: "+levelScene.getTimeLeft(), start, actualRow++, 4);
         actualRow++;
         actualRow++;
         
-        LevelScene.drawStringDropShadow(og, "       Kills: "+levelScene.getKilledCreaturesTotal(), start-6, actualRow, 6);
-        LevelScene.drawStringDropShadow(og, "    Coins: "+levelScene.getMarioCoins(), start+19, actualRow++, 6);
+        drawStringDropShadow(og, "       Kills: "+levelScene.getKilledCreaturesTotal(), start-6, actualRow, 6);
+        drawStringDropShadow(og, "    Coins: "+levelScene.getMarioCoins()+"/"+levelScene.getTotalCoins(), start+19, actualRow++, 6);
         
-        if(levelScene.getKilledCreaturesByStomp()>0) LevelScene.drawStringDropShadow(og, "    by stomp: "+levelScene.getKilledCreaturesByStomp()+" ("+(df.format((double)levelScene.getKilledCreaturesByStomp()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow, 6);
-        else LevelScene.drawStringDropShadow(og, "    by stomp: 0",start-6,actualRow,6);
+        if(levelScene.getKilledCreaturesByStomp()>0) drawStringDropShadow(og, "    by stomp: "+levelScene.getKilledCreaturesByStomp()+" ("+(df.format((double)levelScene.getKilledCreaturesByStomp()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow, 6);
+        else drawStringDropShadow(og, "    by stomp: 0",start-6,actualRow,6);
         	
-        LevelScene.drawStringDropShadow(og, "Mushrooms: "+levelScene.getMarioGainedMushrooms(), start+19, actualRow++, 6);
+        drawStringDropShadow(og, "Mushrooms: "+levelScene.getMarioGainedMushrooms(), start+19, actualRow++, 6);
         
-        if(levelScene.getKilledCreaturesByShell()>0) LevelScene.drawStringDropShadow(og, "    by shell: "+levelScene.getKilledCreaturesByShell()+" ("+(df.format((double)levelScene.getKilledCreaturesByShell()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow, 6);
-        else LevelScene.drawStringDropShadow(og, "    by shell: 0",start-6,actualRow,6);
-        LevelScene.drawStringDropShadow(og, "  Flowers: "+levelScene.getMarioGainedFowers(), start+19, actualRow++, 6);
+        if(levelScene.getKilledCreaturesByShell()>0) drawStringDropShadow(og, "    by shell: "+levelScene.getKilledCreaturesByShell()+" ("+(df.format((double)levelScene.getKilledCreaturesByShell()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow, 6);
+        else drawStringDropShadow(og, "    by shell: 0",start-6,actualRow,6);
+        drawStringDropShadow(og, "  Flowers: "+levelScene.getMarioGainedFowers(), start+19, actualRow++, 6);
         
-        if(levelScene.getKilledCreaturesByFireBall()>0) LevelScene.drawStringDropShadow(og, "    by  fire: "+levelScene.getKilledCreaturesByFireBall()+" ("+(df.format((double)levelScene.getKilledCreaturesByFireBall()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow++, 6);
-        else LevelScene.drawStringDropShadow(og, "     by fire: 0",start-6,actualRow,6);
+        if(levelScene.getKilledCreaturesByFireBall()>0) drawStringDropShadow(og, "    by  fire: "+levelScene.getKilledCreaturesByFireBall()+" ("+(df.format((double)levelScene.getKilledCreaturesByFireBall()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow++, 6);
+        else drawStringDropShadow(og, "     by fire: 0",start-6,actualRow,6);
         actualRow++;       
         
-        LevelScene.drawStringDropShadow(og, "----------------------------------", start-2, actualRow++, 1);
-        LevelScene.drawStringDropShadow(og, "Score: "+(int)(levelScene.getScore()), start-2, actualRow++, 1);
+        drawStringDropShadow(og, "----------------------------------", start-2, actualRow++, 1);
+        drawStringDropShadow(og, "Score: "+(int)(levelScene.getScore()), start-2, actualRow++, 1);
         g.drawImage(image, 0, 0, getSize().width, getSize().height, null);
     }
 
@@ -296,13 +388,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 				+ ", delay=" + delay
 				+ "]";
 	}
-
-	private void drawString(Graphics g, String text, int x, int y, int c) {
-        char[] ch = text.toCharArray();
-        for (int i = 0; i < ch.length; i++) {
-            g.drawImage(Art.font[ch[i] - 32][c], x + i * 8, y, null);
-        }
-    }
 
 	//--- Control
     public void startLevel(long seed, int difficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
@@ -476,8 +561,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     public boolean isMarioFalling() {
     	return this.levelScene.isMarioFalling();
     }
-
-
+    
 	//--- Debug View
 	
 	@Override

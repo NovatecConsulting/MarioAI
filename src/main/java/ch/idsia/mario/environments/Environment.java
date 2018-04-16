@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import ch.idsia.mario.engine.LevelScene;
-import ch.idsia.mario.engine.Scene;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.tools.RunnerOptions;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
-import de.novatec.mario.engine.generalization.Tiles.TileType;
 
 /**
  * Created by IntelliJ IDEA.
@@ -42,9 +40,9 @@ public interface Environment
     
     public void registerKeyboardListener(KeyListener listener);
 
-    public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 0
+    public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 1
 
-    public byte[][] getEnemiesObservation();    // default: ZLevelEnemies = 0
+    public byte[][] getEnemiesObservation();    // default: ZLevelEnemies = 1
 
     public byte[][] getLevelSceneObservation(); // default: ZLevelScene = 1
     

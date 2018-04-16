@@ -1,5 +1,6 @@
 package de.novatec.marioai.tools;
 
+import java.util.Arrays;
 import java.util.Random;
 
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
@@ -139,6 +140,8 @@ public class LevelConfig{
 	 */
 	public static final LevelConfig STANDARD15=new LevelConfig(42,256,15,LEVEL_TYPES.OVERGROUND);
 	
+	public static final LevelConfig TEST = new LevelConfig(1371648390, 256, 3, LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,5,2,0,0});
+	
 	/**
 	 * Randomizes the given LevelConfig
 	 * @param toRandomize
@@ -156,8 +159,8 @@ public class LevelConfig{
 			        odds[LevelGenerator.ODDS_CANNONS] = -10 + 5 * toRandomize.getPresetDifficulty();
 			}
 			
-			if(toRandomize.isFlat()) return new LevelConfig(new Random().nextInt(), toRandomize.length, toRandomize.presetDifficulty,toRandomize.isEnemies(),toRandomize.isBricks(), toRandomize.isCoins());
-			else return new LevelConfig(new Random().nextInt(), toRandomize.getLength(), toRandomize.getPresetDifficulty(),toRandomize.getType(),toRandomize.isEnemies(),toRandomize.isBricks(), toRandomize.isCoins(),odds);
+			if(toRandomize.isFlat()) return new LevelConfig(Math.abs(new Random().nextInt()), toRandomize.length, toRandomize.presetDifficulty,toRandomize.isEnemies(),toRandomize.isBricks(), toRandomize.isCoins());
+			else return new LevelConfig(Math.abs(new Random().nextInt()), toRandomize.getLength(), toRandomize.getPresetDifficulty(),toRandomize.getType(),toRandomize.isEnemies(),toRandomize.isBricks(), toRandomize.isCoins(),odds);
 		}
 		return new LevelConfig(1, 256, 0, LEVEL_TYPES.OVERGROUND);
 	}
@@ -270,7 +273,7 @@ public class LevelConfig{
 		return flat;
 	}
 
-	public int[] getOdds() {
-		return odds;
+	public int[] getOdds() { // IMPORTANT: don't return odds directly
+		return Arrays.copyOf(odds, odds.length);
 	}
 }

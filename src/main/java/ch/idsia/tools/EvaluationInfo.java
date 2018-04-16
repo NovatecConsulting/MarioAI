@@ -28,7 +28,7 @@ public class EvaluationInfo
     public int timeSpentOnLevel = MagicNumberUndef;
     public int totalTimeGiven = MagicNumberUndef;
     public int numberOfGainedCoins = MagicNumberUndef;
-//    public int totalNumberOfCoins = MagicNumberUndef;
+    public int totalNumberOfCoins = MagicNumberUndef;
     public int totalActionsPerfomed = MagicNumberUndef;
     public int totalFramesPerfomed = MagicNumberUndef;
     private int timesHurt=MagicNumberUndef;
@@ -139,7 +139,7 @@ public class EvaluationInfo
         ret += "\n             Time Spent(Fractioned) : " + timeSpentOnLevel + " (" + df.format((double)timeSpentOnLevel/totalTimeGiven*100) + "%)";
         ret += "\n              Time Left(Fractioned) : " + timeLeft + " (" + df.format((double)timeLeft/totalTimeGiven*100) + "%)";
         ret += "\n                   Total time given : " + totalTimeGiven;
-        ret += "\n                       Coins Gained : " + numberOfGainedCoins;
+        ret += "\n                       Coins Gained : " + numberOfGainedCoins+" ("+numberOfGainedCoins+"/"+totalNumberOfCoins+")";
         ret += "\n                        Total Kills : " + killsTotal;
         if(killsTotal>0) {
         	ret += "\n                           by stomp : " + killedCreaturesbyStomp+" (" + df.format((double)killedCreaturesbyStomp/killsTotal*100) + "%)";

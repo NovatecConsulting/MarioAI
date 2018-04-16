@@ -19,8 +19,8 @@ public class Level
     public enum LEVEL_TYPES {
 		OVERGROUND("Overground", 0), UNDERGROUND("Underground", 1), CASTLE("Castle", 2), UNKNOWN("UNKNOWN", 3);
 	
-		int type;
-		String name;
+		private int type;
+		private String name;
 	
 		private LEVEL_TYPES(String name, int type) {
 			this.name = name;
@@ -90,6 +90,8 @@ public class Level
 
     private int xExit;
 	private int yExit;
+	
+	private int totalCoins;
     
     
     public Level(int width, int height)
@@ -99,6 +101,7 @@ public class Level
 
         xExit = 10;
         yExit = 10;
+        totalCoins=0;
         map = new byte[width][height];
         data = new byte[width][height];
         spriteTemplates = new SpriteTemplate[width][height];
@@ -110,6 +113,7 @@ public class Level
          this.height = toCopy.height;
          this.xExit=toCopy.xExit;
          this.yExit=toCopy.yExit;
+         this.totalCoins=toCopy.totalCoins;
          
          this.map=getDeepCopyOf(toCopy.map);
          this.data=getDeepCopyOf(toCopy.data);
@@ -206,65 +210,6 @@ public class Level
     public int getObservationYLength() {
     	return observation[0].length;
     }
-
-
-//    public void ASCIIToOutputStream(OutputStream os) throws IOException {
-//        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(os));
-//        bw.write("\nwidth = " + width);
-//        bw.write("\nheight = " + height);
-//        bw.write("\nMap:\n");
-//        for (int y = 0; y < height; y++)
-//
-//        {
-//                for (int x = 0; x < width; x++)
-//
-//            {
-//                bw.write(map[x][y] + "\t");
-//            }
-//            bw.newLine();
-//        }
-//        bw.write("\nData: \n");
-//
-//        for (int y = 0; y < height; y++)
-//
-//        {
-//                for (int x = 0; x < width; x++)
-//
-//            {
-//                bw.write(data[x][y] + "\t");
-//            }
-//            bw.newLine();
-//        }
-//
-//        bw.write("\nspriteTemplates: \n");
-//        for (int y = 0; y < height; y++)
-//
-//        {
-//                for (int x = 0; x < width; x++)
-//
-//            {
-//                if                  (spriteTemplates[x][y] != null)
-//                    bw.write(spriteTemplates[x][y].getType() + "\t");
-//                else
-//                    bw.write("_\t");
-//
-//            }
-//            bw.newLine();
-//        }
-//
-//        bw.write("\n==================\nAll objects: (Map[x,y], Data[x,y], Sprite[x,y])\n");
-//        for (int y = 0; y < height; y++)
-//        {
-//                for (int x = 0; x < width; x++)
-//
-//            {
-//                bw.write("(" + map[x][y] + "," + data[x][y] + ", " + ((spriteTemplates[x][y] == null) ? "_" : spriteTemplates[x][y].getType()) + ")\t");
-//            }
-//            bw.newLine();
-//        }
-//
-////        bw.close();
-//    }
 
     public static void loadBehaviors(DataInputStream dis) throws IOException
     {
@@ -399,12 +344,21 @@ public class Level
 		this.yExit=yExit;
 	}
 
+    public double getWidthPhys() {
+    	return width * 16;
+    	}
 
-    public double getWidthPhys() {         return width * 16;    }
+	public int getTotalCoins() {
+		return totalCoins;
+	}
+
+	public void setTotalCoins(int totalCoins) {
+		this.totalCoins = totalCoins;
+	}
 
 	@Override
 	public String toString() {
-		return "Level [width=" + width + ", height=" + height + ", xExit=" + xExit + ", yExit=" + yExit + "]";
+		return "Level [width=" + width + ", height=" + height + ", xExit=" + xExit +"]";
 	}
 }
 

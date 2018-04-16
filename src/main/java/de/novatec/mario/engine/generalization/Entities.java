@@ -98,7 +98,6 @@ public class Entities {
 	}
 	
 	public boolean isDangerousAt(int x, int y) {
-		if(getMostDangrousEntityTypeAt(x, y)==EntityType.SHELL) return false;
 		return getMostDangrousEntityTypeAt(x, y).isDangerous();
 	}
 	

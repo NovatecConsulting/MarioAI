@@ -61,8 +61,8 @@ public class Enemy extends Sprite //cloneable
 
         this.x = x;
         this.y = y;
-        this.mapX = mapX;
-        this.mapY = mapY;
+//        this.mapX = mapX;
+//        this.mapY = mapY;
         
         this.spriteContext = world;
         xPicO = 8;

@@ -1,15 +1,12 @@
 package ch.idsia.tools;
 
-import ch.idsia.mario.engine.MarioComponent;
-import ch.idsia.mario.engine.sprites.Mario;
-import ch.idsia.mario.engine.sprites.Mario.STATUS;
-import ch.idsia.mario.simulation.BasicSimulator;
-import ch.idsia.mario.simulation.Simulation;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import ch.idsia.mario.engine.MarioComponent;
+import ch.idsia.mario.simulation.BasicSimulator;
+import ch.idsia.mario.simulation.Simulation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -47,7 +44,9 @@ public class Evaluator implements Runnable
             evaluationSummary.add(evaluationInfo);
 
         long currentTime = System.currentTimeMillis();
-        long elapsed = currentTime - startTime;
+        
+        @SuppressWarnings("unused") //TODO USE
+		long elapsed = currentTime - startTime;
       
         return evaluationSummary;
     }
@@ -89,7 +88,7 @@ public class Evaluator implements Runnable
     }
 }
 
-class evBasicFitnessComparator implements Comparator
+class evBasicFitnessComparator implements Comparator<Object>
 {
     public int compare(Object o, Object o1)
     {
@@ -104,7 +103,7 @@ class evBasicFitnessComparator implements Comparator
     }
 }
 
-class evCoinsFitnessComparator implements Comparator
+class evCoinsFitnessComparator implements Comparator<Object>
 {
     public int compare(Object o, Object o1)
     {
@@ -120,7 +119,7 @@ class evCoinsFitnessComparator implements Comparator
     }
 }
 
-class evDistanceFitnessComparator implements Comparator
+class evDistanceFitnessComparator implements Comparator<Object>
 {
     public int compare(Object o, Object o1)
     {

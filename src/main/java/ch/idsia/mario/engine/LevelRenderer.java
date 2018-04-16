@@ -1,7 +1,6 @@
 package ch.idsia.mario.engine;
 
 import java.awt.*;
-import java.util.Random;
 import ch.idsia.mario.engine.level.*;
 
 

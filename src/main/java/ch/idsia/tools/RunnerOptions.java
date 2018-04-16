@@ -1,12 +1,9 @@
 package ch.idsia.tools;
 
 import java.awt.Point;
-import java.util.Random;
 
 import ch.idsia.ai.agents.Agent;
-import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
-import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.MODE;
 import de.novatec.marioai.tools.LevelConfig;
 
@@ -22,7 +19,7 @@ public class RunnerOptions {
 	
 	private int FPS=24; //Standard: 24 Frames per Second
 	
-	private boolean viewable=true; //Game should be watchable 
+	private boolean viewable=true; //Game should be viewable 
 	
 	private int timeLimit=200;
 	
@@ -40,7 +37,7 @@ public class RunnerOptions {
 	
 	private MODE marioStartMode = MODE.MODE_FIRE;
 	
-	private boolean marioInvulnerable=false; //shouldnt be possible for competition
+	private boolean marioInvulnerable=false; //shouldn't be possible for competition
 	
 	private boolean exitWhenFinished=false;
 	

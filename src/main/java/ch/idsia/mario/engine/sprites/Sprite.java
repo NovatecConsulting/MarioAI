@@ -121,26 +121,16 @@ public abstract class Sprite
     {
         xOld = x;
         yOld = y;
-        mapX = (int)(xOld / 16);
-        mapY = (int)(yOld / 16);
+//        mapX = (int)(xOld / 16);
+//        mapY = (int)(yOld / 16);
         move();
     }
 
     public final void tickNoMove()
     {
         xOld = x;
-        yOld = y;
+        yOld = y;        
     }
-
-//    public float getX(float alpha)
-//    {
-//        return (xOld+(x-xOld)*alpha)-xPicO;
-//    }
-//
-//    public float getY(float alpha)
-//    {
-//        return (yOld+(y-yOld)*alpha)-yPicO;
-//    }
 
     public void collideCheck()
     {
@@ -193,11 +183,11 @@ public abstract class Sprite
 	}
 
 	public int getMapX() {
-		return mapX;
+		return (int)x/16;
 	}
 
 	public int getMapY() {
-		return mapY;
+		return (int)y/16;
 	}
 
 	public int getxPic() {

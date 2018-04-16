@@ -2,7 +2,6 @@ package ch.idsia.ai.tasks;
 
 import java.util.List;
 
-import ch.idsia.ai.agents.Agent;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.RunnerOptions;
 

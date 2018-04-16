@@ -41,6 +41,7 @@ public class LevelGenerator
     public static final int ODDS_CANNONS = 4;
     private int[] odds = new int[5];
     private int totalOdds;
+    private int totalCoins=0;
     private int difficulty;
     private LEVEL_TYPES type;
 
@@ -121,6 +122,7 @@ public class LevelGenerator
         }
 
         fixWalls();
+        level.setTotalCoins(totalCoins);
         return level;
     }
     
@@ -134,13 +136,9 @@ public class LevelGenerator
         	 if(odds[i]<0) odds[i]=0;
         	 if(odds[i]>0) allZero=false;
          }
+         if(allZero) odds[0]=1;
          
-         if(allZero)  odds[0]=1;
-         
-         if (type != LEVEL_TYPES.OVERGROUND)
-         {
-             odds[ODDS_HILL_STRAIGHT] = 0;
-         }
+         if (type != LEVEL_TYPES.OVERGROUND)odds[ODDS_HILL_STRAIGHT] = 0;
 
          for (int i = 0; i < odds.length; i++)
          {
@@ -193,6 +191,8 @@ public class LevelGenerator
          }
 
          fixWalls();
+         
+         level.setTotalCoins(totalCoins);
          return level;
     }
 
@@ -227,6 +227,8 @@ public class LevelGenerator
          level.setYExit(floor);
          
          fixWalls();
+         
+         level.setTotalCoins(totalCoins);
          return level;
     }
     private int buildZone(int x, int maxLength, boolean enemies,boolean bricks,boolean coins)
@@ -559,7 +561,10 @@ public class LevelGenerator
 	
 	        if (floor - 2 > 0) {//TODO CHECK
 	            if ((x1 - 1 - e) - (x0 + 1 + s) > 1){
-	                for (int x = x0 + 1 + s; x < x1 - 1 - e; x++) level.setBlock(x, floor - 2, (byte) (2 + 2 * 16)); //coins? //coins!!
+	                for (int x = x0 + 1 + s; x < x1 - 1 - e; x++) {
+	                	level.setBlock(x, floor - 2, (byte) (34)); //coins? //coins!!
+	                	totalCoins++;
+	                }
 	            }
 	       }
         }
@@ -580,27 +585,27 @@ public class LevelGenerator
 	                        {
 	                            if (random.nextInt(4) == 0)
 	                            {
-	                                level.setBlock(x, floor - 4, (byte) (4 + 2 + 1 * 16));
+	                                level.setBlock(x, floor - 4, (byte) (22));
 	                            }
 	                            else
 	                            {
-	                                level.setBlock(x, floor - 4, (byte) (4 + 1 + 1 * 16));
+	                                level.setBlock(x, floor - 4, (byte) (21));
+	                                totalCoins++;
 	                            }
 	                        }
 	                        else if (random.nextInt(4) == 0)
 	                        {
 	                            if (random.nextInt(4) == 0)
 	                            {
-	                                level.setBlock(x, floor - 4, (byte) (2 + 1 * 16));
+	                                level.setBlock(x, floor - 4, (byte) (18));
 	                            }
-	                            else
-	                            {
-	                                level.setBlock(x, floor - 4, (byte) (1 + 1 * 16));
+	                            else{
+	                                level.setBlock(x, floor - 4, (byte) (17));
+	                                totalCoins++;
 	                            }
 	                        }
-	                        else
-	                        {
-	                            level.setBlock(x, floor - 4, (byte) (0 + 1 * 16));
+	                        else{
+	                            level.setBlock(x, floor - 4, (byte) (16));
 	                        }
 	                    }
 	                }

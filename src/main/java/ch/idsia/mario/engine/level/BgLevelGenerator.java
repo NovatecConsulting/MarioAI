@@ -218,6 +218,11 @@ public class BgLevelGenerator
                 }
                 break;
             }
+		case UNKNOWN:
+			System.err.println("BgLevelGenerator got UNKNOWN as LEVEL_TYPE. This should NOT happen and is a bug. Please report it to the developers!");
+			break;
+		default:
+			break;
         }
         return level;
     }

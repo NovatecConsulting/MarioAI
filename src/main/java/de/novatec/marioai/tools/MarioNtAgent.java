@@ -51,6 +51,7 @@ public abstract class MarioNtAgent implements Agent{
 	@Override
 	public final boolean[] getAction(Environment observation) {
 		
+		
 		env=observation;
 		if(tiles==null) tiles=new Tiles(observation);
 		else tiles.setEnvironment(observation);
@@ -64,6 +65,11 @@ public abstract class MarioNtAgent implements Agent{
 		input.tick();
 		
 		MarioInput input=doAiLogic();
+		if(input==null) {
+			System.err.println("MarioInput is null! Did you return getMarioInput() in your doAiLogic Method?");
+			System.err.println("Simulation will be stopped!");
+			System.exit(1);
+		}
 		
 		return input.toArray();
 	}
@@ -79,10 +85,8 @@ public abstract class MarioNtAgent implements Agent{
 	/**
 	 * Should be overridden. Naming the agent.
 	 */
-	@Override
-	public String getName() {
-		return "This should not be seen! Please give your agent a proper name!";
-	}
+
+	public abstract String getName();
 
 	@Override
 	public final void setName(String name) {
