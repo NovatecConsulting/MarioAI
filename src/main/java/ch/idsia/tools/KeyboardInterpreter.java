@@ -45,6 +45,10 @@ public class KeyboardInterpreter implements KeyListener{
 		case KeyEvent.VK_T:
 			env.performTick();
 			break;
+		case KeyEvent.VK_H:
+			env.setPaused(true);
+			env.swapAgent();
+			break;
 		case KeyEvent.VK_MINUS:
 		case 109:
 			env.resizeView(env.getActualDimension().width-32, env.getActualDimension().height-24);

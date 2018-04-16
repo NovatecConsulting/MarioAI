@@ -40,6 +40,8 @@ public interface Environment
     public void setDebugView(boolean debugView);
     public void toggleDebugView();
     
+    public void swapAgent();
+    
     public void registerKeyboardListener(KeyListener listener);
 
     public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 1

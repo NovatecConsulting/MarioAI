@@ -533,7 +533,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @param env
 	 */
 	public void debugDraw(Graphics og,Environment env) {
-		Coordinates oldCoords=null; //new Coordinates((env.getLevelScene().getMarioX()),env.getLevelScene().getMarioY()-8);
+		Coordinates oldCoords=null; 
 		Color oldColor=og.getColor();
 		og.setColor(Color.RED);
 		for(Coordinates next:coordList) {

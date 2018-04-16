@@ -1220,12 +1220,6 @@ public class LevelScene  implements SpriteContext {
 		return this.mario.getGainedMushrooms();
 	}
 	
-	//--- RunnerOptions from MarioComponent
-	
-	public boolean isLabels() {
-		return renderer.getRunnerOptions().isLabels();
-	}
-	
 	//--- A* Help Methods
 	
 	public LevelScene getDeepCopy() {
@@ -1250,7 +1244,6 @@ public class LevelScene  implements SpriteContext {
 //		System.out.println(collectedMuhsrooms);
 //		System.out.println(collectedFlowers);
 //		System.out.println(timesHurt);
-		
 		
 		//---Positive 
 		//--- Distance Score
@@ -1292,7 +1285,7 @@ public class LevelScene  implements SpriteContext {
 		lastTickFireball=tick;
 	}
 
-	protected List<Sprite> getSprites() {
+	List<Sprite> getSprites() {
 		return sprites;
 	}
 	

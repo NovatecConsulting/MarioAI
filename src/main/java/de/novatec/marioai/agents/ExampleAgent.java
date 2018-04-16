@@ -35,9 +35,9 @@ public class ExampleAgent extends MarioNtAgent{
 		return getMarioInput();
 	}
 	
-	public static void main(String [] args) {		
-		MarioAiRunner.run(new HumanKeyboardAgent(), LevelConfig.HARD_ENEMY_TRAINING, 24, 3, true, true, false);
-	}
+//	public static void main(String [] args) {		
+//		MarioAiRunner.run(new ExampleAgent(), LevelConfig.HARD_ENEMY_TRAINING, 24, 3, true, true, false);
+//	}
 
 
 }

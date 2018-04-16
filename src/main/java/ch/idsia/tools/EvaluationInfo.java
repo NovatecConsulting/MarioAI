@@ -40,6 +40,7 @@ public class EvaluationInfo
     public int levelRandSeed = MagicNumberUndef;
     public Mario.MODE marioMode = null;
     
+    private boolean wasHijacked = false;
     private int killsTotal = MagicNumberUndef;
     private int killedCreaturesbyStomp=MagicNumberUndef;
     private int killedCreaturesbyShell=MagicNumberUndef;
@@ -120,6 +121,14 @@ public class EvaluationInfo
 		this.timesHurt = timesHurt;
 	}
 
+	public boolean isWasHijacked() {
+		return wasHijacked;
+	}
+
+	public void setWasHijacked(boolean wasHijacked) {
+		this.wasHijacked = wasHijacked;
+	}
+
 	@Override
     public String toString()
     {
@@ -130,6 +139,7 @@ public class EvaluationInfo
         ret += "\n                  Player/Agent type : " + agentType;
         ret += "\n                  Player/Agent name : " + agentName;
         ret += "\n                       Mario Status : " + ((marioStatus == STATUS.WIN) ? "Won" : "Lost");
+        ret += "\n                       was hijacked : " + wasHijacked;
         ret += "\n                         Level Type : " + levelType;
         ret += "\n                   Level Difficulty : " + levelDifficulty;
         ret += "\n                    Level Rand Seed : " + levelRandSeed;

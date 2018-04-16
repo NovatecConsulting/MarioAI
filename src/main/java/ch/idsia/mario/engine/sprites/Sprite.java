@@ -113,8 +113,6 @@ public abstract class Sprite
 
 
         og.drawImage(sheet[xPic][yPic], xPixel+(xFlipPic?wPic:0), yPixel+(yFlipPic?hPic:0), xFlipPic?-wPic:wPic, yFlipPic?-hPic:hPic, null);
-        if (spriteContext.isLabels()) 
-            og.drawString("" + xPixel + "," + yPixel, xPixel, yPixel);
     }
     
     public final void tick()

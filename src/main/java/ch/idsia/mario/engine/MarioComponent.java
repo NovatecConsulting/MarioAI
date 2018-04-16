@@ -12,6 +12,7 @@ import ch.idsia.tools.RunnerOptions;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
+import de.novatec.marioai.agents.HumanKeyboardAgent;
 import de.novatec.marioai.tools.MarioNtAgent;
 
 import javax.swing.*;
@@ -34,7 +35,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     private SpriteRenderer spriteRenderer;
     private boolean readyToExit=false,startReady=false;
     private float blackoutTimer;
-    private boolean paused = false,setpaused=false, performTick=false;
+    private boolean paused = false,setpaused=false, performTick=false,hijacked=false,sethijacked,wasHijacked=false;
     
     private RunnerOptions rOptions;
     
@@ -49,6 +50,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     private static final DecimalFormat df = new DecimalFormat("0.0");
     private static final DecimalFormat df2 = new DecimalFormat("00");
 
+    private Agent swapper=new HumanKeyboardAgent(), actual;
     private KeyListener prevHumanKeyBoardAgent;
     private LevelScene levelScene = null;
  
@@ -149,6 +151,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         while (running||!readyToExit) {
         	boolean tmpPerformTick=performTick;
         	checkPaused();
+        	checkHijacked();
 
         	g=getGraphics();
         	og=image.getGraphics();
@@ -161,7 +164,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
             }
             boolean[] action = {false,false,false,false,false};
 
-            	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
+            	/*if(!paused||tmpPerformTick)*/ action = getAgent().getAction(this);
             	
             	if(rOptions.isViewable()&&debugView&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og, this);
            
@@ -237,9 +240,9 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         }
         
         //ADD INFO TO EVALUATION INFO
-        evaluationInfo.agentType = getAgent().getClass().getSimpleName();
-        evaluationInfo.agentName = getAgent().getName();
-        evaluationInfo.marioStatus =  levelScene.getMarioStatus();
+        evaluationInfo.agentType = rOptions.getAgent().getClass().getSimpleName();
+        evaluationInfo.agentName = rOptions.getAgent().getName();
+        evaluationInfo.marioStatus = levelScene.getMarioStatus();
         evaluationInfo.lengthOfLevelPassedPhys = levelScene.getMarioX();
         evaluationInfo.lengthOfLevelPassedCells =  levelScene.getMarioMapX();
         evaluationInfo.levelXExit=levelScene.getLevelXExit();
@@ -387,6 +390,7 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		MarioComponent.drawStringDropShadow(g, "MUSHROOMS: " + df2.format(levelScene.getMarioGainedMushrooms()), 0, 5, 4);
 		MarioComponent.drawStringDropShadow(g, "by Stomp : " + getKillsByStomp(), 19, 4, 1);
 		MarioComponent.drawStringDropShadow(g, "FLOWERS  : " + df2.format(levelScene.getMarioGainedFowers()), 0, 6, 4);
+		if(wasHijacked)MarioComponent.drawStringDropShadow(g, "HIJACKED!" , 19, 6, 1);
 
 		MarioComponent.drawStringDropShadow(g, "TIME", 33, 0, 7);
 		int time = (levelScene.getTimeLeft());
@@ -415,14 +419,15 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
         final int start=4;
         int actualRow=3;
         drawStringDropShadow(og, "Results: ", 1, actualRow++, 1);
-        drawStringDropShadow(og, "       Agent: "+getAgent().getName(), start, actualRow++, 2);
-        if(getAgent().getClass().getSimpleName().length()<18)drawStringDropShadow(og, "     of Type: "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
+        drawStringDropShadow(og, "       Agent: "+rOptions.getAgent().getName(), start, actualRow++, 2);
+        if(rOptions.getAgent().getClass().getSimpleName().length()<18)drawStringDropShadow(og, "     of Type: "+rOptions.getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
         else { 
         	drawStringDropShadow(og, "     of Type: ", start, actualRow++, 2);
         	drawStringDropShadow(og,"   "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
         }
         actualRow++;
-        drawStringDropShadow(og, "Mario Status: "+levelScene.getMarioStatus(), start, actualRow++, 1);
+        drawStringDropShadow(og, "Mario Status: "+levelScene.getMarioStatus(), start, actualRow, 1);
+        if(wasHijacked) drawStringDropShadow(og,  "(HIJACKED!)", start+19, actualRow++, 1);
         actualRow++;
         drawStringDropShadow(og, "       Level: "+levelScene.getLevelSeed(), start, actualRow++, 4);
         drawStringDropShadow(og, " Distance to", start,actualRow++,4);
@@ -477,7 +482,6 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 			Level bgLevel = BgLevelGenerator.createLevel(w / 32 + 1, h / 32 + 1, i == 0, levelScene.getLevelType());
 			bgLayer[i] = new BgRenderer(bgLevel, graphicsConfiguration, 320, 240, scrollSpeed);
 		}
-        
         spriteRenderer=new SpriteRenderer(levelScene.getSprites());
     }
 
@@ -487,6 +491,26 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     
     public void levelWon() {
         stop();
+    }
+    
+    public void swapAgent() {
+    	this.wasHijacked=true;
+    	this.sethijacked=!hijacked;
+    }
+    
+    public void checkHijacked() {
+    	if(levelScene.getMarioStatus()!=STATUS.RUNNING) return;
+    	Agent tmp;
+    	if(sethijacked!=hijacked) {
+    		tmp=swapper;
+    		swapper=actual;
+    		actual=tmp;	
+    		registerKeyListenerAgent(actual);
+    		if(swapper instanceof KeyListener) this.removeKeyListener((KeyListener)swapper);
+    			
+    		
+    	}
+    	sethijacked=hijacked;
     }
 
     //---FocusListener
@@ -570,13 +594,14 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 		rOptions.getAgent().reset();
 		adjustFPS();
 		 
+		actual=rOptions.getAgent();
 		registerKeyListenerAgent(rOptions.getAgent());
 		
 		startLevel(rOptions.getLevelSeed(), rOptions.getDifficulty(), rOptions.getLevelType(), rOptions.getLevelLength(), rOptions.getTimeLimit());
 	}
 	
 	public Agent getAgent() {
-		return rOptions.getAgent();
+		return actual;
 	}
 	
 	@Override
