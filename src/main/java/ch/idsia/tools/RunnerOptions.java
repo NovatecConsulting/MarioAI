@@ -9,7 +9,7 @@ import de.novatec.marioai.tools.LevelConfig;
 
 public class RunnerOptions {
 
-	private Agent agent;
+	private final Agent agent;
 
 	private static final int infiniteFps=100;
 	

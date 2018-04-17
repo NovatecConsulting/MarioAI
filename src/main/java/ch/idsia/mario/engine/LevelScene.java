@@ -28,6 +28,9 @@ public class LevelScene  implements SpriteContext {
 	private List<Sprite> sprites = new ArrayList<Sprite>();
 	private List<Sprite> spritesToAdd = new ArrayList<Sprite>();
 	private List<Sprite> spritesToRemove = new ArrayList<Sprite>();
+	
+	List<Shell> shellsToCheck = new ArrayList<Shell>();
+
 
 	private Level level;
 	private Mario mario;
@@ -68,16 +71,14 @@ public class LevelScene  implements SpriteContext {
 	@Override
 	public String toString() {
 		return "LevelScene [sprites=" + sprites.size() + ", spritesToAdd=" + spritesToAdd.size() + ", spritesToRemove="
-				+ spritesToRemove.size() + ", level=" + level + ", mario=" + mario + ", xCam=" + xCam + ", yCam=" + yCam
-				+ ", tick=" + tick 
+				+ spritesToRemove.size() + ", level=" + level + ", mario=" + mario + ", tick=" + tick 
 				+ ", startTime=" + startTime
 				+ ", timeLeft=" + timeLeft + ", fireballsOnScreen=" + fireballsOnScreen + ", totalTime=" + totalTime
-				+ ", levelSeed=" + levelSeed + ", renderer=" + renderer + ", levelType=" + levelType
+				+ ", levelSeed=" + levelSeed + ", levelType=" + levelType
 				+ ", levelDifficulty=" + levelDifficulty + ", levelLength=" + levelLength + ", killedCreaturesTotal="
 				+ killedCreaturesTotal + ", killedCreaturesByFireBall=" + killedCreaturesByFireBall
 				+ ", killedCreaturesByStomp=" + killedCreaturesByStomp + ", killedCreaturesByShell="
-				+ killedCreaturesByShell + ", shellsToCheck=" + shellsToCheck + ", fireballsToCheck=" + fireballsToCheck
-				+ "]";
+				+ killedCreaturesByShell + "]";
 	}
 
 	public LevelScene(LevelScene toCopy) {
@@ -87,11 +88,11 @@ public class LevelScene  implements SpriteContext {
 			return;
 		}
 		
-		this.sprites = deepCopyList(toCopy.sprites);// TODO TESTING
+		this.sprites = deepCopyList(toCopy.sprites);
 		this.spritesToAdd = deepCopyList(toCopy.spritesToAdd);
 		this.spritesToRemove = deepCopyList(toCopy.spritesToRemove);
 		
-		this.level = new Level(this, toCopy.level); //TODO TESTING
+		this.level = new Level(this, toCopy.level);
 		this.mario = new Mario(this,toCopy.mario);
 		sprites.add(mario);
 		
@@ -99,7 +100,6 @@ public class LevelScene  implements SpriteContext {
 		this.yCam = toCopy.yCam;
 		this.tick = toCopy.tick;
 		this.lastTickFireball=toCopy.lastTickFireball;
-		//this.layer = new LevelRenderer(level, toCopy.layer);
 		
 		this.startTime = toCopy.startTime;
 		this.timeLeft = toCopy.timeLeft;
@@ -818,9 +818,7 @@ public class LevelScene  implements SpriteContext {
 		tick = 0;
 		lastTickFireball=-1;
 	}
-
-	List<Shell> shellsToCheck = new ArrayList<Shell>();
-
+	
 	public void checkShellCollide(Shell shell) {
 		shellsToCheck.add(shell);
 	}
@@ -1051,35 +1049,7 @@ public class LevelScene  implements SpriteContext {
 	public void killedCreaturesByShell() {
 		++killedCreaturesByShell;
 	}
-	
-	public boolean levelIsBlocking(int x, int y, float xa, float ya) {
-		return level.isBlocking(x, y, xa, ya);
-	}
-	
-	public byte levelGetBlock(int x, int y) {
-		return level.getBlock(x, y);
-	}
-	
-	public void setLevelBlock(int x, int y, byte b) {
-		level.setBlock(x, y, b);
-	}
-	
-	public int getLevelWidth() {
-		return level.getWidth();
-	}
-	
-	public int getLevelHight() {
-		return level.getHeight();
-	}
-	
-	public double getLevelWidthPhys() {
-		return level.getWidthPhys();
-	} 
-	
-	public int getLevelXExit() {
-		return level.getXExit();
-	}
-	
+
 	//---Mario Getter/Setter
 	
 	public float getMarioX() {
@@ -1233,18 +1203,6 @@ public class LevelScene  implements SpriteContext {
 	public static double getScoreBasesOnValues(STATUS marioStatus, int timeLeft, double marioX, int killsTotal, int killsByStomp,int killsByShell,int killsByFire, int collectedCoins, int collectedMuhsrooms,int collectedFlowers,int timesHurt) {
 		double res=0;
 		
-//		System.err.println(marioStatus);
-//		System.out.println("Time left: "+timeLeft/15);
-//		System.out.println("Mario X: "+(int)marioX/16);
-//		System.out.println(killsTotal);
-//		System.out.println(killsByStomp);
-//		System.out.println(killsByShell);
-//		System.out.println(killsByFire);
-//		System.out.println(collectedCoins);
-//		System.out.println(collectedMuhsrooms);
-//		System.out.println(collectedFlowers);
-//		System.out.println(timesHurt);
-		
 		//---Positive 
 		//--- Distance Score
 		if(marioX>=0) res+=(int)marioX/16; //adding passed distance 
@@ -1277,10 +1235,6 @@ public class LevelScene  implements SpriteContext {
 		return res;
 	}
 
-	public long getLevelSeed() {
-		return levelSeed;
-	}
-
 	public void usedFireball() {
 		lastTickFireball=tick;
 	}
@@ -1306,6 +1260,39 @@ public class LevelScene  implements SpriteContext {
 		return levelDifficulty;
 	}
 		
+	public long getLevelSeed() {
+		return levelSeed;
+	}
+
+	public boolean levelIsBlocking(int x, int y, float xa, float ya) {
+		return level.isBlocking(x, y, xa, ya);
+	}
+	
+	public byte levelGetBlock(int x, int y) {
+		return level.getBlock(x, y);
+	}
+	
+	public void setLevelBlock(int x, int y, byte b) {
+		level.setBlock(x, y, b);
+	}
+	
+	public int getLevelWidth() {
+		return level.getWidth();
+	}
+	
+	public int getLevelHight() {
+		return level.getHeight();
+	}
+	
+	public double getLevelWidthPhys() {
+		return level.getWidthPhys();
+	} 
+	
+	public int getLevelXExit() {
+		return level.getXExit();
+	}
+	
+
 	//--- Camera
 
 	public float getxCam() {

@@ -24,8 +24,9 @@ import java.awt.image.VolatileImage;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
-public class MarioComponent extends JComponent implements Runnable, FocusListener, Environment {
+public class MarioComponent extends JComponent implements Callable<EvaluationInfo>, FocusListener, Environment {
     private static final long serialVersionUID = 790878775993203817L;
 
     private boolean running = false;
@@ -109,27 +110,32 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
     public void update(Graphics g) {
     }
 
-    public void init() { //needs to stay, parent container must add this before calling init()
+    public void init() { //needs to stay, parent container must add the MarioComponent(this) before calling init()
         graphicsConfiguration = getGraphicsConfiguration();
         if (graphicsConfiguration != null) {
             Art.init(graphicsConfiguration);
         }
     }
 
-    //--- Runnable
+    //--- Callable
     public void stop() {
         running = false;
     }
+    
+    @Override
+	public EvaluationInfo call() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
-    public void run() {
-    }
+   
     
     private void checkPaused() {
     	if(levelScene.getMarioStatus()==STATUS.RUNNING)	this.paused=setpaused;
     	else this.paused=true;
     }
 
-    public EvaluationInfo run1(int currentTrial, int totalNumberOfTrials) {
+    public EvaluationInfo run1() {
     	
         running = true;
         adjustFPS();
@@ -164,9 +170,9 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
             }
             boolean[] action = {false,false,false,false,false};
 
-            	/*if(!paused||tmpPerformTick)*/ action = getAgent().getAction(this);
+            	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
             	
-            	if(rOptions.isViewable()&&debugView&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og, this);
+            	if(rOptions.isViewable()&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og,this,debugView,!paused||performTick);
            
             if (action != null)
             {
@@ -749,5 +755,5 @@ public class MarioComponent extends JComponent implements Runnable, FocusListene
 			parent=parent.getParent();
 		}
 		if(parent instanceof JFrame) ((JFrame)parent).pack();
-	}	
+	}
 }

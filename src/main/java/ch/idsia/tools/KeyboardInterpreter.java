@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 import ch.idsia.mario.environments.Environment;
 
 /**
- * KeyListener for executing actions on the given environment based on user input
+ * KeyListener for executing actions in the given environment based on user input
  * @author rgu
  *
  */

@@ -38,7 +38,6 @@ public class BasicSimulator implements Simulation
         prepareMarioComponent();
         marioComponent.getLevelScene().resetMario(rOptions.getMarioStartMode());     
         
-        return marioComponent.run1(rOptions.incrementTrials(),
-                rOptions.getMaxTrials());
+        return marioComponent.run1();
     }
 }

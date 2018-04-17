@@ -36,7 +36,7 @@ public abstract class MarioNtAgent implements Agent{
 	
 	private static final int ENEMY_CHECK_DISTANCE=4/*,BRICK_CHECK_DISTANCE=3*/;
 	
-	private ArrayList<Coordinates> coordList=new ArrayList<>();
+	private List<Coordinates> coordList=new ArrayList<>(), oldCoordList=new ArrayList<>(); 
 
 	/**
 	 * Resets the agent. Should be overridden if needed.
@@ -523,8 +523,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @param coord
 	 */
 	protected final void addCoordToDraw(Coordinates coord) {
-		if(env.isDebugView()) this.coordList.add(coord);
-		else this.coordList.clear();
+		 this.coordList.add(coord);
 	}
 	
 	/**
@@ -532,7 +531,10 @@ public abstract class MarioNtAgent implements Agent{
 	 * @param og
 	 * @param env
 	 */
-	public void debugDraw(Graphics og,Environment env) {
+	public void debugDraw(Graphics og,Environment env,boolean debug,boolean delete) {
+		
+		if(!delete) coordList=getDeepCopy(oldCoordList);
+		if(debug) {
 		Coordinates oldCoords=null; 
 		Color oldColor=og.getColor();
 		og.setColor(Color.RED);
@@ -541,7 +543,25 @@ public abstract class MarioNtAgent implements Agent{
 			oldCoords=next;
 		}
 		og.setColor(oldColor);
+		}
+		oldCoordList.clear();
+		oldCoordList=getDeepCopy(coordList);
 		coordList.clear();
+	}
+	
+	/**
+	 * Helper Method to make a deep copy of a coordinates list
+	 * @param toCopy the list to copy
+	 * @return a deep copy of the given list
+	 */
+	private List<Coordinates> getDeepCopy(List<Coordinates> toCopy){
+		List<Coordinates> res=new ArrayList<>();
+		
+		for(Coordinates next:toCopy) {
+			res.add(new Coordinates(next.getX(),next.getY()));
+		}
+		
+		return res;
 	}
 	
 }
