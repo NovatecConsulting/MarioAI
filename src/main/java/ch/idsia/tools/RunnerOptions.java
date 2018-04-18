@@ -3,6 +3,7 @@ package ch.idsia.tools;
 import java.awt.Point;
 
 import ch.idsia.ai.agents.Agent;
+import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.sprites.Mario.MODE;
 import de.novatec.marioai.tools.LevelConfig;
@@ -45,13 +46,16 @@ public class RunnerOptions {
 	
 	private LevelConfig config;
 	
+	private final Task task;
+	
 	private int trials=0,maxTrials=1; //number of trials
 	
 	private int ZLevelEnemies=1, ZLevelMap=1;
 
-	public RunnerOptions(Agent agent,LevelConfig config) {
+	public RunnerOptions(Agent agent,LevelConfig config, Task task) {
 		this.config=config;		
 		this.agent=agent;
+		this.task=task;
 	}
 	
 	public RunnerOptions(RunnerOptions toCopy) {
@@ -76,6 +80,31 @@ public class RunnerOptions {
 		this.viewLocation=toCopy.getViewLocation();
 		this.config=toCopy.config;
 		this.debugView=toCopy.debugView;
+		this.task=toCopy.task;
+	}
+	
+	public RunnerOptions getCopyWithNewAgent(Agent agent) {
+		RunnerOptions res= new RunnerOptions(agent, this.config, this.task);
+		res.windowHeigth=this.getWindowHeigth();
+		res.windowWidth=this.getWindowWidth();
+		res.FPS=this.FPS;
+		res.viewable=this.isViewable();
+		res.timeLimit=this.getTimeLimit();
+		res.timer=this.isTimer();
+		res.paused=this.isPaused();
+		res.powerRestauration=this.isPowerRestauration();
+		res.marioStartMode=this.getMarioStartMode();
+		res.marioInvulnerable=this.isMarioInvulnerable();
+		res.exitWhenFinished=this.isExitWhenFinished();
+		res.viewAlwaysOnTop=this.isViewAlwaysOnTop();
+		res.trials=this.trials;
+		res.maxTrials=this.getMaxTrials();
+		res.ZLevelEnemies=this.getZLevelEnemies();
+		res.ZLevelMap=this.getZLevelMap();
+		res.viewLocation=this.getViewLocation();
+		res.debugView=this.debugView;
+		
+		return res;
 	}
 	
 	public Agent getAgent() {
@@ -118,6 +147,7 @@ public class RunnerOptions {
 		return timeLimit;
 	}
 
+	@SuppressWarnings("unused")
 	private void setTimeLimit(int timeLimit) { // shouldn't be changeable
 		this.timeLimit = timeLimit;
 	}
@@ -266,6 +296,8 @@ public class RunnerOptions {
 		this.debugView = debugView;
 	}
 
-	
+	public Task getTask() {
+		return task;
+	}
 	
 }

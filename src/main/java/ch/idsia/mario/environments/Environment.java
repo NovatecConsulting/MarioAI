@@ -43,6 +43,8 @@ public interface Environment
     public void swapAgent();
     
     public void registerKeyboardListener(KeyListener listener);
+    public void removeLastKeyboardListener();
+    public void addLastKeyboardListener();
 
     public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 1
 
@@ -59,7 +61,6 @@ public interface Environment
     public Dimension getInitialDimension();
     public Dimension getActualDimension();
 
-  
     public LevelScene getLevelScene();
 
     //--- Mario

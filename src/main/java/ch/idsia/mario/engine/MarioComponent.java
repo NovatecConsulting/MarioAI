@@ -1,32 +1,37 @@
 package ch.idsia.mario.engine;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GraphicsConfiguration;
+import java.awt.Toolkit;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyListener;
+import java.awt.image.VolatileImage;
+import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.JComponent;
+
 import ch.idsia.ai.agents.Agent;
+import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.BgLevelGenerator;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import ch.idsia.tools.EvaluationInfo;
-import ch.idsia.tools.KeyboardInterpreter;
 import ch.idsia.tools.RunnerOptions;
+import ch.idsia.tools.ToolsConfigurator;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
 import de.novatec.marioai.agents.HumanKeyboardAgent;
 import de.novatec.marioai.tools.MarioNtAgent;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyListener;
-import java.awt.image.VolatileImage;
-import java.text.DecimalFormat;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.Callable;
-
-public class MarioComponent extends JComponent implements Callable<EvaluationInfo>, FocusListener, Environment {
+public class MarioComponent extends JComponent implements Environment {
     private static final long serialVersionUID = 790878775993203817L;
 
     private boolean running = false;
@@ -48,6 +53,7 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
     
     private static final int GENERALIZATION_ENEMIES = 1;
     private static final int GENERALIZATION_LEVELSCENE = 1;
+    private static final int maxFPS=100;
     private static final DecimalFormat df = new DecimalFormat("0.0");
     private static final DecimalFormat df2 = new DecimalFormat("00");
 
@@ -63,8 +69,6 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
 
         Dimension size = new Dimension(width, height);
         setPreferredSize(size);
-        
-        new KeyboardInterpreter(this);
     }
     
     //--- Copy Constructor
@@ -99,7 +103,7 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
 
     //--- FPS
 	public void adjustFPS() { //MAKING MARIO FASTER! SMALLER DELAY=FASTER RUNNING
-    	if(rOptions.isViewable()) delay = (rOptions.getFPS() > 0) ? (rOptions.getFPS() >= RunnerOptions.getInfinitefps()) ? 0 : (1000/rOptions.getFPS()) : 100;
+    	if(rOptions.isViewable()) delay = (rOptions.getFPS() > 0) ? (rOptions.getFPS() >= maxFPS) ? 0 : (1000/rOptions.getFPS()) : maxFPS;
     	else delay=0;
     }
 
@@ -122,32 +126,22 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
         running = false;
     }
     
-    @Override
-	public EvaluationInfo call() throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-   
-    
     private void checkPaused() {
     	if(levelScene.getMarioStatus()==STATUS.RUNNING)	this.paused=setpaused;
     	else this.paused=true;
     }
 
-    public EvaluationInfo run1() {
+    public EvaluationInfo run() {
     	
         running = true;
         adjustFPS();
-        EvaluationInfo evaluationInfo = new EvaluationInfo();
+        EvaluationInfo evaluationInfo = new EvaluationInfo(rOptions.getTask());
 
         VolatileImage image = null;
         Graphics g = null;
         Graphics og = null;
 
         image = createVolatileImage(320, 240);
-
-        addFocusListener(this);
 
         long startTime = System.currentTimeMillis();  // Remember the starting time
         STATUS marioStatus = STATUS.RUNNING;
@@ -277,7 +271,6 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
     }
     
    //--- Rendering
-    
     private void render(Graphics g) {
     	int xCam=(int)levelScene.getxCam();
     	int yCam=(int)levelScene.getyCam();
@@ -426,14 +419,20 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
         int actualRow=3;
         drawStringDropShadow(og, "Results: ", 1, actualRow++, 1);
         drawStringDropShadow(og, "       Agent: "+rOptions.getAgent().getName(), start, actualRow++, 2);
-        if(rOptions.getAgent().getClass().getSimpleName().length()<18)drawStringDropShadow(og, "     of Type: "+rOptions.getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
+        if(rOptions.getAgent().getClass().getSimpleName().length()<18) {
+        	drawStringDropShadow(og, "     of Type: "+rOptions.getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
+        	actualRow++;
+        }
         else { 
         	drawStringDropShadow(og, "     of Type: ", start, actualRow++, 2);
         	drawStringDropShadow(og,"   "+getAgent().getClass().getSimpleName()+".class", start, actualRow++, 2);
         }
         actualRow++;
         drawStringDropShadow(og, "Mario Status: "+levelScene.getMarioStatus(), start, actualRow, 1);
-        if(wasHijacked) drawStringDropShadow(og,  "(HIJACKED!)", start+19, actualRow++, 1);
+        if(wasHijacked) {
+        	drawStringDropShadow(og,  "(HIJACKED!)", start+19, actualRow++, 1);
+        }
+        else actualRow++;
         actualRow++;
         drawStringDropShadow(og, "       Level: "+levelScene.getLevelSeed(), start, actualRow++, 4);
         drawStringDropShadow(og, " Distance to", start,actualRow++,4);
@@ -463,7 +462,7 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
         actualRow++;       
         
         drawStringDropShadow(og, "----------------------------------", start-2, actualRow++, 1);
-        drawStringDropShadow(og, "Score: "+(int)(levelScene.getScore()), start-2, actualRow++, 1);
+        drawStringDropShadow(og, "Score: "+(int)(levelScene.getScore())+" ("+rOptions.getTask().getName()+")", start-2, actualRow++, 1);
         g.drawImage(image, 0, 0, getSize().width, getSize().height, null);
     }
 
@@ -500,11 +499,14 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
     }
     
     public void swapAgent() {
+    	if(rOptions.getAgent().getClass().equals(HumanKeyboardAgent.class)) return;
+    	this.setPaused(true);
     	this.wasHijacked=true;
     	this.sethijacked=!hijacked;
     }
     
     public void checkHijacked() {
+    	if(rOptions.getAgent().getClass().equals(HumanKeyboardAgent.class)) return;
     	if(levelScene.getMarioStatus()!=STATUS.RUNNING) return;
     	Agent tmp;
     	if(sethijacked!=hijacked) {
@@ -610,18 +612,40 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
 		return actual;
 	}
 	
+	Task getTask(){
+		if(rOptions!=null) return rOptions.getTask();
+		return null;
+	}
+	
 	@Override
 	public void registerKeyboardListener(KeyListener listener) {
 		this.addKeyListener(listener);
 	}
 	
+	@Override
+	public void removeLastKeyboardListener() {
+		 if (prevHumanKeyBoardAgent != null) {
+			 
+			 getTopLevelAncestor().removeKeyListener(prevHumanKeyBoardAgent);
+		 }
+	}
+	
+	@Override
+	public void addLastKeyboardListener() {
+ if (prevHumanKeyBoardAgent != null) {
+			 
+			 getTopLevelAncestor().addKeyListener(prevHumanKeyBoardAgent);
+		 }
+	}
+	
   	private void registerKeyListenerAgent(Agent agent) {
         if (agent instanceof KeyListener) {
         	
-            if (prevHumanKeyBoardAgent != null) this.removeKeyListener(prevHumanKeyBoardAgent);
+            if (prevHumanKeyBoardAgent != null) getTopLevelAncestor().removeKeyListener(prevHumanKeyBoardAgent);
             
             this.prevHumanKeyBoardAgent = (KeyListener) agent;
-            registerKeyboardListener(this.prevHumanKeyBoardAgent);;
+            getTopLevelAncestor().addKeyListener(this.prevHumanKeyBoardAgent);
+
         }
     }
 
@@ -706,6 +730,7 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
 
 	@Override
 	public void showMarioViewAsAscii() {
+		setPaused(true);
 		byte[][] tmp=getCompleteObservation();
 		System.out.println(" --------------------------------Marios Receptive Field:--------------------------------");
     	for(int i=0;i<tmp.length;i++) {
@@ -744,16 +769,14 @@ public class MarioComponent extends JComponent implements Callable<EvaluationInf
 		
 		if(Toolkit.getDefaultToolkit().getScreenSize().width<width||Toolkit.getDefaultToolkit().getScreenSize().height<height) return;
 		
-		
-		Dimension d=new Dimension(width, height);
-		this.setPreferredSize(d);
-
 		this.revalidate();
 		
-		Container parent=getParent();
-		while(parent.getParent()!=null) {
-			parent=parent.getParent();
+		Container parent=getTopLevelAncestor();
+		if(parent instanceof ToolsConfigurator) {
+			Dimension d=new Dimension(width, height);
+			((ToolsConfigurator)parent).resizeAll(d);
 		}
-		if(parent instanceof JFrame) ((JFrame)parent).pack();
 	}
 }
+
+	

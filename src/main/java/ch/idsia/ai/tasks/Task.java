@@ -1,24 +1,11 @@
 package ch.idsia.ai.tasks;
 
-import java.util.List;
+import ch.idsia.mario.engine.sprites.Mario.STATUS;
 
-import ch.idsia.tools.EvaluationInfo;
-import ch.idsia.tools.RunnerOptions;
-
-/**
- * Created by IntelliJ IDEA.
- * User: Sergey Karakovskiy
- * Date: Apr 8, 2009
- * Time: 11:20:41 AM
- * Package: ch.idsia.ai.tasks
- */
 public interface Task {
-    public double[] evaluate ();
-    
-    public List<EvaluationInfo> evaluteWithExtendedInfo();
-
-    public void setOptions (RunnerOptions options);
-
-    public RunnerOptions getOptions ();
-
+	
+	public final static Task COMPETITIONTASK=new ChallengeTask();
+	
+	public double getScoreBasesOnValues(STATUS marioStatus, int timeLeft, double marioX, int killsTotal, int killsByStomp,int killsByShell,int killsByFire, int collectedCoins, int collectedMuhsrooms,int collectedFlowers,int timesHurt);
+	public String getName();
 }

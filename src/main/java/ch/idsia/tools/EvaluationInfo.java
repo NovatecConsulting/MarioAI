@@ -1,6 +1,6 @@
 package ch.idsia.tools;
 
-import ch.idsia.mario.engine.LevelScene;
+import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
  */
 public class EvaluationInfo
 {
+	private Task task;
     private static final int MagicNumberUndef = -42;
     public Level.LEVEL_TYPES levelType = Level.LEVEL_TYPES.UNKNOWN;
     public STATUS marioStatus = STATUS.UNKNOWN;
@@ -49,8 +50,12 @@ public class EvaluationInfo
     private int gainedMushrooms=MagicNumberUndef;
     private int gainedFlower=MagicNumberUndef;
 
+    public EvaluationInfo(Task task) {
+    	this.task=task;
+    }
+    
     public double computeBasicFitness() {
-    	return LevelScene.getScoreBasesOnValues(marioStatus, timeLeft, lengthOfLevelPassedPhys, killsTotal, killedCreaturesbyStomp, killedCreaturesbyShell, killedCreaturesbyFire, numberOfGainedCoins, gainedMushrooms, gainedFlower, timesHurt);
+    	return task.getScoreBasesOnValues(marioStatus, timeLeft, lengthOfLevelPassedPhys, killsTotal, killedCreaturesbyStomp, killedCreaturesbyShell, killedCreaturesbyFire, numberOfGainedCoins, gainedMushrooms, gainedFlower, timesHurt);
     }
 
     public double computeDistancePassed()
@@ -136,6 +141,7 @@ public class EvaluationInfo
         String ret = "\n\n			   //////////////\n"; 
         ret +=	    "			   //Statistics//\n";
         ret +=     "			   //////////////";
+        ret += "\n                           Based on : " + task.getName();
         ret += "\n                  Player/Agent type : " + agentType;
         ret += "\n                  Player/Agent name : " + agentName;
         ret += "\n                       Mario Status : " + ((marioStatus == STATUS.WIN) ? "Won" : "Lost");

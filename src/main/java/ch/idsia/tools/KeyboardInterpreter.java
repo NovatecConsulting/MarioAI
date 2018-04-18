@@ -3,7 +3,7 @@ package ch.idsia.tools;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-import ch.idsia.mario.environments.Environment;
+import ch.idsia.mario.engine.MarioComponent;
 
 /**
  * KeyListener for executing actions in the given environment based on user input
@@ -12,11 +12,11 @@ import ch.idsia.mario.environments.Environment;
  */
 public class KeyboardInterpreter implements KeyListener{
 	
-	private Environment env;
+	private ToolsConfigurator configurator;
 
-	public KeyboardInterpreter(Environment env) {
-		env.registerKeyboardListener(this);
-		this.env=env;
+	public KeyboardInterpreter(ToolsConfigurator configurator) {
+		configurator.addKeyListener(this);
+		this.configurator=configurator;
 	}
 	
 	@Override
@@ -30,36 +30,35 @@ public class KeyboardInterpreter implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 	//System.out.println(e.getKeyChar()+" "+e.getKeyCode()); //debug
+		final MarioComponent actualComponent=configurator.getControlledComponent();
 		
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_P:
-			env.togglePaused();
+			actualComponent.togglePaused();
 			break;
 		case KeyEvent.VK_I:
-			env.setPaused(true);
-			env.showMarioViewAsAscii();
+			actualComponent.showMarioViewAsAscii();
 			break;
 		case KeyEvent.VK_O:
-			env.toggleDebugView();
+			actualComponent.toggleDebugView();
 			break;
 		case KeyEvent.VK_T:
-			env.performTick();
+			actualComponent.performTick();
 			break;
 		case KeyEvent.VK_H:
-			env.setPaused(true);
-			env.swapAgent();
+			actualComponent.swapAgent();
 			break;
 		case KeyEvent.VK_MINUS:
 		case 109:
-			env.resizeView(env.getActualDimension().width-32, env.getActualDimension().height-24);
+			actualComponent.resizeView(actualComponent.getActualDimension().width-32, actualComponent.getActualDimension().height-24);
 			break;
 		case KeyEvent.VK_PLUS:
 		case 107:
-			env.resizeView(env.getActualDimension().width+32, env.getActualDimension().height+24);
+			actualComponent.resizeView(actualComponent.getActualDimension().width+32, actualComponent.getActualDimension().height+24);
 		break;
 		case 520:
 		case 106:	
-			env.resizeView(env.getInitialDimension().height, env.getInitialDimension().width);
+			actualComponent.resizeView(actualComponent.getInitialDimension().height, actualComponent.getInitialDimension().width);
 		break;
 		
 		}

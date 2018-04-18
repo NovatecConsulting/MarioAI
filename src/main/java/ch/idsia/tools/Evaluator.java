@@ -1,12 +1,8 @@
 package ch.idsia.tools;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
-
+import java.util.concurrent.Callable;
 import ch.idsia.mario.engine.MarioComponent;
-import ch.idsia.mario.simulation.BasicSimulator;
-import ch.idsia.mario.simulation.Simulation;
 
 /**
  * Created by IntelliJ IDEA.
@@ -16,76 +12,43 @@ import ch.idsia.mario.simulation.Simulation;
  * Package: .Tools
  */
 
-public class Evaluator implements Runnable
+public class Evaluator implements Callable<EvaluationInfo>
 {
-    Thread thisThread = null;
     RunnerOptions rOptions;
     MarioComponent component;
+    ToolsConfigurator configurator;
 
-    private List<EvaluationInfo> evaluationSummary = new ArrayList<EvaluationInfo>();
 
-    
-
-    public List<EvaluationInfo> evaluate()
-    {
-      
-        Simulation simulator = new BasicSimulator(component,new RunnerOptions(rOptions));
-        // Simulate One Level
-
-        EvaluationInfo evaluationInfo;
-
+    public EvaluationInfo evaluate() {
+        EvaluationInfo evaluationInfo=null;
         long startTime = System.currentTimeMillis();
 
-            evaluationInfo = simulator.simulateOneLevel();
-                                                        
-            evaluationInfo.levelType = rOptions.getLevelType();
-            evaluationInfo.levelDifficulty = rOptions.getDifficulty();
-            evaluationInfo.levelRandSeed = rOptions.getLevelSeed();
-            evaluationSummary.add(evaluationInfo);
+        	 configurator.awaitBarrier();
+        	 component.setRunnerOptions(rOptions);
+        	 component.getLevelScene().resetMario(rOptions.getMarioStartMode());     
+			 evaluationInfo = component.run();                                            
+			 evaluationInfo.levelType = rOptions.getLevelType();
+			 evaluationInfo.levelDifficulty = rOptions.getDifficulty();
+			 evaluationInfo.levelRandSeed = rOptions.getLevelSeed();
 
         long currentTime = System.currentTimeMillis();
-        
+
         @SuppressWarnings("unused") //TODO USE
 		long elapsed = currentTime - startTime;
       
-        return evaluationSummary;
+        return evaluationInfo;
     }
 
-    public void verbose(String message, LOGGER.VERBOSE_MODE verbose_mode)
-    {
-        LOGGER.println(message, verbose_mode);
+    public Evaluator(RunnerOptions rOptions,ToolsConfigurator configurator) {           
+    	this.rOptions=rOptions;
+    	this.configurator=configurator;
+    	this.component=configurator.register(rOptions);
     }
-
-    public void reset()
-    {
-        evaluationSummary = new ArrayList<EvaluationInfo>();
-    }
-
-    public Evaluator(RunnerOptions rOptions)
-    {                      
-        init(rOptions);
-    }
-
-    public void run()
-    {
-        evaluate();
-    }
-
-    public void start()
-    {
-        if (thisThread.getState() == Thread.State.NEW)
-            thisThread.start();
-    }
-
-    public void init(RunnerOptions rOptions)
-    {
-         component=ToolsConfigurator.CreateMarioComponentFrame(
-                rOptions);
-        
-        this.rOptions = rOptions;
-        if (thisThread == null)
-            thisThread = new Thread(this);
-    }
+ 
+	@Override
+	public EvaluationInfo call() throws Exception {
+		return evaluate();
+	}
 }
 
 class evBasicFitnessComparator implements Comparator<Object>

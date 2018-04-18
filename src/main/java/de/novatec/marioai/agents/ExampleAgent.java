@@ -1,7 +1,5 @@
 package de.novatec.marioai.agents;
 
-import de.novatec.marioai.tools.LevelConfig;
-import de.novatec.marioai.tools.MarioAiRunner;
 import de.novatec.marioai.tools.MarioInput;
 import de.novatec.marioai.tools.MarioNtAgent;
 
@@ -34,10 +32,4 @@ public class ExampleAgent extends MarioNtAgent{
 		
 		return getMarioInput();
 	}
-	
-//	public static void main(String [] args) {		
-//		MarioAiRunner.run(new ExampleAgent(), LevelConfig.HARD_ENEMY_TRAINING, 24, 3, true, true, false);
-//	}
-
-
 }
