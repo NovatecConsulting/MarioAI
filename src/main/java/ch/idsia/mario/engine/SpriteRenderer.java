@@ -5,6 +5,11 @@ import java.util.List;
 
 import ch.idsia.mario.engine.sprites.Sprite;
 
+/**
+ * Renderer for all sprites that are in the given list
+ * @author rgu
+ *
+ */
 public class SpriteRenderer {
 
 	private List<Sprite> sprites;

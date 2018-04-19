@@ -16,15 +16,17 @@ public class Evaluator implements Callable<EvaluationInfo>
 {
     RunnerOptions rOptions;
     MarioComponent component;
-    ToolsConfigurator configurator;
+    MainFrame configurator;
 
 
     public EvaluationInfo evaluate() {
         EvaluationInfo evaluationInfo=null;
         long startTime = System.currentTimeMillis();
 
+ 
         	 configurator.awaitBarrier();
-        	 component.setRunnerOptions(rOptions);
+        	 component.setRunnerOptions();
+        	 
         	 component.getLevelScene().resetMario(rOptions.getMarioStartMode());     
 			 evaluationInfo = component.run();                                            
 			 evaluationInfo.levelType = rOptions.getLevelType();
@@ -39,7 +41,7 @@ public class Evaluator implements Callable<EvaluationInfo>
         return evaluationInfo;
     }
 
-    public Evaluator(RunnerOptions rOptions,ToolsConfigurator configurator) {           
+    public Evaluator(RunnerOptions rOptions,MainFrame configurator) {           
     	this.rOptions=rOptions;
     	this.configurator=configurator;
     	this.component=configurator.register(rOptions);

@@ -13,7 +13,9 @@ import ch.idsia.ai.tasks.Task;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.Evaluator;
 import ch.idsia.tools.RunnerOptions;
-import ch.idsia.tools.ToolsConfigurator;
+import ch.idsia.tools.MainFrame;
+import de.novatec.marioai.agents.ExampleAgent;
+import de.novatec.marioai.agents.HumanKeyboardAgent;
 
 /**
  * Simple helper class to start the evaluation of an agent. 
@@ -37,12 +39,12 @@ public class MarioAiRunner {
 	 * @param randomize determines if the level should be randomized based on the levelConfig
 	 * @param viewable determines if the evaluation should be viewable (if true fps will be overridden!)
 	 * @param debugView determines if additional debug-views should be shown
-	 * @param windowMultiplier  multiplier for window height/width (Standard: 320x240)
+	 * @param zoomFactor  multiplier for window height/width (Standard: 320x240)
 	 */
-	public static void run(Agent agent,LevelConfig levelConfig,int fps,int windowMultiplier, boolean randomize, boolean viewable, boolean debugView) {
+	public static void run(Agent agent,LevelConfig levelConfig,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
 		List<Agent> tmp=new ArrayList<>();
 		tmp.add(agent);
-		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, windowMultiplier, randomize, viewable, debugView);
+		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, zoomFactor, randomize, viewable, debugView);
 	}
 	
 	/**
@@ -60,13 +62,13 @@ public class MarioAiRunner {
 	 * @param agent Agent to be evaluated
 	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
 	 * @param randomize determines if the level should be randomized based on the levelConfig
-	 * @param windowMultiplier multiplier for window height/width (Standard: 320x240)
+	 * @param zoomFactor multiplier for window height/width (Standard: 320x240)
 	 */
-	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize, int windowMultiplier) {		
-		run(agent, levelConfig, 24,windowMultiplier,randomize, true,false);
+	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize, int zoomFactor) {		
+		run(agent, levelConfig, 24,zoomFactor,randomize, true,false);
 	}
 	
-	public static void multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int windowMultiplier, boolean randomize, boolean viewable, boolean debugView) {
+	public static void multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
 		if(agents==null){
 			System.err.println("Agents List can't be null!\nPlease use a proper List with agents!");
 			return;
@@ -82,19 +84,19 @@ public class MarioAiRunner {
 			System.err.println("Exiting...");
 			return;
 		}
-		if(windowMultiplier<1) windowMultiplier=1;	
+		if(zoomFactor<1) zoomFactor=1;	
 		
 		RunnerOptions baseOptions=new RunnerOptions(agents.get(0),levelConfig,task);
 
 		baseOptions.setViewable(viewable);
 		baseOptions.setFPS(fps);
-		baseOptions.setWindowHeigth(320*windowMultiplier);
-		baseOptions.setWindowWidth(240*windowMultiplier);
+		baseOptions.setWindowHeigth(240*zoomFactor);
+		baseOptions.setWindowWidth(320*zoomFactor);
 		baseOptions.setDebugView(debugView);
 		
 		try {
 			ExecutorService runner = Executors.newWorkStealingPool();
-			ToolsConfigurator configurator=new ToolsConfigurator(agents.size(), false, viewable, new Point());
+			MainFrame configurator=new MainFrame(agents.size(), false, viewable, new Point());
 			
 			List<Future<EvaluationInfo>> results= new ArrayList<>();
 
@@ -117,6 +119,15 @@ public class MarioAiRunner {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
+	}
+	
+	public static void main (String[] args) {
+		List<Agent> tmp=new ArrayList<>();
+		tmp.add(new HumanKeyboardAgent());
+		tmp.add(new ExampleAgent());
+		tmp.add(new ExampleAgent());
+		tmp.add(new ExampleAgent());
+		multiAgentRun(tmp, LevelConfig.LEVEL_3, new ChallengeTask(), 24, 10, true, true, false);
 	}
 }
 

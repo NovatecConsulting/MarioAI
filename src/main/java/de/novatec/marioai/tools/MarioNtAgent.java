@@ -498,6 +498,10 @@ public abstract class MarioNtAgent implements Agent{
 		return env.getLevelScene().getDeepCopy();
 	}
 	
+	public final LevelScene getAStarCopyOfLevelScene() {
+		return env.getLevelScene().getAStarCopy();
+	}
+	
 	/**
 	 * 
 	 * @return Score of the actual LevelScene 

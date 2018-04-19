@@ -1,5 +1,6 @@
 package ch.idsia.mario.engine;
 
+import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.level.LevelGenerator;
 import ch.idsia.mario.engine.level.SpriteTemplate;
@@ -34,6 +35,7 @@ public class LevelScene  implements SpriteContext {
 
 	private Level level;
 	private Mario mario;
+	private Task task;
 	private float xCam, yCam;
 	private int tick,lastTickFireball;
 
@@ -44,16 +46,19 @@ public class LevelScene  implements SpriteContext {
 	private int totalTime = 200; //standard, but will always be overridden
 	private int fireballsOnScreen = 0;
 	
+	//- LevelInfo
 	private long levelSeed;
 	private MarioComponent renderer;
 	private Level.LEVEL_TYPES levelType;
 	private int levelDifficulty;
 	private int levelLength;
+	//- Statistics (TODO MOVE)
 	private int killedCreaturesTotal;
 	private int killedCreaturesByFireBall;
 	private int killedCreaturesByStomp;
 	private int killedCreaturesByShell;
 
+	//- Standard-Constructor
 	public LevelScene(MarioComponent renderer, long seed,int levelDifficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
 		this.levelSeed = seed;
 		this.renderer = renderer;
@@ -65,6 +70,7 @@ public class LevelScene  implements SpriteContext {
 		killedCreaturesByFireBall = 0;
 		killedCreaturesByStomp = 0;
 		killedCreaturesByShell = 0;
+		task=renderer.getRunnerOptions().getTask();
 	}
 	
 	@Override
@@ -80,7 +86,7 @@ public class LevelScene  implements SpriteContext {
 				+ killedCreaturesByShell + "]";
 	}
 
-	public LevelScene(LevelScene toCopy) {
+	public LevelScene(LevelScene toCopy, boolean simpleCopy) {
 		super();
 		if(toCopy==null) {
 			System.err.println("Error: LevelScene can't be copied because toCopy is null!");
@@ -92,7 +98,14 @@ public class LevelScene  implements SpriteContext {
 		this.spritesToRemove = deepCopyList(toCopy.spritesToRemove);
 		
 		this.level = new Level(this, toCopy.level);
-		this.mario = new Mario(this,toCopy.mario);
+		this.shellsToCheck = deepCopyShellList(toCopy.shellsToCheck); 
+		for(Shell next:shellsToCheck) if(next.isCarried()) {
+			System.out.println("CALLED SHELL");
+			this.mario = new Mario(this,next,toCopy.mario);
+			break;
+		}
+		if(this.mario==null) this.mario = new Mario(this,null,toCopy.mario);
+		this.task=toCopy.task;
 		sprites.add(mario);
 		
 		this.xCam = toCopy.xCam;
@@ -105,7 +118,7 @@ public class LevelScene  implements SpriteContext {
 		this.totalTime = toCopy.totalTime;
 		this.levelSeed = toCopy.levelSeed;
 		
-		this.renderer = new MarioComponent(this, toCopy.renderer);
+		if(!simpleCopy)this.renderer = new MarioComponent(this, toCopy.renderer);
 		
 		this.levelType = toCopy.levelType;
 		this.levelDifficulty = toCopy.levelDifficulty;
@@ -116,7 +129,7 @@ public class LevelScene  implements SpriteContext {
 		this.killedCreaturesByShell = toCopy.killedCreaturesByShell;
 		this.fireballsOnScreen = toCopy.fireballsOnScreen;
 		
-		this.shellsToCheck = deepCopyShellList(toCopy.shellsToCheck); 
+	
 		this.fireballsToCheck = deepCopyFireballList(toCopy.fireballsToCheck); 
 	}
 	
@@ -312,8 +325,7 @@ public class LevelScene  implements SpriteContext {
 			case (Sprite.KIND_COIN_ANIM):
 			case (Sprite.KIND_PARTICLE):
 			case (Sprite.KIND_SPARCLE):
-				// case(Sprite.KIND_MARIO):
-
+				
 				return Sprite.KIND_NONE;
 			}
 			return el; // all the rest should go as is
@@ -629,7 +641,6 @@ public class LevelScene  implements SpriteContext {
 		return ret;
 	}
 
-
 	public String bitmapLevelObservation(int ZLevel) {
 		String ret = "";
 		int MarioXInMap =  mario.getMapX();
@@ -830,7 +841,7 @@ public class LevelScene  implements SpriteContext {
 
 	public void tick() {
 		
-		if (renderer.getRunnerOptions().isTimer()&&mario.getStatus()==STATUS.RUNNING)
+		if (mario.getStatus()==STATUS.RUNNING)
 			timeLeft--;
 		
 		if (timeLeft == 0) {
@@ -1017,6 +1028,15 @@ public class LevelScene  implements SpriteContext {
 		return timeLeft / TPS;
 	}
 	
+	public int getExactTimeLeft() {
+		return timeLeft;
+	}
+	
+	public int getExactStartTime() {
+		return totalTime*TPS-timeLeft;
+	}
+	
+	
 	public int getKilledCreaturesTotal() {
 		return killedCreaturesTotal;
 	}
@@ -1192,11 +1212,15 @@ public class LevelScene  implements SpriteContext {
 	//--- A* Help Methods
 	
 	public LevelScene getDeepCopy() {
-		return new LevelScene(this);
+		return new LevelScene(this,false);
+	}
+	
+	public LevelScene getAStarCopy() {
+		return new LevelScene(this, true);
 	}
 	
 	public double getScore() {
-		return renderer.getTask().getScoreBasesOnValues(mario.getStatus(), getTimeLeft(), mario.getX(), killedCreaturesTotal, killedCreaturesByStomp, killedCreaturesByShell, killedCreaturesByFireBall, mario.getCoins(), mario.getGainedMushrooms(), mario.getGainedFlowers(), mario.getTimesHurt());
+		return task.getScoreBasesOnValues(mario.getStatus(), getTimeLeft(), mario.getX(), killedCreaturesTotal, killedCreaturesByStomp, killedCreaturesByShell, killedCreaturesByFireBall, mario.getCoins(), mario.getGainedMushrooms(), mario.getGainedFlowers(), mario.getTimesHurt());
 	}
 
 	public void usedFireball() {

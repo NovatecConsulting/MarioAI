@@ -8,9 +8,9 @@ import ch.idsia.mario.engine.sprites.Mario.STATUS;
 
 public class MouseInterpreter implements MouseListener {
 	
-	private ToolsConfigurator configurator;
+	private MainFrame configurator;
 	
-	public MouseInterpreter(ToolsConfigurator configurator) {
+	public MouseInterpreter(MainFrame configurator) {
 		this.configurator=configurator;
 	}
 

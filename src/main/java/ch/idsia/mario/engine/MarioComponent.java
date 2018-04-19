@@ -5,7 +5,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
-import java.awt.Toolkit;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.VolatileImage;
@@ -14,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.Task;
@@ -23,8 +23,8 @@ import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import ch.idsia.tools.EvaluationInfo;
+import ch.idsia.tools.MainFrame;
 import ch.idsia.tools.RunnerOptions;
-import ch.idsia.tools.ToolsConfigurator;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
@@ -62,8 +62,9 @@ public class MarioComponent extends JComponent implements Environment {
     private LevelScene levelScene = null;
  
     //--- Constructor
-    public MarioComponent(int width, int height) {
+    public MarioComponent(int width, int height, RunnerOptions rOptions) {
        
+    	this.rOptions=rOptions;
         this.setFocusable(true);
         this.setEnabled(true);
 
@@ -90,6 +91,7 @@ public class MarioComponent extends JComponent implements Environment {
 		this.paused=toCopy.paused;
 		this.setpaused=toCopy.setpaused;
 		this.performTick=toCopy.performTick;
+		this.wasHijacked=toCopy.wasHijacked;
 		
 		this.delay = toCopy.delay;
 		
@@ -97,6 +99,10 @@ public class MarioComponent extends JComponent implements Environment {
 		
 		this.debugView=toCopy.debugView;
 		this.viewable=toCopy.viewable;
+		
+		this.layer=new LevelRenderer(alreadyCopied.getLevel(), toCopy.layer);
+		this.bgLayer=toCopy.bgLayer;
+		this.spriteRenderer=new SpriteRenderer(alreadyCopied.getSprites());
 		
 		for(KeyListener listener:toCopy.getKeyListeners()) this.registerKeyboardListener(listener);
     }
@@ -121,7 +127,6 @@ public class MarioComponent extends JComponent implements Environment {
         }
     }
 
-    //--- Callable
     public void stop() {
         running = false;
     }
@@ -236,6 +241,14 @@ public class MarioComponent extends JComponent implements Environment {
         
         //--- Show results on end screen
         if (rOptions.isViewable()) {
+        	SwingUtilities.invokeLater(new Runnable() {
+				
+				@Override
+				public void run() {
+					getParent().setBackground(Color.BLACK);
+		        	
+				}
+			});
         	drawEndScreen(g,og,image);
         }
         
@@ -458,7 +471,7 @@ public class MarioComponent extends JComponent implements Environment {
         drawStringDropShadow(og, "  Flowers: "+levelScene.getMarioGainedFowers(), start+19, actualRow++, 6);
         
         if(levelScene.getKilledCreaturesByFireBall()>0) drawStringDropShadow(og, "    by  fire: "+levelScene.getKilledCreaturesByFireBall()+" ("+(df.format((double)levelScene.getKilledCreaturesByFireBall()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow++, 6);
-        else drawStringDropShadow(og, "     by fire: 0",start-6,actualRow,6);
+        else drawStringDropShadow(og, "    by  fire: 0",start-6,actualRow++,6);
         actualRow++;       
         
         drawStringDropShadow(og, "----------------------------------", start-2, actualRow++, 1);
@@ -595,15 +608,14 @@ public class MarioComponent extends JComponent implements Environment {
 	}
 
 	@Override
-	public void setRunnerOptions(RunnerOptions rOptions) {
-		this.rOptions=rOptions;
+	public void setRunnerOptions() {
 		this.viewable=rOptions.isViewable();
 		this.debugView=rOptions.isDebugView();
 		rOptions.getAgent().reset();
 		adjustFPS();
 		 
 		actual=rOptions.getAgent();
-		registerKeyListenerAgent(rOptions.getAgent());
+		//registerKeyListenerAgent(rOptions.getAgent());
 		
 		startLevel(rOptions.getLevelSeed(), rOptions.getDifficulty(), rOptions.getLevelType(), rOptions.getLevelLength(), rOptions.getTimeLimit());
 	}
@@ -624,17 +636,15 @@ public class MarioComponent extends JComponent implements Environment {
 	
 	@Override
 	public void removeLastKeyboardListener() {
-		 if (prevHumanKeyBoardAgent != null) {
-			 
+		 if (prevHumanKeyBoardAgent != null) { 
 			 getTopLevelAncestor().removeKeyListener(prevHumanKeyBoardAgent);
 		 }
 	}
 	
 	@Override
 	public void addLastKeyboardListener() {
- if (prevHumanKeyBoardAgent != null) {
-			 
-			 getTopLevelAncestor().addKeyListener(prevHumanKeyBoardAgent);
+		if (prevHumanKeyBoardAgent != null) {
+			getTopLevelAncestor().addKeyListener(prevHumanKeyBoardAgent);
 		 }
 	}
 	
@@ -657,6 +667,11 @@ public class MarioComponent extends JComponent implements Environment {
 	@Override
 	public void togglePaused() {
 		this.setpaused=!setpaused;
+	}
+	
+	@Override
+	public boolean isPaused() {
+		return paused;
 	}
 	
 	@Override
@@ -746,7 +761,6 @@ public class MarioComponent extends JComponent implements Environment {
     	}
     	System.out.println(" ----------------------------------------------------------------------------------------");
     	System.out.println();
-		
 	}
 	
 	//--- Screen Size
@@ -767,15 +781,28 @@ public class MarioComponent extends JComponent implements Environment {
 		if(width<320) width=320;
 		if(height<240) height=240;
 		
-		if(Toolkit.getDefaultToolkit().getScreenSize().width<width||Toolkit.getDefaultToolkit().getScreenSize().height<height) return;
-		
 		this.revalidate();
-		
 		Container parent=getTopLevelAncestor();
-		if(parent instanceof ToolsConfigurator) {
+		if(parent instanceof MainFrame) {
 			Dimension d=new Dimension(width, height);
-			((ToolsConfigurator)parent).resizeAll(d);
+			((MainFrame)parent).resizeAll(d);
 		}
+	}
+
+	@Override
+	public void registerActualAgent() {
+		if(rOptions.getAgent()!=null&&rOptions.getAgent() instanceof KeyListener) {
+			getTopLevelAncestor().addKeyListener((KeyListener)rOptions.getAgent());
+		}
+		
+	}
+
+	@Override
+	public void removeActualAgent() {
+		if(rOptions.getAgent()!=null&&rOptions.getAgent() instanceof KeyListener) {
+			getTopLevelAncestor().removeKeyListener((KeyListener)rOptions.getAgent());
+		}
+		
 	}
 }
 

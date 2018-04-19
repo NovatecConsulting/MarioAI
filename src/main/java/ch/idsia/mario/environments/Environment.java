@@ -7,7 +7,6 @@ import java.util.Map;
 
 import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.engine.sprites.Mario;
-import ch.idsia.tools.RunnerOptions;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
@@ -30,9 +29,11 @@ public interface Environment
     // always the same dimensionality: 22x22
     // always centered on the agent
 
-    public void setRunnerOptions(RunnerOptions rOptions);
+    public void setRunnerOptions();
+    
     public void setPaused(boolean paused);
     public void togglePaused();
+    public boolean isPaused();
     
     public void performTick();
     
@@ -45,6 +46,8 @@ public interface Environment
     public void registerKeyboardListener(KeyListener listener);
     public void removeLastKeyboardListener();
     public void addLastKeyboardListener();
+    public void registerActualAgent();
+    public void removeActualAgent();
 
     public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 1
 

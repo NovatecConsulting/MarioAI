@@ -12,9 +12,9 @@ import ch.idsia.mario.engine.MarioComponent;
  */
 public class KeyboardInterpreter implements KeyListener{
 	
-	private ToolsConfigurator configurator;
+	private MainFrame configurator;
 
-	public KeyboardInterpreter(ToolsConfigurator configurator) {
+	public KeyboardInterpreter(MainFrame configurator) {
 		configurator.addKeyListener(this);
 		this.configurator=configurator;
 	}
@@ -31,7 +31,6 @@ public class KeyboardInterpreter implements KeyListener{
 	public void keyReleased(KeyEvent e) {
 	//System.out.println(e.getKeyChar()+" "+e.getKeyCode()); //debug
 		final MarioComponent actualComponent=configurator.getControlledComponent();
-		
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_P:
 			actualComponent.togglePaused();
@@ -58,7 +57,7 @@ public class KeyboardInterpreter implements KeyListener{
 		break;
 		case 520:
 		case 106:	
-			actualComponent.resizeView(actualComponent.getInitialDimension().height, actualComponent.getInitialDimension().width);
+			actualComponent.resizeView(actualComponent.getInitialDimension().width, actualComponent.getInitialDimension().height);
 		break;
 		
 		}
