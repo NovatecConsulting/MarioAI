@@ -60,6 +60,9 @@ public class MarioComponent extends JComponent implements Environment {
     private Agent swapper=new HumanKeyboardAgent(), actual;
     private KeyListener prevHumanKeyBoardAgent;
     private LevelScene levelScene = null;
+    
+    Graphics lastG,lastOg;
+    VolatileImage lastImage;
  
     //--- Constructor
     public MarioComponent(int width, int height, RunnerOptions rOptions) {
@@ -155,9 +158,12 @@ public class MarioComponent extends JComponent implements Environment {
 
         while (running||!readyToExit) {
         	boolean tmpPerformTick=performTick;
-        	checkPaused();
-        	checkHijacked();
+        	
 
+        	lastG=g;
+        	lastOg=og;
+        	lastImage=image;
+        	
         	g=getGraphics();
         	og=image.getGraphics();
             if(!paused||tmpPerformTick)levelScene.tick();
@@ -167,6 +173,8 @@ public class MarioComponent extends JComponent implements Environment {
                 render(og);
                 checkGameStatus(og);
             }
+            checkPaused();
+        	checkHijacked();
             boolean[] action = {false,false,false,false,false};
 
             	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
@@ -191,7 +199,7 @@ public class MarioComponent extends JComponent implements Environment {
             if(!paused||tmpPerformTick) levelScene.setMarioKeys(action);
 
             if (rOptions.isViewable()) {
-                if(running) {
+                if(running&&!readyToExit) {
                 	 drawProgress(og);
                 	 drawInfos(og);
                 	 String msg = "Agent: " + getAgent().getName();
@@ -222,7 +230,6 @@ public class MarioComponent extends JComponent implements Environment {
                 // Win or Die without renderer!! independently.
                 marioStatus =  levelScene.getMarioStatus();
                 if (marioStatus != STATUS.RUNNING) break;
-                
             }
            
             // Delay depending on how far we are behind.
@@ -241,15 +248,14 @@ public class MarioComponent extends JComponent implements Environment {
         
         //--- Show results on end screen
         if (rOptions.isViewable()) {
+        	getParent().setBackground(Color.BLACK);
         	SwingUtilities.invokeLater(new Runnable() {
 				
 				@Override
 				public void run() {
-					getParent().setBackground(Color.BLACK);
-		        	
+		        	redrawEndScreen();
 				}
 			});
-        	drawEndScreen(g,og,image);
         }
         
         //ADD INFO TO EVALUATION INFO
@@ -264,6 +270,7 @@ public class MarioComponent extends JComponent implements Environment {
         evaluationInfo.timeSpentOnLevel = levelScene.getStartTime();
         evaluationInfo.timeLeft = levelScene.getTimeLeft();
         evaluationInfo.totalTimeGiven = levelScene.getTotalTime();
+        evaluationInfo.setExactTimeLeft(levelScene.getExactTimeLeft());
         evaluationInfo.numberOfGainedCoins = levelScene.getMarioCoins();
         evaluationInfo.totalNumberOfCoins   = levelScene.getTotalCoins() ; 
         evaluationInfo.totalActionsPerfomed = totalActionsPerfomed; // Counted during the play/simulation process
@@ -318,7 +325,7 @@ public class MarioComponent extends JComponent implements Environment {
 		}
 
 		if (levelScene.getMarioStatus()==STATUS.WIN) {
-			setpaused=true;
+			setPaused(true);
 			renderBlackout(g, (int)levelScene.getMarioX() - xCam, (int)levelScene.getMarioY() - yCam, (int) (blackoutTimer));
 			levelWon();
 			if ((int)blackoutTimer <= 0){
@@ -328,7 +335,7 @@ public class MarioComponent extends JComponent implements Environment {
 		}
 		
 		if (levelScene.getTimeLeft()<=0||levelScene.getMarioStatus()==STATUS.LOSE) { 
-			setpaused=true;
+			setPaused(true);
 			renderBlackout(g, (int)levelScene.getMarioX() - xCam, (int)levelScene.getMarioY() - yCam, (int) (blackoutTimer));
 			levelFailed();
 
@@ -427,6 +434,11 @@ public class MarioComponent extends JComponent implements Environment {
 		drawStringDropShadow(g, progress_str, 0, 28, 2);
 	}
     
+	public void redrawEndScreen() {
+		if(levelScene.getMarioStatus()==STATUS.WIN||levelScene.getMarioStatus()==STATUS.LOSE) {
+			drawEndScreen(lastG, lastOg, lastImage);
+		}
+	}
     private void drawEndScreen(Graphics g, Graphics og, VolatileImage image) {
         final int start=4;
         int actualRow=3;
@@ -615,7 +627,6 @@ public class MarioComponent extends JComponent implements Environment {
 		adjustFPS();
 		 
 		actual=rOptions.getAgent();
-		//registerKeyListenerAgent(rOptions.getAgent());
 		
 		startLevel(rOptions.getLevelSeed(), rOptions.getDifficulty(), rOptions.getLevelType(), rOptions.getLevelLength(), rOptions.getTimeLimit());
 	}

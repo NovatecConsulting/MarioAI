@@ -160,6 +160,7 @@ public class Mario extends Sprite // cloneable
 		this.lastFire = toCopy.lastFire;
 		this.newLarge = toCopy.newLarge;
 		this.newFire = toCopy.newFire;
+		this.timesHurt = toCopy.timesHurt;
 	}
 
 	private boolean lastLarge;
@@ -591,7 +592,7 @@ public class Mario extends Sprite // cloneable
 		ya = jumpTime * yJumpSpeed;
 		onGround = false;
 		sliding = false;
-		invulnerableTime = 1;
+		invulnerableTime = 2;
 	}
 
 	public void stomp(Shell shell) {
@@ -611,7 +612,7 @@ public class Mario extends Sprite // cloneable
 			ya = jumpTime * yJumpSpeed;
 			onGround = false;
 			sliding = false;
-			invulnerableTime = 1;
+			invulnerableTime = 2;
 		}
 	}
 
@@ -648,7 +649,6 @@ public class Mario extends Sprite // cloneable
 	public void die() {
 		xDeathPos = ((int) x);
 		yDeathPos = ((int) y);
-		//spriteContext.setPaused(true);
 		deathTime = (25);
 		status = STATUS.LOSE;
 	}
@@ -686,7 +686,7 @@ public class Mario extends Sprite // cloneable
 			setCarried(shell);
 			shell.setCarried(true);
 		} else {
-			invulnerableTime = 1;
+			invulnerableTime = 2;
 		}
 	}
 
@@ -703,7 +703,7 @@ public class Mario extends Sprite // cloneable
 		ya = jumpTime * yJumpSpeed;
 		onGround = false;
 		sliding = false;
-		invulnerableTime = 1;
+		invulnerableTime = 2;
 	}
 
 	public byte getKeyMask() {

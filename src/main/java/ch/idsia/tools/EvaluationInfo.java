@@ -28,6 +28,7 @@ public class EvaluationInfo
     public int levelXExit=MagicNumberUndef;
     public int timeSpentOnLevel = MagicNumberUndef;
     public int totalTimeGiven = MagicNumberUndef;
+    private int exactTimeLeft = MagicNumberUndef;
     public int numberOfGainedCoins = MagicNumberUndef;
     public int totalNumberOfCoins = MagicNumberUndef;
     public int totalActionsPerfomed = MagicNumberUndef;
@@ -134,6 +135,14 @@ public class EvaluationInfo
 		this.wasHijacked = wasHijacked;
 	}
 
+	public int getExactTimeLeft() {
+		return exactTimeLeft;
+	}
+
+	public void setExactTimeLeft(int exactTimeLeft) {
+		this.exactTimeLeft = exactTimeLeft;
+	}
+
 	@Override
     public String toString()
     {
@@ -154,6 +163,7 @@ public class EvaluationInfo
         ret += "\n                     Passed (Cells) : " + df.format((double)lengthOfLevelPassedCells / levelXExit *100) + "% (" + lengthOfLevelPassedCells + " of " + levelXExit + ")";
         ret += "\n             Time Spent(Fractioned) : " + timeSpentOnLevel + " (" + df.format((double)timeSpentOnLevel/totalTimeGiven*100) + "%)";
         ret += "\n              Time Left(Fractioned) : " + timeLeft + " (" + df.format((double)timeLeft/totalTimeGiven*100) + "%)";
+        ret += "\n                    Exact Time Left : " + exactTimeLeft;
         ret += "\n                   Total time given : " + totalTimeGiven;
         ret += "\n                       Coins Gained : " + numberOfGainedCoins+" ("+numberOfGainedCoins+"/"+totalNumberOfCoins+")";
         ret += "\n                        Total Kills : " + killsTotal;

@@ -18,7 +18,6 @@ public abstract class Sprite
     public static final int KIND_BULLET_BILL = 8;
     public static final int KIND_SPIKY = 9;
     public static final int KIND_SPIKY_WINGED = 10;
-//  public static final int KIND_ENEMY_FLOWER = 11;
     public static final int KIND_ENEMY_FLOWER = 12;
     public static final int KIND_SHELL = 13;
     public static final int KIND_MUSHROOM = 14;
@@ -56,7 +55,6 @@ public abstract class Sprite
     }
     
     protected Sprite(LevelScene alreadyCopied,Sprite toCopy) { 
-    	//spritecontext=toCopy.levelscenecopy
     	
     	this.kind = toCopy.kind;
 		this.xOld = toCopy.xOld;
@@ -75,13 +73,12 @@ public abstract class Sprite
 		this.yPicO = toCopy.yPicO;
 		this.xFlipPic = toCopy.xFlipPic;
 		this.yFlipPic = toCopy.yFlipPic;
-		this.sheet = toCopy.sheet; // does this work? just graphics, wont be changed
+		this.sheet = toCopy.sheet; // does this work?(yes) just graphics, wont be changed
 		this.visible = toCopy.visible;
 		this.layer = toCopy.layer;
 		
 		this.isClone=true;
-		
-		
+	
 		if(toCopy.spriteTemplate!=null)this.spriteTemplate = new SpriteTemplate(this, toCopy.spriteTemplate); //needs copy constructor
 		this.spriteContext=alreadyCopied;
     }

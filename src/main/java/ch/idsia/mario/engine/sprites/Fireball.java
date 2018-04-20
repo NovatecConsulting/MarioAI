@@ -21,8 +21,7 @@ public class Fireball extends Sprite //cloneable
     private boolean dead = false;
     private int deadTime = 0;
 
-    public Fireball(LevelScene world, float x, float y, int facing)
-    {
+    public Fireball(LevelScene world, float x, float y, int facing) {
         kind = KIND_FIREBALL;
         sheet = Art.particles;
 

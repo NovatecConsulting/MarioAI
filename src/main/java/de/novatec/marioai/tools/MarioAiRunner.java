@@ -95,7 +95,7 @@ public class MarioAiRunner {
 		baseOptions.setDebugView(debugView);
 		
 		try {
-			ExecutorService runner = Executors.newWorkStealingPool();
+			ExecutorService runner = Executors.newCachedThreadPool();
 			MainFrame configurator=new MainFrame(agents.size(), false, viewable, new Point());
 			
 			List<Future<EvaluationInfo>> results= new ArrayList<>();

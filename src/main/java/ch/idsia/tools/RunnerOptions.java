@@ -24,15 +24,11 @@ public class RunnerOptions {
 	
 	private int timeLimit=200;
 	
-	private boolean timer=true;  //timer should be visible
-	
 	private boolean paused=false;
 	
 	private boolean labels=false;
 	
 	private boolean debugView=false;
-	
-	private boolean marioAlwaysCentered=false;
 	
 	private boolean powerRestauration=false;
 	
@@ -41,8 +37,6 @@ public class RunnerOptions {
 	private boolean marioInvulnerable=false; //shouldn't be possible for competition
 	
 	private boolean exitWhenFinished=false;
-	
-	private boolean viewAlwaysOnTop=false;
 	
 	private LevelConfig config;
 	
@@ -66,18 +60,15 @@ public class RunnerOptions {
 		this.FPS=toCopy.FPS;
 		this.viewable=toCopy.isViewable();
 		this.timeLimit=toCopy.getTimeLimit();
-		this.timer=toCopy.isTimer();
 		this.paused=toCopy.isPaused();
 		this.powerRestauration=toCopy.isPowerRestauration();
 		this.marioStartMode=toCopy.getMarioStartMode();
 		this.marioInvulnerable=toCopy.isMarioInvulnerable();
 		this.exitWhenFinished=toCopy.isExitWhenFinished();
-		this.viewAlwaysOnTop=toCopy.isViewAlwaysOnTop();
 		this.trials=toCopy.trials;
 		this.maxTrials=toCopy.getMaxTrials();
 		this.ZLevelEnemies=toCopy.getZLevelEnemies();
 		this.ZLevelMap=toCopy.getZLevelMap();
-		this.viewLocation=toCopy.getViewLocation();
 		this.config=toCopy.config;
 		this.debugView=toCopy.debugView;
 		this.task=toCopy.task;
@@ -90,18 +81,15 @@ public class RunnerOptions {
 		res.FPS=this.FPS;
 		res.viewable=this.isViewable();
 		res.timeLimit=this.getTimeLimit();
-		res.timer=this.isTimer();
 		res.paused=this.isPaused();
 		res.powerRestauration=this.isPowerRestauration();
 		res.marioStartMode=this.getMarioStartMode();
 		res.marioInvulnerable=this.isMarioInvulnerable();
 		res.exitWhenFinished=this.isExitWhenFinished();
-		res.viewAlwaysOnTop=this.isViewAlwaysOnTop();
 		res.trials=this.trials;
 		res.maxTrials=this.getMaxTrials();
 		res.ZLevelEnemies=this.getZLevelEnemies();
 		res.ZLevelMap=this.getZLevelMap();
-		res.viewLocation=this.getViewLocation();
 		res.debugView=this.debugView;
 		
 		return res;
@@ -152,14 +140,6 @@ public class RunnerOptions {
 		this.timeLimit = timeLimit;
 	}
 
-	public boolean isTimer() {
-		return timer;
-	}
-
-	public void setTimer(boolean timer) {
-		this.timer = timer;
-	}
-
 	public boolean isPaused() {
 		return paused;
 	}
@@ -198,14 +178,6 @@ public class RunnerOptions {
 
 	public void setExitWhenFinished(boolean exitWhenFinished) {
 		this.exitWhenFinished = exitWhenFinished;
-	}
-
-	public boolean isViewAlwaysOnTop() {
-		return viewAlwaysOnTop;
-	}
-
-	public void setViewAlwaysOnTop(boolean viewAlwaysOnTop) {
-		this.viewAlwaysOnTop = viewAlwaysOnTop;
 	}
 
 	public int getTrials() {
@@ -254,14 +226,6 @@ public class RunnerOptions {
 
 	public void setMaxTrials(int maxTrials) {
 		this.maxTrials = maxTrials;
-	}
-
-	public boolean isMarioAlwaysCentered() {
-		return marioAlwaysCentered;
-	}
-
-	public void setMarioAlwaysCentered(boolean marioAlwaysCentered) {
-		this.marioAlwaysCentered = marioAlwaysCentered;
 	}
 
 	public boolean isLabels() {

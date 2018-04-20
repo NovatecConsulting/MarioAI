@@ -66,12 +66,12 @@ public class MainFrame extends JFrame  {
     	case 0:
     		System.err.println("No Agents given to evaluate!");
     		System.exit(1);
-    	
     	case 1:
     		MarioComponent marioComponent=toControl.get(0);
     		setContentPane(marioComponent);
     		controlledComponent=marioComponent;
             marioComponent.init();
+            controlledComponent.registerActualAgent();
         break;
         
     	default: 
@@ -120,12 +120,9 @@ public class MainFrame extends JFrame  {
     }
     public void resizeAll(Dimension oldD) {
     	Dimension d=getAllowedDimension(oldD);
-
-    	for(MarioComponent next: toControl) {
-    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) return;
-    	}
     	
     	for(MarioComponent next: toControl) {
+    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) return;
     		next.setPaused(true);
     		while(!next.isPaused()) {
     			try {
@@ -138,6 +135,7 @@ public class MainFrame extends JFrame  {
     	
     	for(MarioComponent next: toControl) {
     		next.setPreferredSize(d);
+    		next.redrawEndScreen();
     		next.revalidate();
     		next.repaint();
     	}
@@ -147,6 +145,7 @@ public class MainFrame extends JFrame  {
     	pack();
     	
     	for(MarioComponent next: toControl) {
+    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) return;
     		next.revalidate();
     		next.setPaused(false);
     		while(next.isPaused()) {

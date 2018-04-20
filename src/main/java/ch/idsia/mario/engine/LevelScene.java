@@ -94,8 +94,12 @@ public class LevelScene  implements SpriteContext {
 		}
 		
 		this.sprites = deepCopyList(toCopy.sprites);
-		this.spritesToAdd = deepCopyList(toCopy.spritesToAdd);
-		this.spritesToRemove = deepCopyList(toCopy.spritesToRemove);
+		
+		if(toCopy.spritesToAdd.isEmpty()) this.spritesToAdd=new ArrayList<>();
+		else this.spritesToAdd = deepCopyList(toCopy.spritesToAdd);
+		
+		if(toCopy.spritesToRemove.isEmpty()) this.spritesToRemove=new ArrayList<>();
+		else this.spritesToRemove = deepCopyList(toCopy.spritesToRemove);
 		
 		this.level = new Level(this, toCopy.level);
 		this.shellsToCheck = deepCopyShellList(toCopy.shellsToCheck); 
@@ -129,8 +133,7 @@ public class LevelScene  implements SpriteContext {
 		this.killedCreaturesByShell = toCopy.killedCreaturesByShell;
 		this.fireballsOnScreen = toCopy.fireballsOnScreen;
 		
-	
-		this.fireballsToCheck = deepCopyFireballList(toCopy.fireballsToCheck); 
+		this.fireballsToCheck = deepCopyFireballList(toCopy.fireballsToCheck); 		
 	}
 	
 	private List<Sprite> deepCopyList(List<Sprite> toCopy){
@@ -168,7 +171,6 @@ public class LevelScene  implements SpriteContext {
 				res.add(new Mushroom(this, (Mushroom)next));
 			}
 		}
-		
 		return res;
 	}
 	
@@ -954,7 +956,7 @@ public class LevelScene  implements SpriteContext {
 			fireballsToCheck.clear();
 		
 
-		sprites.addAll(0, spritesToAdd);
+		sprites.addAll(spritesToAdd);
 		sprites.removeAll(spritesToRemove);
 		spritesToAdd.clear();
 		spritesToRemove.clear();

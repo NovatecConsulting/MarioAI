@@ -61,8 +61,6 @@ public class Enemy extends Sprite //cloneable
 
         this.x = x;
         this.y = y;
-//        this.mapX = mapX;
-//        this.mapY = mapY;
         
         this.spriteContext = world;
         xPicO = 8;
@@ -134,7 +132,7 @@ public class Enemy extends Sprite //cloneable
                         {
                             spriteContext.addSprite(new Shell(spriteContext, x, y, 1));
                         }
-//                        System.out.println("collideCheck and stomp");
+//                      System.out.println("collideCheck and stomp");
                         spriteContext.incrementKilledCreaturesTotal();
                         spriteContext.killedCreatureByStomp();;
                     }

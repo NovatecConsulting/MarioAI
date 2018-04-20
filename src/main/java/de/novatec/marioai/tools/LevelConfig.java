@@ -67,7 +67,7 @@ public class LevelConfig{
 	/**
 	 * Well.. just try it.
 	 */
-	public static final LevelConfig GOOD_LUCK=new LevelConfig(666,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,2,4});
+	public static final LevelConfig GOOD_LUCK=new LevelConfig(443102000,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
 	
 //  public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,true,true);
 //	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
@@ -139,8 +139,6 @@ public class LevelConfig{
 	 * Standard level with difficulty 15
 	 */
 	public static final LevelConfig STANDARD15=new LevelConfig(42,256,15,LEVEL_TYPES.OVERGROUND);
-	
-	public static final LevelConfig TEST = new LevelConfig(1371648390, 256, 3, LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,5,2,0,0});
 	
 	/**
 	 * Randomizes the given LevelConfig
