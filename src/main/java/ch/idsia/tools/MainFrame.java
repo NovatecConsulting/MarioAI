@@ -113,6 +113,8 @@ public class MainFrame extends JFrame  {
     
     private Dimension getAllowedDimension(Dimension toCheck) {
     	Dimension d=toCheck;
+    	if(d.width<320) d.width=320;
+		if(d.height<240) d.height=240;
     	while(getWidth()-getContentPane().getWidth()+d.width*cols>getToolkit().getScreenSize().width||getHeight()-getContentPane().getHeight()+d.height*rows>getToolkit().getScreenSize().height) {
     		d=new Dimension(d.width-32, d.height-24);
     	}
@@ -122,7 +124,8 @@ public class MainFrame extends JFrame  {
     	Dimension d=getAllowedDimension(oldD);
     	
     	for(MarioComponent next: toControl) {
-    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) return;
+    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) break;
+    		next.storePaused();
     		next.setPaused(true);
     		while(!next.isPaused()) {
     			try {
@@ -134,10 +137,7 @@ public class MainFrame extends JFrame  {
     		}
     	
     	for(MarioComponent next: toControl) {
-    		next.setPreferredSize(d);
-    		next.redrawEndScreen();
-    		next.revalidate();
-    		next.repaint();
+    		next.resizeView(d);
     	}
 
 		this.getContentPane().revalidate();
@@ -145,16 +145,16 @@ public class MainFrame extends JFrame  {
     	pack();
     	
     	for(MarioComponent next: toControl) {
-    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) return;
+    		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) break;
     		next.revalidate();
-    		next.setPaused(false);
-    		while(next.isPaused()) {
-    			try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-    		}
+    		next.restorePaused();
+//    		while(next.isPaused()) {
+//    			try {
+//					Thread.sleep(1);
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//    		}
     	}
     }
 

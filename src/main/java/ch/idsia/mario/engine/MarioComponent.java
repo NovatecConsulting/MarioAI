@@ -41,7 +41,7 @@ public class MarioComponent extends JComponent implements Environment {
     private SpriteRenderer spriteRenderer;
     private boolean readyToExit=false,startReady=false;
     private float blackoutTimer;
-    private boolean paused = false,setpaused=false, performTick=false,hijacked=false,sethijacked,wasHijacked=false;
+    private boolean paused = false,setpaused=false, performTick=false,hijacked=false,sethijacked,wasHijacked=false,storedPause=false;
     
     private RunnerOptions rOptions;
     
@@ -61,7 +61,6 @@ public class MarioComponent extends JComponent implements Environment {
     private KeyListener prevHumanKeyBoardAgent;
     private LevelScene levelScene = null;
     
-    Graphics lastG,lastOg;
     VolatileImage lastImage;
  
     //--- Constructor
@@ -159,9 +158,6 @@ public class MarioComponent extends JComponent implements Environment {
         while (running||!readyToExit) {
         	boolean tmpPerformTick=performTick;
         	
-
-        	lastG=g;
-        	lastOg=og;
         	lastImage=image;
         	
         	g=getGraphics();
@@ -248,14 +244,8 @@ public class MarioComponent extends JComponent implements Environment {
         
         //--- Show results on end screen
         if (rOptions.isViewable()) {
-        	getParent().setBackground(Color.BLACK);
-        	SwingUtilities.invokeLater(new Runnable() {
-				
-				@Override
-				public void run() {
-		        	redrawEndScreen();
-				}
-			});
+        	redrawEndScreen();
+		
         }
         
         //ADD INFO TO EVALUATION INFO
@@ -436,7 +426,13 @@ public class MarioComponent extends JComponent implements Environment {
     
 	public void redrawEndScreen() {
 		if(levelScene.getMarioStatus()==STATUS.WIN||levelScene.getMarioStatus()==STATUS.LOSE) {
-			drawEndScreen(lastG, lastOg, lastImage);
+			getParent().setBackground(Color.BLACK);
+        	SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					drawEndScreen(getGraphics(), lastImage.getGraphics(), lastImage);
+				}
+			});
 		}
 	}
     private void drawEndScreen(Graphics g, Graphics og, VolatileImage image) {
@@ -787,17 +783,11 @@ public class MarioComponent extends JComponent implements Environment {
 	}
 
 	@Override
-	public void resizeView(int width, int height) {
-		if(levelScene.getMarioStatus()!=STATUS.RUNNING) return;
-		if(width<320) width=320;
-		if(height<240) height=240;
-		
-		this.revalidate();
-		Container parent=getTopLevelAncestor();
-		if(parent instanceof MainFrame) {
-			Dimension d=new Dimension(width, height);
-			((MainFrame)parent).resizeAll(d);
-		}
+	public void resizeView(Dimension d) {
+		setPreferredSize(d);
+		revalidate();
+		redrawEndScreen();
+		repaint();
 	}
 
 	@Override
@@ -814,6 +804,17 @@ public class MarioComponent extends JComponent implements Environment {
 			getTopLevelAncestor().removeKeyListener((KeyListener)rOptions.getAgent());
 		}
 		
+	}
+
+	@Override
+	public void storePaused() {
+		this.storedPause=this.paused;
+		
+	}
+
+	@Override
+	public void restorePaused() {
+		this.setPaused(storedPause);
 	}
 }
 

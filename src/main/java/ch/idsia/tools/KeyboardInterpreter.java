@@ -1,5 +1,6 @@
 package ch.idsia.tools;
 
+import java.awt.Dimension;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -49,15 +50,15 @@ public class KeyboardInterpreter implements KeyListener{
 			break;
 		case KeyEvent.VK_MINUS:
 		case 109:
-			actualComponent.resizeView(actualComponent.getActualDimension().width-32, actualComponent.getActualDimension().height-24);
+			configurator.resizeAll(new Dimension(actualComponent.getActualDimension().width-32, actualComponent.getActualDimension().height-24));
 			break;
 		case KeyEvent.VK_PLUS:
 		case 107:
-			actualComponent.resizeView(actualComponent.getActualDimension().width+32, actualComponent.getActualDimension().height+24);
+			configurator.resizeAll(new Dimension(actualComponent.getActualDimension().width+32, actualComponent.getActualDimension().height+24));
 		break;
 		case 520:
 		case 106:	
-			actualComponent.resizeView(actualComponent.getInitialDimension().width, actualComponent.getInitialDimension().height);
+			configurator.resizeAll(new Dimension(actualComponent.getInitialDimension().width, actualComponent.getInitialDimension().height));;
 		break;
 		
 		}

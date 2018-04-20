@@ -34,6 +34,8 @@ public interface Environment
     public void setPaused(boolean paused);
     public void togglePaused();
     public boolean isPaused();
+    public void storePaused();
+    public void restorePaused();
     
     public void performTick();
     
@@ -60,7 +62,7 @@ public interface Environment
     public Map<Coordinates,Tile> getTiles();
     public Map<Coordinates,List<Entity>> getEntities();
     
-    public void resizeView(int width, int height);
+    public void resizeView(Dimension d);
     public Dimension getInitialDimension();
     public Dimension getActualDimension();
 
