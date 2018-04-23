@@ -15,6 +15,7 @@ import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
 import de.novatec.mario.engine.generalization.Tiles.TileType;
 import de.novatec.marioai.tools.LevelConfig;
+import de.novatec.marioai.tools.MarioInput;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -104,7 +105,6 @@ public class LevelScene  implements SpriteContext {
 		this.level = new Level(this, toCopy.level);
 		this.shellsToCheck = deepCopyShellList(toCopy.shellsToCheck); 
 		for(Shell next:shellsToCheck) if(next.isCarried()) {
-			System.out.println("CALLED SHELL");
 			this.mario = new Mario(this,next,toCopy.mario);
 			break;
 		}
@@ -1195,10 +1195,10 @@ public class LevelScene  implements SpriteContext {
 		mario.setKeys(input);
 	}
 	
-	public void setMarioCheatKeys(boolean[] input) {
-		mario.setCheatKeys(input);
+	public void setMarioInput(MarioInput input) {
+		this.setMarioKeys(input.toArray());
 	}
-	
+
 	public int getTimesMarioHurt() {
 		return this.mario.getTimesHurt();
 	}

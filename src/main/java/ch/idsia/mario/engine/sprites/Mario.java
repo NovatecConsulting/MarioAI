@@ -81,7 +81,6 @@ public class Mario extends Sprite // cloneable
 	private static final float AIR_INERTIA = 0.89f;
 
 	private boolean[] keys;
-	private boolean[] cheatKeys;
 	private float runTime;
 	private boolean wasOnGround = false;
 	private boolean onGround = false;
@@ -111,7 +110,6 @@ public class Mario extends Sprite // cloneable
 		kind = KIND_MARIO;
 		this.spriteContext = world;
 		keys = Scene.keys; // SK: in fact, this is already redundant due to using Agent
-		cheatKeys = Scene.keys; // SK: in fact, this is already redundant due to using Agent
 		x = 32;
 		y = 0;
 		
@@ -136,7 +134,6 @@ public class Mario extends Sprite // cloneable
 		this.gainedFlowers = toCopy.gainedFlowers;
 		this.isMarioInvulnerable = toCopy.isMarioInvulnerable;
 		this.keys = Arrays.copyOf(toCopy.keys, toCopy.keys.length); //TESTING
-		this.cheatKeys =  Arrays.copyOf(toCopy.cheatKeys,toCopy.cheatKeys.length);
 		this.runTime = toCopy.runTime;
 		this.wasOnGround = toCopy.wasOnGround;
 		this.onGround = toCopy.onGround;
@@ -242,7 +239,7 @@ public class Mario extends Sprite // cloneable
 				blink(((-powerUpTime / 3) & 1) == 0);
 			}
 
-			if (powerUpTime == 0)
+			//if (powerUpTime == 0)
 				//spriteContext.setPaused(false);
 
 			calcPic();
@@ -325,9 +322,6 @@ public class Mario extends Sprite // cloneable
 		if (keys[KEY_SPEED] && canShoot && this.fire && spriteContext.getFireballsOnScreen() < 2) {
 			spriteContext.addSprite(new Fireball(spriteContext, x + facing * 6, y - 20, facing));
 		}
-		//spriteContext.setPaused(false);
-//		if (cheatKeys[KEY_WIN])
-//			win();
 		
 		canShoot = !keys[KEY_SPEED];
 
@@ -772,15 +766,7 @@ public class Mario extends Sprite // cloneable
 	public void setKeys(boolean[] keys) {
 		this.keys = keys;
 	}
-
-	public boolean[] getCheatKeys() {
-		return cheatKeys;
-	}
-
-	public void setCheatKeys(boolean[] cheatKeys) {
-		this.cheatKeys = cheatKeys;
-	}
-
+	
 	public boolean wasOnGround() {
 		return wasOnGround;
 	}

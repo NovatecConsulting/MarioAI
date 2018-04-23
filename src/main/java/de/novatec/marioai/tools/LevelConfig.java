@@ -67,7 +67,9 @@ public class LevelConfig{
 	/**
 	 * Well.. just try it.
 	 */
-	public static final LevelConfig GOOD_LUCK=new LevelConfig(443102000,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+	public static final LevelConfig GOOD_LUCK=new LevelConfig(666,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+	
+	public static final LevelConfig LAST_RESORT=new LevelConfig(1697160782,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
 	
 //  public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,true,true);
 //	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
