@@ -619,7 +619,6 @@ public class Mario extends Sprite // cloneable
 
 		timesHurt++;
 		if (isLarge()) {
-			//spriteContext.setPaused(true);
 			powerUpTime = -3 * FractionalPowerUpTime;
 			if (fire) {
 				setLarge(true, false);

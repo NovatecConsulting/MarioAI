@@ -150,12 +150,13 @@ public class MarioComponent extends JComponent implements Environment {
 
         image = createVolatileImage(320, 240);
 
-        long startTime = System.currentTimeMillis();  // Remember the starting time
+        long startTime;  // Remember the starting time
         STATUS marioStatus = STATUS.RUNNING;
 
         int totalActionsPerfomed = 0;
 
         while (running||!readyToExit) {
+        	startTime = System.currentTimeMillis();
         	boolean tmpPerformTick=performTick;
         	
         	lastImage=image;

@@ -64,6 +64,8 @@ public class LevelConfig{
 	 * Want to torchure your A*-Agent? Try this.
 	 */
 	public static final LevelConfig ASTAR_KILLER=new LevelConfig(652649838,1024,15,LEVEL_TYPES.OVERGROUND);
+	public static final LevelConfig ASTAR_KILLER2=new LevelConfig(711536351,1024,15,LEVEL_TYPES.OVERGROUND);
+	
 	/**
 	 * Well.. just try it.
 	 */
