@@ -1,7 +1,6 @@
 package ch.idsia.mario.engine;
 
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
@@ -23,7 +22,6 @@ import ch.idsia.mario.engine.sprites.Mario;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import ch.idsia.tools.EvaluationInfo;
-import ch.idsia.tools.MainFrame;
 import ch.idsia.tools.RunnerOptions;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
@@ -53,7 +51,7 @@ public class MarioComponent extends JComponent implements Environment {
     
     private static final int GENERALIZATION_ENEMIES = 1;
     private static final int GENERALIZATION_LEVELSCENE = 1;
-    private static final int maxFPS=100;
+    private static final int maxFPS=200;
     private static final DecimalFormat df = new DecimalFormat("0.0");
     private static final DecimalFormat df2 = new DecimalFormat("00");
 
@@ -141,7 +139,7 @@ public class MarioComponent extends JComponent implements Environment {
     public EvaluationInfo run() {
     	
         running = true;
-        adjustFPS();
+        //adjustFPS();
         EvaluationInfo evaluationInfo = new EvaluationInfo(rOptions.getTask());
 
         VolatileImage image = null;
@@ -157,6 +155,7 @@ public class MarioComponent extends JComponent implements Environment {
 
         while (running||!readyToExit) {
         	startTime = System.currentTimeMillis();
+        	//adjustFPS();
         	boolean tmpPerformTick=performTick;
         	
         	lastImage=image;
@@ -176,7 +175,7 @@ public class MarioComponent extends JComponent implements Environment {
 
             	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
             	
-            	if(rOptions.isViewable()&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og,this,debugView,!paused||performTick);
+            	if(rOptions.isViewable()&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og,debugView,!paused||performTick);
            
             if (action != null)
             {
@@ -816,6 +815,19 @@ public class MarioComponent extends JComponent implements Environment {
 	@Override
 	public void restorePaused() {
 		this.setPaused(storedPause);
+	}
+
+	@Override
+	public float[] getMarioFloatPosArray() {
+		float[] tmp=new float[2];
+		tmp[0] = levelScene.getMarioX();
+		tmp[1] = levelScene.getMarioY();
+		return tmp;
+	}
+
+	@Override
+	public float[] getEnemiesFloatPosArray() {
+		return levelScene.enemiesFloatPos();
 	}
 }
 

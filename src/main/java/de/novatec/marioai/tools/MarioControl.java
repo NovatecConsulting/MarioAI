@@ -161,7 +161,7 @@ public class MarioControl {
 	/**
 	 * Can Mario shoot?
 	 * 
-	 * @return
+	 * @return a boolean value indicating whether Mario can shoot 
 	 */
 	public boolean canShoot() {
 		return shooting;
@@ -170,7 +170,7 @@ public class MarioControl {
 	/**
 	 * Can Mario sprint?
 	 * 
-	 * @return
+	 * @return a boolean value indicating whether Mario can sprint
 	 */
 	public boolean canSprint() {
 		return sprinting;
@@ -179,8 +179,7 @@ public class MarioControl {
 	/**
 	 * Presses a given {@link MarioKey}.
 	 * 
-	 * @param key
-	 *            to press
+	 * @param key to press
 	 */
 	public void press(MarioKey key) {
 		input.press(key);

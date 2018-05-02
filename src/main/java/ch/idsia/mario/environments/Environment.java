@@ -77,6 +77,8 @@ public interface Environment
     
     public Coordinates getMarioPos();
     public Coordinates getMarioFloatPos();
+    public float[] getMarioFloatPosArray();
+    public float[] getEnemiesFloatPosArray();
     public int getMarioMapX();
     public int getMarioMapY();
 

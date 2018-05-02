@@ -33,7 +33,6 @@ public class LevelScene  implements SpriteContext {
 	
 	List<Shell> shellsToCheck = new ArrayList<Shell>();
 
-
 	private Level level;
 	private Mario mario;
 	private Task task;
@@ -1119,6 +1118,10 @@ public class LevelScene  implements SpriteContext {
 	
 	public Sprite getMarioCarried() {
 		return mario.getCarried();
+	}
+	
+	public boolean isMarioCarrying() {
+		return getMarioCarried()!=null;
 	}
 	
 	public int getMarioCoins() {

@@ -49,7 +49,7 @@ public class Level
 				return LEVEL_TYPES.CASTLE;
 			default:
 				System.err.println(
-						"Unknown Type - either this is a bug or int > 2 --- Returning Standard World Type!");
+						"Unknown Type - either this is a bug or int > 2 --- Returning unkown world type!");
 				return LEVEL_TYPES.UNKNOWN;
 			}
 		}

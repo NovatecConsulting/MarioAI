@@ -7,7 +7,7 @@ import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
 import ch.idsia.mario.engine.level.LevelGenerator;
 
 /**
- * Stores information for the LevelGenerator
+ * Stores information for the LevelGenerator, should be used to generate a Level
  * @author rgu
  *
  */
@@ -21,7 +21,7 @@ public class LevelConfig{
 	 */
 	public static final LevelConfig LEVEL_2=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{10,0,0,0,0});
 	/**
-	 * Same as {@link #Level_1} but with enemies.
+	 * Same as {@link #LEVEL_1} but with enemies.
 	 */
 	public static final LevelConfig LEVEL_3=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{10,0,0,0,0});
 	/**
@@ -33,7 +33,7 @@ public class LevelConfig{
 	 */
 	public static final LevelConfig LEVEL_5=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,false,true,true,new int[]{10,5,2,0,0});
 	/**
-	 * Same as {@link #Level_5} but with enemies.
+	 * Same as {@link #LEVEL_5} but with enemies.
 	 */
 	public static final LevelConfig LEVEL_6=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,5,2,0,0});
 	/**
@@ -64,6 +64,9 @@ public class LevelConfig{
 	 * Want to torchure your A*-Agent? Try this.
 	 */
 	public static final LevelConfig ASTAR_KILLER=new LevelConfig(652649838,1024,15,LEVEL_TYPES.OVERGROUND);
+	/**
+	 * Same as {@link #ASTAR_KILLER} but with different seed.
+	 */
 	public static final LevelConfig ASTAR_KILLER2=new LevelConfig(711536351,1024,15,LEVEL_TYPES.OVERGROUND);
 	
 	/**
@@ -71,7 +74,15 @@ public class LevelConfig{
 	 */
 	public static final LevelConfig GOOD_LUCK=new LevelConfig(666,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
 	
+	/**
+	 * Same as {@link #GOOD_LUCK} but with a different seed.
+	 */
 	public static final LevelConfig LAST_RESORT=new LevelConfig(1697160782,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+	
+	/**
+	 * Same as {@link #GOOD_LUCK} but with a different seed.
+	 */
+	public static final LevelConfig FLY_HIGH=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
 	
 //  public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,true,true);
 //	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
@@ -146,8 +157,8 @@ public class LevelConfig{
 	
 	/**
 	 * Randomizes the given LevelConfig
-	 * @param toRandomize
-	 * @return
+	 * @param toRandomize LevelConfig that should be randomized
+	 * @return a randomized LevelConfig based on the given LevelConfig
 	 */
 	public static LevelConfig randomize(LevelConfig toRandomize) {
 		if(toRandomize!=null) {
@@ -182,7 +193,7 @@ public class LevelConfig{
 	 * @param enemies should enemies be spawned?
 	 * @param bricks should bricks be spawned?
 	 * @param coins should coins be spawned?
-	 * @param odds array with length 5, determines the percentage of level parts [STRAIGHT, HILLS, TUBES, HOLES, BULLETBILL]
+	 * @param odds array with length of 5, determines the percentage of level parts [STRAIGHT, HILLS, TUBES, HOLES, BULLETBILL]
 	 */
 	public LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type,boolean enemies, boolean bricks,boolean coins, int[] odds) { //custom level generation
 		this.seed = seed;
@@ -235,7 +246,10 @@ public class LevelConfig{
 		this.flat=false;
 	}
 	
-	
+	/**
+	 * Returns the seed that should be used by the LevelGenerators Random
+	 * @return an integer with the chosen world seed
+	 */
 	public int getSeed() {
 		return seed;
 	}
@@ -244,6 +258,10 @@ public class LevelConfig{
 		return type;
 	}
 	
+	/**
+	 * Returns the estimated length of the Level (Real length will always be a bit smaller)
+	 * @return an integer value with the estimated length of the level
+	 */
 	public int getLength() {
 		return length;
 	}
@@ -256,26 +274,51 @@ public class LevelConfig{
 		presetDifficulty=difficulty;
 	}
 
+	/**
+	 * Should the standard world generation be used?
+	 * @return a boolean value indicating whether standard world generation should be used
+	 */
 	public boolean isUseStandardGenerator() {
 		return useStandardGenerator;
 	}
 
+	/**
+	 * Should enemies be placed in the Level?
+	 * @return a boolean value indicating whether enemies should be spawned
+	 */
 	public boolean isEnemies() {
 		return enemies;
 	}
 
+	
+	/**
+     * Should bricks be placed in the Level?
+	 * @return a boolean value indicating whether bricks should be spawned
+	 */
 	public boolean isBricks() {
 		return bricks;
 	}
 	
+	/**
+     * Should coins be placed in the Level?
+	 * @return a boolean value indicating whether coins should be spawned
+	 */
 	public boolean isCoins() {
 		return coins;
 	}
 
+	/**
+     * Should the world be flat? This value should be automatically set with the use of one of the constructors.
+	 * @return a boolean value indicating whether the world should be flat
+	 */
 	public boolean isFlat() {
 		return flat;
 	}
 
+	/**
+	 * Returns an integer array with a length of 5. The values should determine the percentage of level stages generated inside the level. ({straight,hills,tubes,jump,bullet}) 
+	 * @return an integer array with a length of 5
+	 */
 	public int[] getOdds() { // IMPORTANT: don't return odds directly
 		if(odds==null) return null;
 		return Arrays.copyOf(odds, odds.length);

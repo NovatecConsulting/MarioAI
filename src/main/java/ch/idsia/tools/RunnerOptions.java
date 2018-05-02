@@ -11,8 +11,6 @@ import de.novatec.marioai.tools.LevelConfig;
 public class RunnerOptions {
 
 	private final Agent agent;
-
-	private static final int infiniteFps=100;
 	
 	private int windowHeigth=320*4,windowWidth=240*4;
 	
@@ -204,10 +202,6 @@ public class RunnerOptions {
 		ZLevelMap = zLevelMap;
 	}
 
-	public static int getInfinitefps() {
-		return infiniteFps;
-	}
-	
 	public Point getViewLocation() {
 		return viewLocation;
 	}

@@ -100,10 +100,13 @@ public class MarioAiRunner {
 			
 			List<Future<EvaluationInfo>> results= new ArrayList<>();
 
+			System.out.println("Evaluating the following agents: ");
 			for(Agent next: agents) {
+				System.out.println(next.getName());
 				Evaluator ev=new Evaluator(baseOptions.getCopyWithNewAgent(next),configurator);
 				results.add(runner.submit(ev));
 			}
+			
 			
 			System.out.println("waiting for results...");
 			

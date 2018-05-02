@@ -77,13 +77,17 @@ public class MarioInput {
 		justReleased.clear();
 	}
 	
+	/**
+	 * Returns all pressed MarioKeys
+	 * @return the set with all pressed MarioKeys
+	 */
 	public Set<MarioKey> getPressed() {
 		return pressed;
 	}
 	
 	/**
 	 * Press or release given 'key'.
-	 * @param key
+	 * @param key the MarioKey to change
 	 * @param pressed true == PRESS, false == RELEASE
 	 */
 	public void set(MarioKey key, boolean pressed) {
@@ -93,7 +97,7 @@ public class MarioInput {
 	
 	/**
 	 * Change state of given 'key'.
-	 * @param key
+	 * @param key the MarioKey to toggle
 	 */
 	public void toggle(MarioKey key) {
 		if (pressed.contains(key)) pressed.remove(key);
@@ -102,7 +106,7 @@ public class MarioInput {
 	
 	/**
 	 * PRESS given 'key' or keep pressed if already pressed.
-	 * @param key
+	 * @param key the MarioKey to press
 	 */
 	public void press(MarioKey key) {
 		if (!pressed.contains(key)) {
@@ -117,7 +121,7 @@ public class MarioInput {
 	
 	/**
 	 * RELEASE given 'key'.
-	 * @param key
+	 * @param key the MarioKey to release
 	 */
 	public void release(MarioKey key) {
 		if (!pressed.contains(key)) return;
@@ -131,8 +135,8 @@ public class MarioInput {
 	
 	/**
 	 * Whether 'key' is PRESSED.
-	 * @param key
-	 * @return
+	 * @param key the MarioKey to check 
+	 * @return a boolean value indicating whether the given MarioKey is pressed
 	 */
 	public boolean isPressed(MarioKey key) {
 		return pressed.contains(key);
@@ -140,8 +144,8 @@ public class MarioInput {
 	
 	/**
 	 * Whether 'key' was NEWLY pressed THIS FRAME.
-	 * @param key
-	 * @return
+	 * @param key the MarioKey to check 
+	 * @return a boolean value indicating whether the given MarioKey was newly pressed this frame
 	 */
 	public boolean isJustPressed(MarioKey key) {
 		return justPressed.contains(key);
@@ -149,8 +153,8 @@ public class MarioInput {
 	
 	/**
 	 * Whether 'key' was RELEASED THIS FRAME.
-	 * @param key
-	 * @return
+	 * @param key the MarioKey to check 
+	 * @return a boolean value indicating whether the given MarioKey was newly released this frame
 	 */
 	public boolean isJustReleased(MarioKey key) {
 		return justReleased.contains(key);
