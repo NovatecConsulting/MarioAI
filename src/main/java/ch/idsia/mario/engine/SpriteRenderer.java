@@ -21,7 +21,7 @@ public class SpriteRenderer {
 	public void render(Graphics g,int xCam,int yCam, int layer) {
 		g.translate(-xCam, -yCam);
 
-		for (Sprite sprite : sprites) { //not used?
+		for (Sprite sprite : sprites) { 
 			if (sprite.getLayer() == layer) {
 				sprite.render(g);
 			}

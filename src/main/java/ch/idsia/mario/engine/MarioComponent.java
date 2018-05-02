@@ -14,6 +14,10 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.BgLevelGenerator;
@@ -30,8 +34,7 @@ import de.novatec.marioai.agents.HumanKeyboardAgent;
 import de.novatec.marioai.tools.MarioNtAgent;
 
 public class MarioComponent extends JComponent implements Environment {
-    private static final long serialVersionUID = 790878775993203817L;
-
+	
     private boolean running = false;
     private GraphicsConfiguration graphicsConfiguration;
     private LevelRenderer layer;
@@ -48,10 +51,13 @@ public class MarioComponent extends JComponent implements Environment {
 
     private int frame;
     private int delay;
+    private int fps;
     
+    private Logger log;
+    private static final long serialVersionUID = 790878775993203817L;
     private static final int GENERALIZATION_ENEMIES = 1;
     private static final int GENERALIZATION_LEVELSCENE = 1;
-    private static final int maxFPS=200;
+    private static final int maxFPS=100;
     private static final DecimalFormat df = new DecimalFormat("0.0");
     private static final DecimalFormat df2 = new DecimalFormat("00");
 
@@ -78,9 +84,7 @@ public class MarioComponent extends JComponent implements Environment {
     	this.setFocusable(true);
         this.setEnabled(true);
        
-        Dimension size = new Dimension((int)toCopy.getSize().getWidth(), (int)toCopy.getSize().getHeight());
-
-        setPreferredSize(size);
+        setPreferredSize(toCopy.getActualDimension());
         
         this.running = toCopy.running;
 		this.graphicsConfiguration = toCopy.graphicsConfiguration; //ready only
@@ -94,6 +98,7 @@ public class MarioComponent extends JComponent implements Environment {
 		this.wasHijacked=toCopy.wasHijacked;
 		
 		this.delay = toCopy.delay;
+		this.fps=toCopy.fps;
 		
 		this.levelScene = alreadyCopied;
 		
@@ -103,15 +108,30 @@ public class MarioComponent extends JComponent implements Environment {
 		this.layer=new LevelRenderer(alreadyCopied.getLevel(), toCopy.layer);
 		this.bgLayer=toCopy.bgLayer;
 		this.spriteRenderer=new SpriteRenderer(alreadyCopied.getSprites());
+		this.log=toCopy.log;
 		
 		for(KeyListener listener:toCopy.getKeyListeners()) this.registerKeyboardListener(listener);
     }
 
     //--- FPS
-	public void adjustFPS() { //MAKING MARIO FASTER! SMALLER DELAY=FASTER RUNNING
-    	if(rOptions.isViewable()) delay = (rOptions.getFPS() > 0) ? (rOptions.getFPS() >= maxFPS) ? 0 : (1000/rOptions.getFPS()) : maxFPS;
+	private void adjustFPS(int fps) { //MAKING MARIO FASTER! SMALLER DELAY=FASTER RUNNING
+		if(!(fps>0&&fps<=maxFPS)) return; 
+    	if(rOptions.isViewable()) delay = (fps > 0) ? (fps >= maxFPS) ? 0 : (1000/fps) : maxFPS;
     	else delay=0;
+    	
+    	this.fps=fps;
+    	log.debug("adjusted FPS: "+fps+" DELAY: "+delay);
     }
+	
+	@Override
+	public void setFPS(int fps) {
+		adjustFPS(fps);
+	}
+
+	@Override
+	public int getFPS() {
+		return this.fps;
+	}
 
     //--- JComponent
     public void paint(Graphics g) {
@@ -120,6 +140,7 @@ public class MarioComponent extends JComponent implements Environment {
     public void update(Graphics g) {
     }
 
+    //--- Work
     public void init() { //needs to stay, parent container must add the MarioComponent(this) before calling init()
         graphicsConfiguration = getGraphicsConfiguration();
         if (graphicsConfiguration != null) {
@@ -137,9 +158,8 @@ public class MarioComponent extends JComponent implements Environment {
     }
 
     public EvaluationInfo run() {
-    	
+
         running = true;
-        //adjustFPS();
         EvaluationInfo evaluationInfo = new EvaluationInfo(rOptions.getTask());
 
         VolatileImage image = null;
@@ -155,7 +175,6 @@ public class MarioComponent extends JComponent implements Environment {
 
         while (running||!readyToExit) {
         	startTime = System.currentTimeMillis();
-        	//adjustFPS();
         	boolean tmpPerformTick=performTick;
         	
         	lastImage=image;
@@ -180,14 +199,12 @@ public class MarioComponent extends JComponent implements Environment {
             if (action != null)
             {
               if(!paused||tmpPerformTick) for (int i = 0; i < Environment.numberOfButtons; ++i)
-                    if (action[i])
-                    {
+                    if (action[i]) {
                         ++totalActionsPerfomed;
                         break;
                     }
             }
-            else
-            {
+            else {
                 System.err.println("Null Action received. Skipping simulation...");
                 stop();
             }
@@ -205,18 +222,16 @@ public class MarioComponent extends JComponent implements Environment {
                      drawStringDropShadow(og, msg, 0, 8, 6);
 
                      msg = "";
-                     if (action != null)
-                     {
+                     if (action != null) {
                          for (int i = 0; i < Environment.numberOfButtons; ++i)
                              msg += (action[i]) ? Scene.keysStr[i] : "      ";
                      }
-                     else
-                         msg = "NULL";                    
+                     else msg = "NULL";                    
                      drawString(og, msg, 6, 78, 1);
 
                      og.setColor(Color.DARK_GRAY);
                 	 drawStringDropShadow(og, "FPS: ", 33, 2, 7);
-                	 drawStringDropShadow(og, ((rOptions.getFPS() > 99) ? "\\infty" : ""+rOptions.getFPS()), 33, 3, 7);
+                	 drawStringDropShadow(og, ((fps > 99) ? "\\infty" : ""+fps), 33, 3, 7);
                      drawStringDropShadow(og, "Score: "+(int)levelScene.getScore(), 1,27, 4);
                 }
 
@@ -236,17 +251,24 @@ public class MarioComponent extends JComponent implements Environment {
                 } catch (InterruptedException e) {
                     break;
                 }
-            // Advance the frame
-            frame++;
+            
+            // advance the frame
+            if(!isPaused()||tmpPerformTick) {
+            	
+            	frame++;
+           	 	ThreadContext.put("frame",String.valueOf(frame));
+                log.debug("Score: "+this.levelScene.getScore());
+                log.debug("Total Kills: "+levelScene.getKilledCreaturesTotal());
+                log.debug("Mario X: "+levelScene.getMarioX());
+           }
             
             if(tmpPerformTick==true)performTick=false;
-        } 
+           
+           
+        }//while 
         
         //--- Show results on end screen
-        if (rOptions.isViewable()) {
-        	redrawEndScreen();
-		
-        }
+        if (rOptions.isViewable()) redrawEndScreen();
         
         //ADD INFO TO EVALUATION INFO
         evaluationInfo.agentType = rOptions.getAgent().getClass().getSimpleName();
@@ -617,11 +639,20 @@ public class MarioComponent extends JComponent implements Environment {
 
 	@Override
 	public void setRunnerOptions() {
+		if(rOptions.getAgent()!=null) log=LogManager.getLogger(rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+Integer.toHexString(rOptions.getAgent().hashCode()));
+		else {
+			log=LogManager.getLogger(this.getClass().getName()+" ERROR LOGGER");
+	    		Throwable t=new NullPointerException("Agent can't be null!");
+	    	log.catching(t);
+	    	log.error("Exiting...");
+	    	System.exit(1);
+		}
+		log.debug("Created Logger");
 		this.viewable=rOptions.isViewable();
 		this.debugView=rOptions.isDebugView();
 		rOptions.getAgent().reset();
-		adjustFPS();
-		 
+		fps=rOptions.getFPS();
+		adjustFPS(rOptions.getFPS());
 		actual=rOptions.getAgent();
 		
 		startLevel(rOptions.getLevelSeed(), rOptions.getDifficulty(), rOptions.getLevelType(), rOptions.getLevelLength(), rOptions.getTimeLimit());

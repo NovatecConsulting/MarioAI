@@ -44,6 +44,8 @@ public interface Environment
     public void toggleDebugView();
     
     public void swapAgent();
+    public void setFPS(int fps);
+    public int getFPS();
     
     public void registerKeyboardListener(KeyListener listener);
     public void removeLastKeyboardListener();

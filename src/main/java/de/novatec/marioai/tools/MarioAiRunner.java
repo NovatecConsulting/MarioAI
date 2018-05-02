@@ -7,6 +7,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.ChallengeTask;
 import ch.idsia.ai.tasks.Task;
@@ -24,6 +27,7 @@ import de.novatec.marioai.agents.HumanKeyboardAgent;
  */
 public class MarioAiRunner {
 	
+	private static Logger log=LogManager.getLogger(MarioAiRunner.class);
 	/**
 	 * No instances needed.
 	 */
@@ -69,19 +73,21 @@ public class MarioAiRunner {
 	}
 	
 	public static void multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
+		
+		log.info("MarioAi - trying to start evaluation...");
 		if(agents==null){
-			System.err.println("Agents List can't be null!\nPlease use a proper List with agents!");
+			log.error("Agents List can't be null!\nPlease use a proper List with agents! - no evaluation started");
 			return;
 		}
 		if(agents.isEmpty()) {
-			System.err.println("Agents List is empty - no evaluation started");
+			log.error("Agents List is empty - no evaluation started");
 			return;
 		}
-		if(levelConfig==null&&!randomize) System.err.println("LevelConfig is null, Level will be randomized!");
+		if(levelConfig==null&&!randomize) log.warn("LevelConfig is null, Level will be randomized!");
 		if(randomize||levelConfig==null) levelConfig=LevelConfig.randomize(levelConfig);
 		if(task==null) {
-			System.err.println("Task can't be null");
-			System.err.println("Exiting...");
+			log.error("Task can't be null");
+			log.error("Exiting...");
 			return;
 		}
 		if(zoomFactor<1) zoomFactor=1;	
@@ -89,10 +95,15 @@ public class MarioAiRunner {
 		RunnerOptions baseOptions=new RunnerOptions(agents.get(0),levelConfig,task);
 
 		baseOptions.setViewable(viewable);
+		log.trace("viewable="+viewable);
 		baseOptions.setFPS(fps);
+		log.trace("initialFps="+fps);
 		baseOptions.setWindowHeigth(240*zoomFactor);
 		baseOptions.setWindowWidth(320*zoomFactor);
+		log.trace("zoomFactor="+zoomFactor);
+		log.trace("initialWindowWidth="+320*zoomFactor+" initialWindowHeight="+240*zoomFactor);
 		baseOptions.setDebugView(debugView);
+		log.trace("debugView="+debugView);
 		
 		try {
 			ExecutorService runner = Executors.newCachedThreadPool();
@@ -100,20 +111,20 @@ public class MarioAiRunner {
 			
 			List<Future<EvaluationInfo>> results= new ArrayList<>();
 
-			System.out.println("Evaluating the following agents: ");
+			log.info("Evaluating the following agents: ");
 			for(Agent next: agents) {
-				System.out.println(next.getName());
+				log.info(next.getName());
 				Evaluator ev=new Evaluator(baseOptions.getCopyWithNewAgent(next),configurator);
 				results.add(runner.submit(ev));
 			}
 			
 			
-			System.out.println("waiting for results...");
+			log.info("waiting for results...");
 			
 			for(Future<EvaluationInfo> next: results) {
 				EvaluationInfo info=next.get();
-				System.out.println("---Agent: "+info.agentName+" finished---");
-				System.out.println(info);
+				log.info("Agent: "+info.agentName+" finished");
+				log.info(info);
 			}
 			
 			runner.shutdown();

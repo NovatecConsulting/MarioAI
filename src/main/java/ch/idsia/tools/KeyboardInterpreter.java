@@ -45,6 +45,15 @@ public class KeyboardInterpreter implements KeyListener{
 		case KeyEvent.VK_T:
 			actualComponent.performTick();
 			break;
+		case KeyEvent.VK_J:
+			actualComponent.setFPS(actualComponent.getFPS()+1);
+			break;
+		case KeyEvent.VK_K:
+			actualComponent.setFPS(actualComponent.getFPS()-1);
+			break;	
+		case KeyEvent.VK_L:
+			actualComponent.setFPS(24);
+			break;		
 		case KeyEvent.VK_H:
 			actualComponent.swapAgent();
 			break;
