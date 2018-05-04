@@ -18,7 +18,7 @@ public class Tiles {
 	public TileType getTile(int x,int y) {
 		//no check needed, Map already managed that
 		
-		Tile res=env.getTiles().get(new Coordinates(x,y));
+		Tile res=env.getLevelScene().getTiles().get(new Coordinates(x,y));
 		if(res==null) return TileType.NOTHING;
 		
 		return res.getType();
@@ -53,7 +53,7 @@ public class Tiles {
 	public List<Tile> getTiles(){
 	List<Tile> res=new LinkedList<>();
 		
-		Map<Coordinates,Tile> map=env.getTiles();
+		Map<Coordinates,Tile> map=env.getLevelScene().getTiles();
 		
 		for(Entry<Coordinates,Tile> next:map.entrySet()) {
 				res.add(next.getValue());

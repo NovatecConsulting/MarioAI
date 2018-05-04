@@ -48,14 +48,14 @@ public class MarioControl {
 		// WHAT IS THE STATE OF SPEED/SHOOT BUTTON?
 		if (input.isPressed(MarioKey.SPEED)) {
 			// SPEED/SHOOT WAS PRESSED LAST FRAME
-			if (shooting && env.mayMarioShoot()) {
+			if (shooting && env.getLevelScene().mayMarioShoot()) {
 				input.release(MarioKey.SPEED);
 			} else if (!sprinting) {
 				input.release(MarioKey.SPEED);
 			}
 		} else {
 			// SPEED/SHOOT BUTTON WAS NOT PRESSED LAST FRAME
-			if (shooting && env.mayMarioShoot()) {
+			if (shooting && env.getLevelScene().mayMarioShoot()) {
 				input.press(MarioKey.SPEED);
 			} else if (sprinting) {
 				input.press(MarioKey.SPEED);
@@ -78,7 +78,7 @@ public class MarioControl {
 
 	public void shoot() {
 		// CAN WE EVEN SHOOT
-		if (!env.mayMarioShoot()) {
+		if (!env.getLevelScene().mayMarioShoot()) {
 			// => NO!
 			return;
 		}
@@ -121,7 +121,7 @@ public class MarioControl {
 		sprinting = true;
 
 		// DO WE WANT TO SHOOT AND CAN WE START SHOOTING?
-		if (shooting && env.mayMarioShoot()) {
+		if (shooting && env.getLevelScene().mayMarioShoot()) {
 			// YES
 			// => shooting has a priority over sprinting
 			return;
@@ -136,7 +136,7 @@ public class MarioControl {
 	 * Mario will JUMP if able.
 	 */
 	public void jump() {
-		if (!env.mayMarioJump()&&env.isMarioOnGround() || env.isMarioFalling()) {
+		if (!env.getLevelScene().mayMarioJump()&&env.getLevelScene().isMarioOnGround() || env.getLevelScene().isMarioFalling()) {
 			return;
 		}
 		input.press(MarioKey.JUMP);

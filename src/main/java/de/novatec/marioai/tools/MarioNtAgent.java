@@ -161,7 +161,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a boolean value indicating whether Mario can shoot
 	 */
 	public final boolean mayShoot() {
-		return this.env.mayMarioShoot();
+		return this.env.getLevelScene().mayMarioShoot();
 	}
 	
 	/**
@@ -169,7 +169,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a boolean value indicating whether Mario can jump
 	 */
 	public final boolean mayJump() {
-		return this.env.mayMarioJump();
+		return this.env.getLevelScene().mayMarioJump();
 	}
 	
 	/**
@@ -177,7 +177,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return an instance of Coordinates with Mario's (map) position.
 	 */
 	public final Coordinates getMarioPos(){
-		return this.env.getMarioPos();
+		return this.env.getLevelScene().getMarioPos();
 	}
 	
 	/**
@@ -185,7 +185,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return an instance of Coordinates with Mario's (physical) position.
 	 */
 	public final Coordinates getMarioFloatPos() {
-		return this.env.getMarioFloatPos();
+		return this.env.getLevelScene().getMarioFloatPos();
 	}
 	
 	/**
@@ -193,7 +193,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return an integer value with Mario's X position
 	 */
 	public final int getMarioMapX() {
-		return this.env.getMarioMapX();
+		return this.env.getLevelScene().getMarioMapX();
 	}
 	
 	/**
@@ -201,7 +201,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return an integer value with Mario's Y position
 	 */
 	public final int getMarioMapY() {
-		return this.env.getMarioMapY();
+		return this.env.getLevelScene().getMarioMapY();
 	}
 	
 	/**
@@ -225,7 +225,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a boolean value indicating whether Mario is on the ground
 	 */
 	public final boolean isOnGround() {
-		return this.env.isMarioOnGround();
+		return this.env.getLevelScene().isMarioOnGround();
 	}
 	
 	/**
@@ -233,7 +233,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a boolean value indicating whether Mario is falling
 	 */
 	public final boolean isFalling() {
-		return this.env.isMarioFalling();
+		return this.env.getLevelScene().isMarioFalling();
 	}
 	
 	/**
@@ -241,7 +241,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a boolean value indicating whether Mario is carrying a shell
 	 */
 	public final boolean isCarrying() {
-		return this.env.isMarioCarrying();
+		return this.env.getLevelScene().isMarioCarrying();
 	}
 	
 	///--- Simple Detection Methods
@@ -542,7 +542,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a byte[] array 
 	 */
 	public byte[][] getMergedObservationZ(int zLevelScene, int zLevelEnemies) {
-        return env.getMergedObservationZ(zLevelScene, zLevelEnemies);
+        return env.getLevelScene().mergedObservation(zLevelScene, zLevelEnemies);
 	}
 	
 	/**
@@ -551,7 +551,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a byte[] array 
 	 */
 	public byte[][] getLevelSceneObservationZ(int zLevelScene) {
-        return getLevelSceneObservationZ(zLevelScene);
+        return env.getLevelScene().levelSceneObservation(zLevelScene);
 	}
 
 	/**
@@ -560,7 +560,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * @return a byte[] array
 	 */
 	public byte[][] getEnemiesObservationZ(int zLevelEnemies) {
-         return env.getEnemiesObservationZ(zLevelEnemies);
+         return env.getLevelScene().enemiesObservation(zLevelEnemies);
 	}
 	
 	////////////////////////////////
@@ -579,7 +579,7 @@ public abstract class MarioNtAgent implements Agent{
 	 * Given Coordinate will be added to the List of Coordinates to be drawn if Debug View is enabled.
 	 * @param coord next Coordinate to draw a line to
 	 */
-	protected final void addCoordToDraw(Coordinates coord) {
+	public final void addCoordToDraw(Coordinates coord) {
 		 this.coordList.add(coord);
 	}
 	

@@ -51,15 +51,24 @@ public class LevelConfig{
 	/**
 	 * Easy enemy training level
 	 */
-	public static final LevelConfig EASY_ENEMY_TRAINING=new LevelConfig(42,256,1,true,false,false);
+	public static final LevelConfig EASY_ENEMY_TRAINING=new LevelConfig(42,512,1,true,false,false);
 	/**
 	 * Medium enemy training level
 	 */
-	public static final LevelConfig MEDIUM_ENEMY_TRAINING=new LevelConfig(42,256,4,true,false,false);
+	public static final LevelConfig MEDIUM_ENEMY_TRAINING=new LevelConfig(42,512,4,true,false,false);
 	/**
 	 * Hard enemy training level
 	 */
-	public static final LevelConfig HARD_ENEMY_TRAINING=new LevelConfig(42,256,6,true,false,false);
+	public static final LevelConfig HARD_ENEMY_TRAINING=new LevelConfig(42,512,7,true,false,false);
+	
+	/**
+	 * Extreme hard enemy training level
+	 */
+	public static final LevelConfig EXTREME_ENEMY_TRAINING=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{0,15,0,0,0});
+	/*
+	 * Ride the wave!
+	 */
+	public static final LevelConfig RIDE_THE_WAVE=new LevelConfig(42,512,35,true,true,false);
 	/**
 	 * Want to torchure your A*-Agent? Try this.
 	 */
@@ -68,7 +77,6 @@ public class LevelConfig{
 	 * Same as {@link #ASTAR_KILLER} but with different seed.
 	 */
 	public static final LevelConfig ASTAR_KILLER2=new LevelConfig(711536351,1024,15,LEVEL_TYPES.OVERGROUND);
-	
 	/**
 	 * Well.. just try it.
 	 */
@@ -82,8 +90,16 @@ public class LevelConfig{
 	/**
 	 * Same as {@link #GOOD_LUCK} but with a different seed.
 	 */
-	public static final LevelConfig FLY_HIGH=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
-	
+	public static final LevelConfig SHELL_HELL=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+
+	/*
+	 * Nothing to see here!
+	 */
+	public static final LevelConfig DEALBREAKER=new LevelConfig(666,512,50,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{12,0,0,0,0});
+	/**
+	 * Nevermind. I'm done.
+	 */
+	public static final LevelConfig WHAT_HAVE_I_DONE=new LevelConfig(666,512,30,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{12,10,1,2,4});
 //  public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,true,true);
 //	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
 //	public static final LevelConfig LevelCUSTOM1=new LevelConfig(1236445678,512,4,LEVEL_TYPES.CASTLE,false,true,true,new int[]{10,0,0,0,0});

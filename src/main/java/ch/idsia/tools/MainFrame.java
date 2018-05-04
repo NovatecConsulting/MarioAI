@@ -93,8 +93,7 @@ public class MainFrame extends JFrame  {
     			panel.add(tmp);
     			tmp.init();
     			tmp.addMouseListener(interpreter);
-    			
-    			
+	
     		}
     		controlledComponent.registerActualAgent();
 
@@ -148,13 +147,6 @@ public class MainFrame extends JFrame  {
     		if(next.getLevelScene().getMarioStatus()!=STATUS.RUNNING) break;
     		next.revalidate();
     		next.restorePaused();
-//    		while(next.isPaused()) {
-//    			try {
-//					Thread.sleep(1);
-//				} catch (InterruptedException e) {
-//					e.printStackTrace();
-//				}
-//    		}
     	}
     }
 
@@ -211,9 +203,8 @@ public class MainFrame extends JFrame  {
 	   
 	   @Override
 	   public void run() {
-		configurator.init();
+		if(isVisible())configurator.init();
 	   }
-	   
    }
    
    public MarioComponent getControlledComponent() {

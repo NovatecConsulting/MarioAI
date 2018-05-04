@@ -59,7 +59,7 @@ public class LevelScene  implements SpriteContext {
 	private int killedCreaturesByShell;
 
 	//- Standard-Constructor
-	public LevelScene(MarioComponent renderer, long seed,int levelDifficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
+	public LevelScene(MarioComponent renderer,Task task, long seed,int levelDifficulty, Level.LEVEL_TYPES type, int levelLength, int timeLimit) {
 		this.levelSeed = seed;
 		this.renderer = renderer;
 		this.levelDifficulty = levelDifficulty;
@@ -70,7 +70,7 @@ public class LevelScene  implements SpriteContext {
 		killedCreaturesByFireBall = 0;
 		killedCreaturesByStomp = 0;
 		killedCreaturesByShell = 0;
-		task=renderer.getRunnerOptions().getTask();
+		this.task=task;
 	}
 	
 	@Override
@@ -800,15 +800,13 @@ public class LevelScene  implements SpriteContext {
 		return ret;
 	}
 
-	public void init() {
+	public void init(LevelConfig config, MODE startMode) {
 		try {
 			Level.loadBehaviors(new DataInputStream(Thread.currentThread().getContextClassLoader().getResourceAsStream("tiles.dat")));
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
-
-		LevelConfig config=renderer.getRunnerOptions().getConfig();
 			
 		if(config.isUseStandardGenerator()) {
 			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType()); // Standard level-generation
@@ -820,7 +818,7 @@ public class LevelScene  implements SpriteContext {
 
 		sprites.clear();
 		
-		mario = new Mario(this,renderer.getRunnerOptions().getMarioStartMode());
+		mario = new Mario(this,startMode);
 
 		sprites.add(mario);
 		startTime = 1;
@@ -1098,6 +1096,14 @@ public class LevelScene  implements SpriteContext {
 	
 	public float getMarioYA() {
 		return mario.getYa();
+	}
+	
+	public Coordinates getMarioPos() {
+		return new Coordinates(this.getMarioMapX(), this.getMarioMapY());
+	}
+	
+	public Coordinates getMarioFloatPos() {
+		return new Coordinates(this.getMarioX(),this.getMarioY());
 	}
 	
 	public int getMarioFacing() {

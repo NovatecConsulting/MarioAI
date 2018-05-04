@@ -382,7 +382,6 @@ public class Enemy extends Sprite //cloneable
                 winged = false;
                 hPic = -hPic;
                 yPicO = -yPicO + 16;
-//                System.out.println("fireballCollideCheck");
                 spriteContext.incrementKilledCreaturesTotal();
                 spriteContext.killedCreaturesByFireBall();
                 return true;
@@ -405,7 +404,6 @@ public class Enemy extends Sprite //cloneable
             winged = false;
             hPic = -hPic;
             yPicO = -yPicO + 16;
-            System.out.println("bumpCheck");
         }
     }
 

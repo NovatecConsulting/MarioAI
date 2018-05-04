@@ -22,7 +22,6 @@ public class Evaluator implements Callable<EvaluationInfo>
     public EvaluationInfo evaluate() {
         EvaluationInfo evaluationInfo=null;
         long startTime = System.currentTimeMillis();
-
  
         	 configurator.awaitBarrier();
         	 component.setRunnerOptions();

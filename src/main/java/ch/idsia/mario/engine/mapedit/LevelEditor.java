@@ -23,8 +23,7 @@ public class LevelEditor extends JFrame implements ActionListener
     
     private JCheckBox[] bitmapCheckboxes = new JCheckBox[8];
 
-    public LevelEditor()
-    {
+    public LevelEditor() {
         super("Map Edit");
         
         try

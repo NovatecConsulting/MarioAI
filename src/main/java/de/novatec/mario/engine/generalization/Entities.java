@@ -20,7 +20,7 @@ public class Entities {
 	}
 	
 	public List<Entity> getEntitiesAt(int x,int y){		
-		List<Entity> tmp=env.getEntities().get(new Coordinates(x,y));
+		List<Entity> tmp=env.getLevelScene().getEntities().get(new Coordinates(x,y));
 		if(tmp==null) return new LinkedList<>();
 		return tmp;
 	}
@@ -28,7 +28,7 @@ public class Entities {
 	public List<Entity> getEntitiesOnScreen(){
 		List<Entity> res=new LinkedList<>();
 		
-		for(Map.Entry<Coordinates, List<Entity>> entry:env.getEntities().entrySet()) {
+		for(Map.Entry<Coordinates, List<Entity>> entry:env.getLevelScene().getEntities().entrySet()) {
 			for(Entity e:entry.getValue()) {
 				res.add(e);
 			} 
@@ -122,7 +122,7 @@ public class Entities {
 	}
 	
 	public String toString() {
-		return env.getEntities().toString();
+		return env.getLevelScene().getEntities().toString();
 	}
 	
 	public enum EntityType{ 

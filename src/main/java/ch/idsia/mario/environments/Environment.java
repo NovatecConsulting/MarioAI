@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import ch.idsia.mario.engine.LevelScene;
-import ch.idsia.mario.engine.sprites.Mario;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entity;
 import de.novatec.mario.engine.generalization.Tile;
@@ -52,49 +51,16 @@ public interface Environment
     public void addLastKeyboardListener();
     public void registerActualAgent();
     public void removeActualAgent();
-
-    public byte[][] getCompleteObservation();   // default: ZLevelScene = 1, ZLevelEnemies = 1
-
-    public byte[][] getEnemiesObservation();    // default: ZLevelEnemies = 1
-
-    public byte[][] getLevelSceneObservation(); // default: ZLevelScene = 1
     
     public void showMarioViewAsAscii();
-    
-    public Map<Coordinates,Tile> getTiles();
-    public Map<Coordinates,List<Entity>> getEntities();
     
     public void resizeView(Dimension d);
     public Dimension getInitialDimension();
     public Dimension getActualDimension();
 
     public LevelScene getLevelScene();
-
-    //--- Mario
-    public boolean isMarioOnGround();
-    public boolean mayMarioJump();
-    public boolean isMarioCarrying();
-    public boolean mayMarioShoot();
-    public boolean isMarioFalling();
     
-    public Coordinates getMarioPos();
-    public Coordinates getMarioFloatPos();
     public float[] getMarioFloatPosArray();
     public float[] getEnemiesFloatPosArray();
-    public int getMarioMapX();
-    public int getMarioMapY();
-
-    public Mario.MODE getMarioMode();
-    
-    //--- Obserservations
-    public byte[][] getMergedObservationZ(int ZLevelScene, int ZLevelEnemies);
-    public byte[][] getLevelSceneObservationZ(int ZLevelScene);
-    public byte[][] getEnemiesObservationZ(int ZLevelEnemies);
-
-    //--- Kills
-    public int getKillsTotal();
-    public int getKillsByFire();
-    public int getKillsByStomp();
-    public int getKillsByShell();
    
 }
