@@ -27,6 +27,7 @@ import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.RunnerOptions;
 import de.novatec.marioai.agents.HumanKeyboardAgent;
 import de.novatec.marioai.tools.MarioNtAgent;
+import io.prometheus.client.Gauge;
 
 public class MarioComponent extends JComponent implements Environment {
 	
@@ -46,9 +47,12 @@ public class MarioComponent extends JComponent implements Environment {
     private int delay;
     private int fps;
     
+    //--- Logging & Prometheus
     private Logger log;
     private static final Level STATISTIC=Level.forName("STATISTIC", 550);
-    private static int AGENT_ID=0;
+    private static volatile int AGENT_ID=0;
+    private int agentId=-1;
+    private static final Gauge data=Gauge.build().name("mariocomponent").help("Actual Amount of Kills.").labelNames("name","agent","id","type").register();
     
     private static final long serialVersionUID = 790878775993203817L;
     private static final int GENERALIZATION_ENEMIES = 1;
@@ -65,7 +69,7 @@ public class MarioComponent extends JComponent implements Environment {
  
     //--- Constructor
     public MarioComponent(int width, int height, RunnerOptions rOptions) {
-       
+    	
     	this.rOptions=rOptions;
         this.setFocusable(true);
         this.setEnabled(true);
@@ -105,6 +109,7 @@ public class MarioComponent extends JComponent implements Environment {
 		this.spriteRenderer=new SpriteRenderer(alreadyCopied.getSprites());
 		this.log=toCopy.log;
 		this.setVisible(toCopy.isVisible());
+		this.agentId=toCopy.agentId;
 		
 		for(KeyListener listener:toCopy.getKeyListeners()) this.registerKeyboardListener(listener);
     }
@@ -249,7 +254,10 @@ public class MarioComponent extends JComponent implements Environment {
             
             // advance the frame
             if(!isPaused()||tmpPerformTick) {
-            	frame++;
+            	increaseFrame();
+            	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"score").set(levelScene.getScore());
+            	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"kills").set(levelScene.getKilledCreaturesTotal());
+            	
            	 	ThreadContext.put("frame",String.valueOf(frame));
                 log.log(STATISTIC,"Score: "+this.levelScene.getScore());
                 log.log(STATISTIC,"Total Kills: "+levelScene.getKilledCreaturesTotal());
@@ -293,6 +301,10 @@ public class MarioComponent extends JComponent implements Environment {
         evaluationInfo.setTimesHurt(levelScene.getTimesMarioHurt());
 
         return evaluationInfo;
+    }
+    
+    private void increaseFrame() {
+    	frame++;
     }
     
    //--- Rendering
@@ -549,7 +561,10 @@ public class MarioComponent extends JComponent implements Environment {
 	//-- RunnerOptions
 	@Override
 	public void setRunnerOptions() {
-		if(rOptions.getAgent()!=null) log=LogManager.getLogger(rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+Integer.toHexString(rOptions.getAgent().hashCode())+":"+AGENT_ID++);
+		if(rOptions.getAgent()!=null) {
+			this.agentId=AGENT_ID++;
+			log=LogManager.getLogger(rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
+		}
 		else {
 			log=LogManager.getLogger(this.getClass().getName()+"-ERROR LOGGER");
 	    		Throwable t=new NullPointerException("Agent can't be null!");

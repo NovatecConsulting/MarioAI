@@ -15,14 +15,7 @@ import javax.swing.JPanel;
 import ch.idsia.mario.engine.MarioComponent;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Sergey Karakovskiy
- * Date: Mar 29, 2009
- * Time: 6:27:25 PM
- * Package: .Tools
- */
-public class MainFrame extends JFrame  {
+public class MainFrame extends JFrame  { //TODO don't overwrite JFrame
 	
 	private static final long serialVersionUID = 1L;
 

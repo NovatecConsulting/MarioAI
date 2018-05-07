@@ -1,6 +1,7 @@
 package de.novatec.marioai.tools;
 
 import java.awt.Point;
+import java.net.BindException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,6 +20,7 @@ import ch.idsia.tools.RunnerOptions;
 import ch.idsia.tools.MainFrame;
 import de.novatec.marioai.agents.ExampleAgent;
 import de.novatec.marioai.agents.HumanKeyboardAgent;
+import io.prometheus.client.exporter.HTTPServer;
 
 /**
  * Simple helper class to start the evaluation of an agent. 
@@ -105,7 +107,17 @@ public class MarioAiRunner {
 		baseOptions.setDebugView(debugView);
 		log.trace("debugView="+debugView);
 		
+		int port=1234; //TODO changeable? just a test
 		try {
+			HTTPServer server=null;
+			try {
+				server=new HTTPServer(port, true);
+			}
+			catch (BindException e) {
+				log.error("Port "+port+" is already in use!");
+				log.error("No server will be started!");
+			}
+
 			ExecutorService runner = Executors.newCachedThreadPool();
 			MainFrame configurator=new MainFrame(agents.size(), false, viewable, new Point());
 			
@@ -128,6 +140,7 @@ public class MarioAiRunner {
 			}
 			
 			runner.shutdown();
+			if(server!=null)server.stop();
 			if(!baseOptions.isViewable())System.exit(0);
 			
 		} catch (Exception e) {
@@ -139,9 +152,9 @@ public class MarioAiRunner {
 		List<Agent> tmp=new ArrayList<>();
 		tmp.add(new HumanKeyboardAgent());
 		tmp.add(new ExampleAgent());
-		tmp.add(new ExampleAgent());
-		tmp.add(new ExampleAgent());
-		multiAgentRun(tmp, LevelConfig.LEVEL_3, new ChallengeTask(), 24, 10, true, true, false);
+//		tmp.add(new ExampleAgent());
+//		tmp.add(new ExampleAgent());
+		multiAgentRun(tmp, LevelConfig.LEVEL_3, new ChallengeTask(), 24, 2, true, true, false);
 	}
 }
 
