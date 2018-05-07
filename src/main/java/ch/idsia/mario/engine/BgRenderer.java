@@ -19,8 +19,7 @@ public class BgRenderer
     private int height;
     private int distance;
 
-    public BgRenderer(Level level, GraphicsConfiguration graphicsConfiguration, int width, int height, int distance)
-    {
+    public BgRenderer(Level level, GraphicsConfiguration graphicsConfiguration, int width, int height, int distance) {
         this.distance = distance;
         this.width = width;
         this.height = height;
@@ -33,8 +32,7 @@ public class BgRenderer
         updateArea(0, 0, width, height);
     }
 
-    public void setCam(int xCam, int yCam)
-    {
+    public void setCam(int xCam, int yCam) {
         xCam /= distance;
         yCam /= distance;
         int xCamD = this.xCam - xCam;
@@ -68,8 +66,7 @@ public class BgRenderer
         }
     }
 
-    private void updateArea(int x0, int y0, int w, int h)
-    {
+    private void updateArea(int x0, int y0, int w, int h) {
         g.setBackground(transparent);
         g.clearRect(x0, y0, w, h);
         int xTileStart = (x0 + xCam) / 32;
@@ -86,13 +83,11 @@ public class BgRenderer
         }
     }
 
-    public void render(Graphics g, int tick)
-    {
+    public void render(Graphics g, int tick) {
         g.drawImage(image, 0, 0, null);
     }
 
-    public void setLevel(Level level)
-    {
+    public void setLevel(Level level) {
         this.level = level;
         updateArea(0, 0, width, height);
     }

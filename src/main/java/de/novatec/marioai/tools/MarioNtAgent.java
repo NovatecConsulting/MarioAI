@@ -52,11 +52,11 @@ public abstract class MarioNtAgent implements Agent{
 	public final boolean[] getAction(Environment observation) {
 		
 		env=observation;
-		if(tiles==null) tiles=new Tiles(observation);
-		else tiles.setEnvironment(observation);
+		if(tiles==null) tiles=new Tiles(observation.getLevelScene());
+		else tiles.setLevelScene(observation.getLevelScene());
 		
-		if(entities==null) entities=new Entities(observation);
-		else entities.setEnvironment(observation);
+		if(entities==null) entities=new Entities(observation.getLevelScene());
+		else entities.setLevelScene(observation.getLevelScene());
 		
 		control.setEnvironment(observation);
 		

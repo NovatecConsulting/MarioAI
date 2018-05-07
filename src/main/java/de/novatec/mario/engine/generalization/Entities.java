@@ -1,34 +1,34 @@
 package de.novatec.mario.engine.generalization;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.engine.sprites.Sprite;
-import ch.idsia.mario.environments.Environment;
 
 public class Entities {
 
-	Environment env;
+	LevelScene scene;
 	
-	public Entities(Environment env) {
-		this.env=env;
+	public Entities(LevelScene scene) {
+		this.scene=scene;
 		}
 	
-	public void setEnvironment(Environment env) {
-		this.env=env;
+	public void setLevelScene(LevelScene scene) {
+		this.scene=scene;
 	}
 	
 	public List<Entity> getEntitiesAt(int x,int y){		
-		List<Entity> tmp=env.getLevelScene().getEntities().get(new Coordinates(x,y));
-		if(tmp==null) return new LinkedList<>();
+		List<Entity> tmp=scene.getEntities().get(new Coordinates(x,y));
+		if(tmp==null) return new ArrayList<>();
 		return tmp;
 	}
 	
 	public List<Entity> getEntitiesOnScreen(){
-		List<Entity> res=new LinkedList<>();
+		List<Entity> res=new ArrayList<>();
 		
-		for(Map.Entry<Coordinates, List<Entity>> entry:env.getLevelScene().getEntities().entrySet()) {
+		for(Map.Entry<Coordinates, List<Entity>> entry:scene.getEntities().entrySet()) {
 			for(Entity e:entry.getValue()) {
 				res.add(e);
 			} 
@@ -38,7 +38,7 @@ public class Entities {
 	}
 	
 	public List<Entity> getEnemiesAt(int x,int y){
-		List<Entity> tmp=getEntitiesOnScreen(),res=new LinkedList<>();
+		List<Entity> tmp=getEntitiesOnScreen(),res=new ArrayList<>();
 		
 		for(Entity e:tmp) {
 			if(e.isDangerous()) res.add(e); 
@@ -47,7 +47,7 @@ public class Entities {
 	}
 	
 	public List<Entity> getEnemiesOnScreen(){
-		List<Entity> res=new LinkedList<>();
+		List<Entity> res=new ArrayList<>();
 		
 		for(Entity next: getEntitiesOnScreen()) {
 			if(next.isDangerous()) res.add(next);
@@ -57,14 +57,14 @@ public class Entities {
 	}
 	
 	public List<Entity> getCollectiblesAt(int x, int y){
-		List<Entity> res=new LinkedList<>();
+		List<Entity> res=new ArrayList<>();
 		for(Entity e:getEntitiesAt(x, y)) if(e.isCollectable()) res.add(e); 
 		
 		return res;
 	}
 	
 	public List<Entity> getCollectiblesOnScreen(){
-		List<Entity> tmp=getEntitiesOnScreen(),res=new LinkedList<>();
+		List<Entity> tmp=getEntitiesOnScreen(),res=new ArrayList<>();
 		
 		for(Entity e:tmp) {
 			if(e.isCollectable()) res.add(e); 
@@ -122,7 +122,7 @@ public class Entities {
 	}
 	
 	public String toString() {
-		return env.getLevelScene().getEntities().toString();
+		return scene.getEntities().toString();
 	}
 	
 	public enum EntityType{ 
@@ -214,7 +214,7 @@ public class Entities {
             	return EntityType.FIREBALL;
             default: return EntityType.UNKNOWN;
             
-  		}
+  			}
 		}
 		
 	}

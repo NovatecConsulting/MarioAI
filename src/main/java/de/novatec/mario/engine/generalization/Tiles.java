@@ -1,24 +1,24 @@
 package de.novatec.mario.engine.generalization;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import ch.idsia.mario.environments.Environment;
+import ch.idsia.mario.engine.LevelScene;
 
 public class Tiles {
 	
-	Environment env;
+	LevelScene scene;
 	
-	public Tiles(Environment env) {
-		this.env=env;
+	public Tiles(LevelScene scene) {
+		this.scene=scene;
 	}
 	
 	public TileType getTile(int x,int y) {
 		//no check needed, Map already managed that
 		
-		Tile res=env.getLevelScene().getTiles().get(new Coordinates(x,y));
+		Tile res=scene.getTiles().get(new Coordinates(x,y));
 		if(res==null) return TileType.NOTHING;
 		
 		return res.getType();
@@ -51,9 +51,9 @@ public class Tiles {
 	}
 	
 	public List<Tile> getTiles(){
-	List<Tile> res=new LinkedList<>();
+	List<Tile> res=new ArrayList<>();
 		
-		Map<Coordinates,Tile> map=env.getLevelScene().getTiles();
+		Map<Coordinates,Tile> map=scene.getTiles();
 		
 		for(Entry<Coordinates,Tile> next:map.entrySet()) {
 				res.add(next.getValue());
@@ -63,7 +63,7 @@ public class Tiles {
 	}
 	
 	public List<Tile> getInteractiveBlocksOnScreen(){
-		List<Tile> tiles=getTiles(),res=new LinkedList<>();
+		List<Tile> tiles=getTiles(),res=new ArrayList<>();
 		
 		for(Tile next:tiles) {
 			TileType type=next.getType();
@@ -73,8 +73,8 @@ public class Tiles {
 		return res;
 	}
 	
-	public void setEnvironment(Environment env) {
-		this.env=env;
+	public void setLevelScene(LevelScene scene) {
+		this.scene=scene;
 	}
 	
 	public enum TileType{
