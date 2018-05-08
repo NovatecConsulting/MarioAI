@@ -100,6 +100,8 @@ public class LevelConfig{
 	 * Nevermind. I'm done.
 	 */
 	public static final LevelConfig WHAT_HAVE_I_DONE=new LevelConfig(666,512,30,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{12,10,1,2,4});
+	
+	public static final LevelConfig BOWSERS_CASTLE=new LevelConfig(96969,512,20,LEVEL_TYPES.CASTLE,true,true,true,new int[]{10,15,2,2,5});
 //  public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,true,true);
 //	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
 //	public static final LevelConfig LevelCUSTOM1=new LevelConfig(1236445678,512,4,LEVEL_TYPES.CASTLE,false,true,true,new int[]{10,0,0,0,0});
