@@ -26,7 +26,6 @@ public class Evaluator implements Callable<EvaluationInfo>
         	 configurator.awaitBarrier();
         	 component.setRunnerOptions();
         	 
-        	 component.getLevelScene().resetMario(rOptions.getMarioStartMode());     
 			 evaluationInfo = component.run();                                            
 			 evaluationInfo.levelType = rOptions.getLevelType();
 			 evaluationInfo.levelDifficulty = rOptions.getDifficulty();

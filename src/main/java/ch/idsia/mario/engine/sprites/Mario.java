@@ -20,32 +20,31 @@ public class Mario extends Sprite // cloneable
 	private boolean isMarioInvulnerable;
 
 	public void reset(MODE marioMode) {
-		large = (marioMode == MODE.MODE_LARGE || marioMode == MODE.MODE_FIRE);
-		fire = marioMode == MODE.MODE_FIRE;
+		setMode(marioMode);
+
 		resetCoins();
 		gainedMushrooms = 0;
 		gainedFlowers = 0;
 	}
 
-	public void setMode(MODE mode) {
-		this.large = ((mode == MODE.MODE_LARGE));
-		fire = (mode == MODE.MODE_FIRE);
+	private void setMode(MODE marioMode) {
+		setLarge((marioMode == MODE.LARGE || marioMode == MODE.FIRE),marioMode == MODE.FIRE);
 	}
 
 	public Mario.MODE getMode() {
 		if (isLarge()) {
 			if (fire)
-				return Mario.MODE.MODE_FIRE;
+				return Mario.MODE.FIRE;
 			else
-				return Mario.MODE.MODE_LARGE;
+				return Mario.MODE.LARGE;
 		}
 
 		else
-			return Mario.MODE.MODE_SMALL;
+			return Mario.MODE.SMALL;
 	}
 
 	public enum MODE {
-		MODE_SMALL, MODE_LARGE, MODE_FIRE
+		SMALL, LARGE, FIRE
 	}
 	
 	public enum STATUS {
@@ -72,10 +71,6 @@ public class Mario extends Sprite // cloneable
 	public static final int KEY_JUMP = 3;
 	public static final int KEY_SPEED = 4;
 	public static final int KEY_UP = 5;
-	public static final int KEY_PAUSE = 6;
-	public static final int KEY_DUMP_CURRENT_WORLD = 7;
-	public static final int KEY_LIFE_UP = 8;
-	public static final int KEY_WIN = 9;
 
 	private static final float GROUND_INERTIA = 0.89f;
 	private static final float AIR_INERTIA = 0.89f;
@@ -115,15 +110,12 @@ public class Mario extends Sprite // cloneable
 		
 		facing = 1;
 
-		if (mode == MODE.MODE_FIRE)
-			setLarge(true, true);
-		else if (mode == MODE.MODE_LARGE)
-			setLarge(true, false);
-		else
-			setLarge(false, false);
+		if (mode == MODE.FIRE) setLarge(true, true);
+		else if (mode == MODE.LARGE) setLarge(true, false);
+		else setLarge(false, false);
 	}
 
-	public Mario(LevelScene alreadyCopied,Shell alreadyCopiedCarried, Mario toCopy) {
+	public Mario(LevelScene alreadyCopied, Shell alreadyCopiedCarried, Mario toCopy) {
 		super(alreadyCopied, toCopy);
 
 		this.large = toCopy.large;
@@ -188,7 +180,7 @@ public class Mario extends Sprite // cloneable
 		calcPic();
 	}
 
-	void setLarge(boolean large, boolean fire) {
+	private void setLarge(boolean large, boolean fire) {
 		if (fire)
 			large = true;
 		if (!large)
@@ -215,7 +207,7 @@ public class Mario extends Sprite // cloneable
 			return;
 		}
 
-		if (getDeathTime() > 0) {
+		if (getDeathTime() > 0) { //falling down after death
 			deathTime = (getDeathTime() + 1);
 			if (getDeathTime() < 11) {
 				xa = 0;
@@ -239,20 +231,15 @@ public class Mario extends Sprite // cloneable
 				blink(((-powerUpTime / 3) & 1) == 0);
 			}
 
-			//if (powerUpTime == 0)
-				//spriteContext.setPaused(false);
-
 			calcPic();
 			return;
 		}
 
-		if (invulnerableTime > 0)
-			invulnerableTime--;
+		if (invulnerableTime > 0) invulnerableTime--;
 		visible = ((invulnerableTime / 2) & 1) == 0;
 
 		wasOnGround = onGround;
 		float sideWaysSpeed = keys[KEY_SPEED] ? 1.2f : 0.6f;
-		// float sideWaysSpeed = onGround ? 2.5f : 1.2f;
 
 		if (onGround) {
 			if (keys[KEY_DOWN] && isLarge()) {
@@ -634,7 +621,6 @@ public class Mario extends Sprite // cloneable
 	private void win() {
 		xDeathPos = ((int) x);
 		yDeathPos = ((int) y);
-		//spriteContext.setPaused(true);
 		winTime = 1;
 		status = STATUS.WIN;
 	}
@@ -651,7 +637,6 @@ public class Mario extends Sprite // cloneable
 			return;
 
 		if (!fire) {
-			//spriteContext.setPaused(true);
 			powerUpTime = 3 * FractionalPowerUpTime;
 			setLarge(true, true);
 		}
@@ -664,7 +649,6 @@ public class Mario extends Sprite // cloneable
 			return;
 
 		if (!isLarge()) {
-			//spriteContext.setPaused(true);
 			powerUpTime = 3 * FractionalPowerUpTime;
 			setLarge(true, false);
 		}
@@ -759,7 +743,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public boolean[] getKeys() {
-		return keys;
+		return Arrays.copyOf(keys, keys.length);
 	}
 
 	public void setKeys(boolean[] keys) {

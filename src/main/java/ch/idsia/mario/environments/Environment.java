@@ -2,13 +2,7 @@ package ch.idsia.mario.environments;
 
 import java.awt.Dimension;
 import java.awt.event.KeyListener;
-import java.util.List;
-import java.util.Map;
-
 import ch.idsia.mario.engine.LevelScene;
-import de.novatec.mario.engine.generalization.Coordinates;
-import de.novatec.mario.engine.generalization.Entity;
-import de.novatec.mario.engine.generalization.Tile;
 
 /**
  * Created by IntelliJ IDEA.

@@ -34,11 +34,9 @@ public class Enemy extends Sprite //cloneable
     
     protected boolean noFireballDeath;
 
-    public Enemy(LevelScene world, int x, int y, int dir, int type, boolean winged, int mapX, int mapY)
-    {
+    public Enemy(LevelScene world, int x, int y, int dir, int type, boolean winged, int mapX, int mapY) {
         byte k = KIND_UNDEF;
-        switch (type)
-        {
+        switch (type) {
             case ENEMY_RED_KOOPA:
                 k = (byte) (4 + ((winged) ? 1 : 0));
                 break;
@@ -95,41 +93,32 @@ public class Enemy extends Sprite //cloneable
 
     }
 
-	public void collideCheck()
-    {
-        if (deadTime != 0)
-        {
+	public void collideCheck() {
+        if (deadTime != 0) {
             return;
         }
 
         float xMarioD = spriteContext.getMarioX() - x;
         float yMarioD = spriteContext.getMarioY() - y;
-        if (xMarioD > -width*2-4 && xMarioD < width*2+4)
-        {
-            if (yMarioD > -height && yMarioD < spriteContext.getMarioHeight())
-            {
-                if (type != Enemy.ENEMY_SPIKY && spriteContext.getMarioYA() > 0 && yMarioD <= 0 && (!spriteContext.isMarioOnGround() || !spriteContext.wasMarioOnGround()))
-                {
+        if (xMarioD > -width*2-4 && xMarioD < width*2+4) {
+            if (yMarioD > -height && yMarioD < spriteContext.getMarioHeight()) {
+                if (type != Enemy.ENEMY_SPIKY && spriteContext.getMarioYA() > 0 && yMarioD <= 0 && (!spriteContext.isMarioOnGround() || !spriteContext.wasMarioOnGround())) {
                     spriteContext.marioStomp(this);
-                    if (winged)
-                    {
+                    if (winged) {
                         winged = false;
                         ya = 0;
                     }
-                    else
-                    {
+                    else {
                         this.yPicO = 31 - (32 - 8);
                         hPic = 8;
                         if (spriteTemplate != null) spriteTemplate.setDead(true);
                         deadTime = 10;
                         winged = false;
 
-                        if (type == Enemy.ENEMY_RED_KOOPA)
-                        {
+                        if (type == Enemy.ENEMY_RED_KOOPA) {
                             spriteContext.addSprite(new Shell(spriteContext, x, y, 0));
                         }
-                        else if (type == Enemy.ENEMY_GREEN_KOOPA)
-                        {
+                        else if (type == Enemy.ENEMY_GREEN_KOOPA) {
                             spriteContext.addSprite(new Shell(spriteContext, x, y, 1));
                         }
 //                      System.out.println("collideCheck and stomp");
@@ -137,26 +126,21 @@ public class Enemy extends Sprite //cloneable
                         spriteContext.killedCreatureByStomp();;
                     }
                 }
-                else
-                {
+                else {
                     spriteContext.getMarioHurt();
                 }
             }
         }
     }
 
-    public void move()
-    {
+    public void move() {
         wingTime++;
-        if (deadTime > 0)
-        {
+        if (deadTime > 0) {
             deadTime--;
 
-            if (deadTime == 0)
-            {
+            if (deadTime == 0) {
                 deadTime = 1;
-                for (int i = 0; i < 8; i++)
-                {
+                for (int i = 0; i < 8; i++) {
                     spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 1, 5));
                 }
                 spriteContext.removeSprite(this);

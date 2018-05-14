@@ -15,60 +15,60 @@ public class LevelConfig{
 	/**
 	 * Flat level without enemies, coins or bricks.
 	 */
-	public static final LevelConfig LEVEL_1=new LevelConfig(0,256,0,false,false,false);
+	public static final LevelConfig LEVEL_1=new LevelConfig(0,256,0,false,false,false,false);
 	/**
 	 * Level with plains and without enemies, coins or bricks.
 	 */
-	public static final LevelConfig LEVEL_2=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{10,0,0,0,0});
+	public static final LevelConfig LEVEL_2=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,false,true,false,false,new int[]{10,0,0,0,0});
 	/**
 	 * Same as {@link #LEVEL_1} but with enemies.
 	 */
-	public static final LevelConfig LEVEL_3=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{10,0,0,0,0});
+	public static final LevelConfig LEVEL_3=new LevelConfig(0,256,1,LEVEL_TYPES.OVERGROUND,true,true,false,false,new int[]{10,0,0,0,0});
 	/**
 	 * Level with plains, tubes, enemies and without coins or bricks.
 	 */
-	public static final LevelConfig LEVEL_4=new LevelConfig(2,256,3,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{10,0,2,0,0});
+	public static final LevelConfig LEVEL_4=new LevelConfig(2,256,3,LEVEL_TYPES.OVERGROUND,true,true,false,false,new int[]{10,0,2,0,0});
 	/**
 	 * Level with plains, hills, pipes, coins, bricks and without enemies.
 	 */
-	public static final LevelConfig LEVEL_5=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,false,true,true,new int[]{10,5,2,0,0});
+	public static final LevelConfig LEVEL_5=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,false,true,true,true,new int[]{10,5,2,0,0});
 	/**
 	 * Same as {@link #LEVEL_5} but with enemies.
 	 */
-	public static final LevelConfig LEVEL_6=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{10,5,2,0,0});
+	public static final LevelConfig LEVEL_6=new LevelConfig(24,256,3,LEVEL_TYPES.OVERGROUND,true,true,true,true,new int[]{10,5,2,0,0});
 	/**
 	 * Training level with tubes.
 	 */
-	public static final LevelConfig TUBE_TRAINING=new LevelConfig(0,256,0,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{0,0,10,0,0});
+	public static final LevelConfig TUBE_TRAINING=new LevelConfig(0,256,0,LEVEL_TYPES.OVERGROUND,true,true,false,false,new int[]{0,0,10,0,0});
 	/**
 	 * Training level with holes
 	 */
-	public static final LevelConfig JUMP_TRAINING=new LevelConfig(1,256,0,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{0,0,0,10,0});
+	public static final LevelConfig JUMP_TRAINING=new LevelConfig(1,256,0,LEVEL_TYPES.OVERGROUND,false,true,false,false,new int[]{0,0,0,10,0});
 	/**
 	 * Training level with bullet bills
 	 */
-	public static final LevelConfig BULLET_TRAINING=new LevelConfig(0,256,0,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{0,0,0,0,10});
+	public static final LevelConfig BULLET_TRAINING=new LevelConfig(0,256,0,LEVEL_TYPES.OVERGROUND,false,true,false,false,new int[]{0,0,0,0,10});
 	/**
 	 * Easy enemy training level
 	 */
-	public static final LevelConfig EASY_ENEMY_TRAINING=new LevelConfig(42,512,1,true,false,false);
+	public static final LevelConfig EASY_ENEMY_TRAINING=new LevelConfig(42,512,1,true,true,false,false);
 	/**
 	 * Medium enemy training level
 	 */
-	public static final LevelConfig MEDIUM_ENEMY_TRAINING=new LevelConfig(42,512,4,true,false,false);
+	public static final LevelConfig MEDIUM_ENEMY_TRAINING=new LevelConfig(42,512,4,true,true,false,false);
 	/**
 	 * Hard enemy training level
 	 */
-	public static final LevelConfig HARD_ENEMY_TRAINING=new LevelConfig(42,512,7,true,false,false);
+	public static final LevelConfig HARD_ENEMY_TRAINING=new LevelConfig(42,512,7,true,true,false,false);
 	
 	/**
 	 * Extreme hard enemy training level
 	 */
-	public static final LevelConfig EXTREME_ENEMY_TRAINING=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,false,false,new int[]{0,15,0,0,0});
+	public static final LevelConfig EXTREME_ENEMY_TRAINING=new LevelConfig(2086813029,512,20,LEVEL_TYPES.OVERGROUND,true,true,false,false,new int[]{0,15,0,0,0});
 	/*
 	 * Ride the wave!
 	 */
-	public static final LevelConfig RIDE_THE_WAVE=new LevelConfig(42,512,35,true,true,false);
+	public static final LevelConfig RIDE_THE_WAVE=new LevelConfig(42,512,35,true,true,true,false);
 	/**
 	 * Want to torchure your A*-Agent? Try this.
 	 */
@@ -80,28 +80,28 @@ public class LevelConfig{
 	/**
 	 * Well.. just try it.
 	 */
-	public static final LevelConfig GOOD_LUCK=new LevelConfig(666,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+	public static final LevelConfig GOOD_LUCK=new LevelConfig(666,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,true,new int[]{5,15,2,0,4});
 	
 	/**
 	 * Same as {@link #GOOD_LUCK} but with a different seed.
 	 */
-	public static final LevelConfig LAST_RESORT=new LevelConfig(1697160782,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+	public static final LevelConfig LAST_RESORT=new LevelConfig(1697160782,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,true,new int[]{5,15,2,0,4});
 	
 	/**
 	 * Same as {@link #GOOD_LUCK} but with a different seed.
 	 */
-	public static final LevelConfig SHELL_HELL=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{5,15,2,0,4});
+	public static final LevelConfig SHELL_HELL=new LevelConfig(2086813029,512,15,LEVEL_TYPES.OVERGROUND,true,true,true,true,new int[]{5,15,2,0,4});
 
 	/*
 	 * Nothing to see here!
 	 */
-	public static final LevelConfig DEALBREAKER=new LevelConfig(666,512,50,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{12,0,0,0,0});
+	public static final LevelConfig DEALBREAKER=new LevelConfig(666,512,50,LEVEL_TYPES.OVERGROUND,true,true,true,true,new int[]{12,0,0,0,0});
 	/**
 	 * Nevermind. I'm done.
 	 */
-	public static final LevelConfig WHAT_HAVE_I_DONE=new LevelConfig(666,512,30,LEVEL_TYPES.OVERGROUND,true,true,true,new int[]{12,10,1,2,4});
+	public static final LevelConfig WHAT_HAVE_I_DONE=new LevelConfig(666,512,30,LEVEL_TYPES.OVERGROUND,true,true,true,true,new int[]{12,10,1,2,4});
 	
-	public static final LevelConfig BOWSERS_CASTLE=new LevelConfig(96969,512,20,LEVEL_TYPES.CASTLE,true,true,true,new int[]{10,15,2,2,5});
+	public static final LevelConfig BOWSERS_CASTLE=new LevelConfig(1164209458,512,20,LEVEL_TYPES.CASTLE,true,true,true,true,new int[]{10,15,2,2,5});
 //  public static final LevelConfig LevelFLAT1=new LevelConfig(1193454339,256,2,false,true,true);
 //	public static final LevelConfig LevelFLAT2=new LevelConfig(1193454339,256,0,false,true,false);
 //	public static final LevelConfig LevelCUSTOM1=new LevelConfig(1236445678,512,4,LEVEL_TYPES.CASTLE,false,true,true,new int[]{10,0,0,0,0});
@@ -191,15 +191,15 @@ public class LevelConfig{
 			        odds[LevelGenerator.ODDS_CANNONS] = -10 + 5 * toRandomize.getPresetDifficulty();
 			}
 			
-			if(toRandomize.isFlat()) return new LevelConfig(Math.abs(new Random().nextInt()), toRandomize.length, toRandomize.presetDifficulty,toRandomize.isEnemies(),toRandomize.isBricks(), toRandomize.isCoins());
-			else return new LevelConfig(Math.abs(new Random().nextInt()), toRandomize.getLength(), toRandomize.getPresetDifficulty(),toRandomize.getType(),toRandomize.isEnemies(),toRandomize.isBricks(), toRandomize.isCoins(),odds);
+			if(toRandomize.isFlat()) return new LevelConfig(Math.abs(new Random().nextInt()), toRandomize.length, toRandomize.presetDifficulty,toRandomize.isEnemies(),toRandomize.isWinged(),toRandomize.isBricks(), toRandomize.isCoins());
+			else return new LevelConfig(Math.abs(new Random().nextInt()), toRandomize.getLength(), toRandomize.getPresetDifficulty(),toRandomize.getType(),toRandomize.isEnemies(),toRandomize.isWinged(),toRandomize.isBricks(), toRandomize.isCoins(),odds);
 		}
 		return new LevelConfig(1, 256, 0, LEVEL_TYPES.OVERGROUND);
 	}
 
 	private int seed,length,presetDifficulty;
 	private LEVEL_TYPES type;
-	private boolean useStandardGenerator,enemies=true,bricks=true,coins=true,flat;
+	private boolean useStandardGenerator,enemies=true,winged=true,bricks=true,coins=true,flat;
 	private int[] odds;
 	
 	/**
@@ -213,13 +213,14 @@ public class LevelConfig{
 	 * @param coins should coins be spawned?
 	 * @param odds array with length of 5, determines the percentage of level parts [STRAIGHT, HILLS, TUBES, HOLES, BULLETBILL]
 	 */
-	public LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type,boolean enemies, boolean bricks,boolean coins, int[] odds) { //custom level generation
+	public LevelConfig(int seed, int length, int presetDifficulty, LEVEL_TYPES type,boolean enemies,boolean winged,boolean bricks,boolean coins, int[] odds) { //custom level generation
 		this.seed = seed;
 		this.length = length;
 		this.presetDifficulty = presetDifficulty;
 		this.type = type;
 		this.useStandardGenerator=false;
 		this.enemies = enemies;
+		this.winged = winged;
 		this.bricks = bricks;
 		this.coins=coins;
 		this.odds = odds;
@@ -235,12 +236,13 @@ public class LevelConfig{
 	 * @param bricks should bricks be spawned?
 	 * @param coins should coins be spawned?
 	 */
-	public LevelConfig(int seed, int length, int presetDifficulty,boolean enemies,boolean bricks,boolean coins) { //flat level
+	public LevelConfig(int seed, int length, int presetDifficulty,boolean enemies,boolean winged,boolean bricks,boolean coins) { //flat level
 		this.seed = seed;
 		this.length = length;
 		this.presetDifficulty = presetDifficulty;
 		this.useStandardGenerator=false;
 		this.enemies = enemies;
+		this.winged = winged;
 		this.bricks = bricks;
 		this.coins=coins;
 		this.useStandardGenerator=false;
@@ -308,6 +310,13 @@ public class LevelConfig{
 		return enemies;
 	}
 
+	/**
+	 * Should enemies be spawned with wings?
+	 * @return a boolean value indicating whether enemies with wings should be spawned
+	 */
+	public boolean isWinged() {
+		return winged;
+	}
 	
 	/**
      * Should bricks be placed in the Level?

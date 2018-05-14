@@ -30,7 +30,7 @@ public class RunnerOptions {
 	
 	private boolean powerRestauration=false;
 	
-	private MODE marioStartMode = MODE.MODE_FIRE;
+	private MODE marioStartMode = MODE.FIRE;
 	
 	private boolean marioInvulnerable=false; //shouldn't be possible for competition
 	

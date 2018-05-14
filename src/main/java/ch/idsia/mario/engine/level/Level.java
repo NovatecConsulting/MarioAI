@@ -94,8 +94,7 @@ public class Level
 	private int totalCoins;
     
     
-    public Level(int width, int height)
-    {
+    public Level(int width, int height) {
         this.width = width;
         this.height = height;
 

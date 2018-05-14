@@ -5,8 +5,7 @@ import ch.idsia.mario.engine.level.SpriteTemplate;
 
 import java.awt.*;
 
-public abstract class Sprite
-{
+public abstract class Sprite {
     public static final int KIND_NONE = 0;
     public static final int KIND_MARIO = -31;
     public static final int KIND_GOOMBA = 2;
@@ -92,60 +91,45 @@ public abstract class Sprite
     	this.spriteContext=spriteContext;
     }
 
-	public void move()
-    {
+	public void move() {
         x+=xa;
         y+=ya;
     }
     
-    public void render(Graphics og)
-    {
+    public void render(Graphics og) {
         if (!visible) return;
-        
-//        int xPixel = (int)(xOld+(x-xOld)*alpha)-xPicO;
-//        int yPixel = (int)(yOld+(y-yOld)*alpha)-yPicO;
 
         int xPixel = (int)x-xPicO;
         int yPixel = (int)y-yPicO;
 
-
         og.drawImage(sheet[xPic][yPic], xPixel+(xFlipPic?wPic:0), yPixel+(yFlipPic?hPic:0), xFlipPic?-wPic:wPic, yFlipPic?-hPic:hPic, null);
     }
     
-    public final void tick()
-    {
+    public final void tick() {
         xOld = x;
         yOld = y;
-//        mapX = (int)(xOld / 16);
-//        mapY = (int)(yOld / 16);
         move();
     }
 
-    public final void tickNoMove()
-    {
+    public final void tickNoMove() {
         xOld = x;
         yOld = y;        
     }
 
-    public void collideCheck()
-    {
+    public void collideCheck() {
     }
 
-    public void bumpCheck(int xTile, int yTile)
-    {
+    public void bumpCheck(int xTile, int yTile) {
     }
 
-    public boolean shellCollideCheck(Shell shell)
-    {
+    public boolean shellCollideCheck(Shell shell) {
         return false;
     }
 
-    public void release(Mario mario)
-    {
+    public void release(Mario mario) {
     }
 
-    public boolean fireballCollideCheck(Fireball fireball)
-    {
+    public boolean fireballCollideCheck(Fireball fireball) {
         return false;
     }
     

@@ -812,9 +812,9 @@ public class LevelScene implements SpriteContext {
 			level = LevelGenerator.createLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType()); // Standard level-generation
 		}
 		else if(config.isFlat()) {
-			level=LevelGenerator.createFlatLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.isEnemies(), config.isBricks(), config.isCoins()); // flat level generation
+			level=LevelGenerator.createFlatLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.isEnemies(), config.isWinged(), config.isBricks(), config.isCoins()); // flat level generation
 		}
-		else level=LevelGenerator.createCustomLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType(), config.getOdds(),config.isEnemies(), config.isBricks(), config.isCoins()); //custom level generation
+		else level=LevelGenerator.createCustomLevel(config.getLength(), 15, config.getSeed(), config.getPresetDifficulty(), config.getType(), config.getOdds(),config.isEnemies(), config.isWinged(), config.isBricks(), config.isCoins()); //custom level generation
 
 		sprites.clear();
 		
@@ -1140,7 +1140,7 @@ public class LevelScene implements SpriteContext {
 	
 	public boolean mayMarioShoot() {
 		if(lastTickFireball==tick-1) return false;
-		return mario.getMode()==MODE.MODE_FIRE&&fireballsOnScreen<2;
+		return mario.getMode()==MODE.FIRE&&fireballsOnScreen<2;
 	}
 	
 	public boolean isMarioFalling() {

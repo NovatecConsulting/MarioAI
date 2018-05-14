@@ -140,7 +140,7 @@ public class MarioComponent extends JComponent implements Environment {
         if(graphicsConfiguration!=null) Art.init(graphicsConfiguration);
     	else {
     		log=LogManager.getLogger(this.getClass().getName()+" ERROR LOGGER");
-    		Throwable t = new NullPointerException("GraphicConfiguration can't be null - did you forget to add the MarioComponent to a parent before calling init()?");
+    		Throwable t = new NullPointerException("GraphicConfiguration can't be null - did you forget to add the MarioComponent to a parent frame before calling init()?");
     		log.catching(t);
     		log.error("Exiting...");
     		System.exit(1);
@@ -257,6 +257,9 @@ public class MarioComponent extends JComponent implements Environment {
             	increaseFrame();
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"score").set(levelScene.getScore());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"kills").set(levelScene.getKilledCreaturesTotal());
+            	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"time").set(levelScene.getTimeLeft());
+            	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance").set(levelScene.getMarioX());
+            	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance_percentage").set(levelScene.getMarioX()/(levelScene.getLevelXExit()*16));
             	
            	 	ThreadContext.put("frame",String.valueOf(frame));
                 log.log(STATISTIC,"Score: "+this.levelScene.getScore());
@@ -265,7 +268,6 @@ public class MarioComponent extends JComponent implements Environment {
                 log.log(STATISTIC,"MarioMode: "+levelScene.getMarioMode());
             }
             if(tmpPerformTick==true)performTick=false;
-           
         }//while 
         
         //--- Show results on end screen
@@ -316,7 +318,6 @@ public class MarioComponent extends JComponent implements Environment {
 			bgLayer[i].setCam(xCam, yCam);
 			bgLayer[i].render(g, tick);
 		}
-    	
     	spriteRenderer.render(g,xCam, yCam,0);
     	
     	g.translate((int)levelScene.getxCam(), (int)levelScene.getyCam());
@@ -361,7 +362,6 @@ public class MarioComponent extends JComponent implements Environment {
 			}
 			else blackoutTimer-=10;
 		}
-		
     }
     
     public static void drawStringDropShadow(Graphics g, String text, int x, int y, int c) {
@@ -528,7 +528,6 @@ public class MarioComponent extends JComponent implements Environment {
         
         if(this.isVisible()) {
         	layer = new LevelRenderer(levelScene.getLevel(), graphicsConfiguration, 320, 240);
-        
         
 	        for (int i = 0; i < 2; i++) {
 				int scrollSpeed = 4 >> i;
