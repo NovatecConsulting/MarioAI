@@ -4,7 +4,7 @@
 
     <groupId>de.novatec.marioai</groupId>
     <artifactId>marioAI</artifactId>
-    <version>1.7</version>
+    <version>1.8</version>
 
 
     <organization>
@@ -143,6 +143,18 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>de.novatec.marioai.tools.MarioAiRunner</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
 			</plugin>
 
         </plugins>

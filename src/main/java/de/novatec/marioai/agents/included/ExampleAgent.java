@@ -1,4 +1,4 @@
-package de.novatec.marioai.agents;
+package de.novatec.marioai.agents.included;
 
 import de.novatec.marioai.tools.MarioInput;
 import de.novatec.marioai.tools.MarioNtAgent;

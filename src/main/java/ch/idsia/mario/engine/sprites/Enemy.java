@@ -6,8 +6,7 @@ import ch.idsia.mario.engine.LevelScene;
 import java.awt.*;
 
 
-public class Enemy extends Sprite //cloneable
-{
+public class Enemy extends Sprite {//cloneable
     public static final int ENEMY_RED_KOOPA = 0;
     public static final int ENEMY_GREEN_KOOPA = 1;
     public static final int ENEMY_GOOMBA = 2;
@@ -33,7 +32,7 @@ public class Enemy extends Sprite //cloneable
     private int wingTime = 0;
     
     protected boolean noFireballDeath;
-
+	
     public Enemy(LevelScene world, int x, int y, int dir, int type, boolean winged, int mapX, int mapY) {
         byte k = KIND_UNDEF;
         switch (type) {
@@ -90,7 +89,6 @@ public class Enemy extends Sprite //cloneable
 		this.winged = toCopy.winged;
 		this.wingTime = toCopy.wingTime;
 		this.noFireballDeath = toCopy.noFireballDeath;
-
     }
 
 	public void collideCheck() {
@@ -111,7 +109,7 @@ public class Enemy extends Sprite //cloneable
                     else {
                         this.yPicO = 31 - (32 - 8);
                         hPic = 8;
-                        if (spriteTemplate != null) spriteTemplate.setDead(true);
+                        this.dead=true;
                         deadTime = 10;
                         winged = false;
 
@@ -331,12 +329,12 @@ public class Enemy extends Sprite //cloneable
                 xa = shell.getFacing() * 2;
                 ya = -5;
                 flyDeath = true;
-                if (spriteTemplate != null) spriteTemplate.setDead(true);
+                this.dead=true;
                 deadTime = 100;
                 winged = false;
                 hPic = -hPic;
                 yPicO = -yPicO + 16;
-//                System.out.println("shellCollideCheck");
+                
                 spriteContext.incrementKilledCreaturesTotal();
                 spriteContext.killedCreaturesByShell();
                 return true;
@@ -352,16 +350,16 @@ public class Enemy extends Sprite //cloneable
         float xD = fireball.x - x;
         float yD = fireball.y - y;
 
-        if (xD > -16 && xD < 16)
-        {
-            if (yD > -height && yD < fireball.getHeight())
-            {
+        if (xD > -16 && xD < 16) {
+            if (yD > -height && yD < fireball.getHeight()) {
                 if (noFireballDeath) return true;
                 
                 xa = fireball.getFacing() * 2;
                 ya = -5;
                 flyDeath = true;
-                if (spriteTemplate != null) spriteTemplate.setDead(true);
+                
+                this.dead=true;
+                
                 deadTime = 100;
                 winged = false;
                 hPic = -hPic;
@@ -383,7 +381,9 @@ public class Enemy extends Sprite //cloneable
             xa = -spriteContext.getMarioFacing() * 2;
             ya = -5;
             flyDeath = true;
-            if (spriteTemplate != null) spriteTemplate.setDead(true);
+            
+            this.dead=true;
+            
             deadTime = 100;
             winged = false;
             hPic = -hPic;
@@ -426,4 +426,5 @@ public class Enemy extends Sprite //cloneable
             }
         }
     }
+
 }

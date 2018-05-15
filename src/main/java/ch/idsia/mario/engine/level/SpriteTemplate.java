@@ -8,7 +8,6 @@ import ch.idsia.mario.engine.sprites.Sprite;
 public class SpriteTemplate {
     private int lastVisibleTick = -1;
 	private Sprite sprite;
-    private boolean isDead = false;
     private boolean winged;
    
     private int type;
@@ -20,14 +19,13 @@ public class SpriteTemplate {
     
     public SpriteTemplate(Sprite alreadyCopied,SpriteTemplate toCopy) {
     	this.type=toCopy.type;
-    	this.sprite=alreadyCopied; //TODO LOOP,could (definitly will) cause problems! //fixed?
+    	this.sprite=alreadyCopied;
     	this.lastVisibleTick=toCopy.lastVisibleTick;
-    	this.isDead=toCopy.isDead;
     	this.winged=toCopy.winged;
     }
     
     public void spawn(LevelScene world, int x, int y, int dir) {
-        if (isDead) return;
+        if (sprite!=null && isDead()) return; // sprite won't be respawned after death
 
         if (type==Enemy.ENEMY_FLOWER) {
             sprite = new FlowerEnemy(world, x*16+15, y*16+24, x, y);
@@ -35,7 +33,6 @@ public class SpriteTemplate {
         else {
             sprite = new Enemy(world, x*16+8, y*16+15, dir, type, winged, x, y);
         }
-        sprite.setSpriteTemplate(this);
         world.addSprite(sprite);
     }
     
@@ -52,11 +49,7 @@ public class SpriteTemplate {
 	}
 
 	public boolean isDead() {
-		return isDead;
-	}
-
-	public void setDead(boolean isDead) {
-		this.isDead = isDead;
+		return sprite.isDead();
 	}
 
 	public boolean isWinged() {

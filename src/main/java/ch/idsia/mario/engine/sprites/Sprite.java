@@ -1,8 +1,6 @@
 package ch.idsia.mario.engine.sprites;
 
 import ch.idsia.mario.engine.LevelScene;
-import ch.idsia.mario.engine.level.SpriteTemplate;
-
 import java.awt.*;
 
 public abstract class Sprite {
@@ -45,11 +43,11 @@ public abstract class Sprite {
     
     protected int layer = 1;
 
-    protected SpriteTemplate spriteTemplate;
-    
+    protected boolean dead=false;
+
     protected boolean isClone=false;
 
-	public Sprite() {
+	protected Sprite() { //got to stay
     	
     }
     
@@ -75,10 +73,11 @@ public abstract class Sprite {
 		this.sheet = toCopy.sheet; // does this work?(yes) just graphics, wont be changed
 		this.visible = toCopy.visible;
 		this.layer = toCopy.layer;
+		this.dead=toCopy.dead;
 		
 		this.isClone=true;
 	
-		if(toCopy.spriteTemplate!=null)this.spriteTemplate = new SpriteTemplate(this, toCopy.spriteTemplate); //needs copy constructor
+		//if(toCopy.spriteTemplate!=null)this.spriteTemplate = new SpriteTemplate(this, toCopy.spriteTemplate); //needs copy constructor
 		this.spriteContext=alreadyCopied;
     }
     
@@ -204,8 +203,16 @@ public abstract class Sprite {
 	public int getLayer() {
 		return layer;
 	}
-	
-    public void setSpriteTemplate(SpriteTemplate spriteTemplate) {
-		this.spriteTemplate = spriteTemplate;
+
+	public boolean isDead() {
+		return dead;
 	}
+
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+	
+//    public void setSpriteTemplate(SpriteTemplate spriteTemplate) {
+//		this.spriteTemplate = spriteTemplate;
+//	}
 }

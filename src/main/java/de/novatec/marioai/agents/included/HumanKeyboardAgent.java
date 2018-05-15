@@ -1,4 +1,4 @@
-package de.novatec.marioai.agents;
+package de.novatec.marioai.agents.included;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

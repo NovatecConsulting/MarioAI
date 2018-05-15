@@ -25,7 +25,7 @@ import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.RunnerOptions;
-import de.novatec.marioai.agents.HumanKeyboardAgent;
+import de.novatec.marioai.agents.included.HumanKeyboardAgent;
 import de.novatec.marioai.tools.MarioNtAgent;
 import io.prometheus.client.Gauge;
 
@@ -150,7 +150,7 @@ public class MarioComponent extends JComponent implements Environment {
     private void stop() {
     	if(!running) return;
     	
-    	log.info("Evaluation finished");
+    	//log.info("Evaluation finished");
         running = false;
     }
 

@@ -26,7 +26,8 @@ public class Evaluator implements Callable<EvaluationInfo>
         	 configurator.awaitBarrier();
         	 component.setRunnerOptions();
         	 
-			 evaluationInfo = component.run();                                            
+			 evaluationInfo = component.run();    
+			 evaluationInfo.setUsedAgent(rOptions.getAgent());
 			 evaluationInfo.levelType = rOptions.getLevelType();
 			 evaluationInfo.levelDifficulty = rOptions.getDifficulty();
 			 evaluationInfo.levelRandSeed = rOptions.getLevelSeed();

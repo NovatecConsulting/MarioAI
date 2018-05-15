@@ -4,8 +4,7 @@ import ch.idsia.mario.engine.Art;
 import ch.idsia.mario.engine.LevelScene;
 
 
-public class Shell extends Sprite //cloneable
-{
+public class Shell extends Sprite {//cloneable
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
 
@@ -24,8 +23,7 @@ public class Shell extends Sprite //cloneable
     private boolean carried; //useless?
 
 
-	public Shell(LevelScene world, float x, float y, int type)
-    {
+	public Shell(LevelScene world, float x, float y, int type) {
         kind = KIND_SHELL;
         sheet = Art.enemies;
 
@@ -54,8 +52,7 @@ public class Shell extends Sprite //cloneable
     	carried=toCopy.carried;
     }
     
-    public boolean fireballCollideCheck(Fireball fireball)
-    {
+    public boolean fireballCollideCheck(Fireball fireball) {
         if (deadTime != 0) return false;
 
         float xD = fireball.x - x;
@@ -69,7 +66,9 @@ public class Shell extends Sprite //cloneable
                 
                 xa = fireball.getFacing() * 2;
                 ya = -5;
-                if (spriteTemplate != null) spriteTemplate.setDead(true); 
+                
+                this.dead=true;
+                
                 deadTime = 100;
                 hPic = -hPic;
                 yPicO = -yPicO + 16;
@@ -79,8 +78,7 @@ public class Shell extends Sprite //cloneable
         return false;
     }    
 
-    public void collideCheck()
-    {
+    public void collideCheck() {
         if (isCarried() || dead || deadTime>0) return;
 
         float xMarioD = spriteContext.getMarioX() - x;
@@ -118,16 +116,13 @@ public class Shell extends Sprite //cloneable
         }
     }
 
-    public void move()
-    {
-        if (isCarried())
-        {
+    public void move() {
+        if (isCarried()) {
             spriteContext.checkShellCollide(this);
             return;
         }
 
-        if (deadTime > 0)
-        {
+        if (deadTime > 0) {
             deadTime--;
 
             if (deadTime == 0)
@@ -153,19 +148,16 @@ public class Shell extends Sprite //cloneable
         float sideWaysSpeed = 11f;
         //        float sideWaysSpeed = onGround ? 2.5f : 1.2f;
 
-        if (xa > 2)
-        {
+        if (xa > 2) {
             facing = 1;
         }
-        if (xa < -2)
-        {
+        if (xa < -2) {
             facing = -1;
         }
 
         xa = facing * sideWaysSpeed;
 
-        if (facing != 0)
-        {
+        if (facing != 0) {
             spriteContext.checkShellCollide(this);
         }
 
@@ -175,63 +167,53 @@ public class Shell extends Sprite //cloneable
 
 
 
-        if (!move(xa, 0))
-        {
+        if (!move(xa, 0)) {
             facing = -facing;
         }
         onGround = false;
         move(0, ya);
 
         ya *= 0.85f;
-        if (onGround)
-        {
+        if (onGround) {
             xa *= GROUND_INERTIA;
         }
-        else
-        {
+        else {
             xa *= AIR_INERTIA;
         }
 
-        if (!onGround)
-        {
+        if (!onGround) {
             ya += 2;
         }
     }
 
-    @SuppressWarnings("unused")
-	private boolean move(float xa, float ya)
-    {
-        while (xa > 8)
-        {
+
+	@SuppressWarnings("unused")
+	private boolean move(float xa, float ya) {
+        while (xa > 8) {
             if (!move(8, 0)) return false;
             xa -= 8;
         }
-        while (xa < -8)
-        {
+        while (xa < -8) {
             if (!move(-8, 0)) return false;
             xa += 8;
         }
-        while (ya > 8)
-        {
+        while (ya > 8) {
             if (!move(0, 8)) return false;
             ya -= 8;
         }
-        while (ya < -8)
-        {
+        while (ya < -8) {
             if (!move(0, -8)) return false;
             ya += 8;
         }
 
         boolean collide = false;
-        if (ya > 0)
-        {
+        if (ya > 0) {
             if (isBlocking(x + xa - width, y + ya, xa, 0)) collide = true;
             else if (isBlocking(x + xa + width, y + ya, xa, 0)) collide = true;
             else if (isBlocking(x + xa - width, y + ya + 1, xa, ya)) collide = true;
             else if (isBlocking(x + xa + width, y + ya + 1, xa, ya)) collide = true;
         }
-        if (ya < 0)
-        {
+        if (ya < 0) {
             if (isBlocking(x + xa, y + ya - height, xa, ya)) collide = true;
             else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya)) collide = true;
             else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya)) collide = true;

@@ -598,7 +598,7 @@ public class Mario extends Sprite // cloneable
 	}
 
 	public void getHurt() {
-		if (getDeathTime() > 0  || isMarioInvulnerable())
+		if (getDeathTime() > 0 || isMarioInvulnerable())
 			return;
 
 		if (invulnerableTime > 0)

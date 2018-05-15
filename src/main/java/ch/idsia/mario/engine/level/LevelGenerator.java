@@ -289,32 +289,26 @@ public class LevelGenerator {
         return length;
     }
 
-    private int buildCannons(int xo, int maxLength)
-    {
+    private int buildCannons(int xo, int maxLength) {
         int length = random.nextInt(10) + 2;
         if (length > maxLength) length = maxLength;
 
         int floor = height - 1 - random.nextInt(4);
         int xCannon = xo + 1 + random.nextInt(4);
-        for (int x = xo; x < xo + length; x++)
-        {
-            if (x > xCannon)
-            {
+        for (int x = xo; x < xo + length; x++) {
+            if (x > xCannon) {
                 xCannon += 2 + random.nextInt(4);
             }
             if (xCannon == xo + length - 1) xCannon += 10;
             int cannonHeight = floor - random.nextInt(4) - 1;
 
-            for (int y = 0; y < height; y++)
-            {
-                if (y >= floor)
-                {
+            for (int y = 0; y < height; y++) {
+                if (y >= floor) {
                     level.setBlock(x, y, (byte) (1 + 9 * 16));
                 }
                 else
                 {
-                    if (x == xCannon && y >= cannonHeight)
-                    {
+                    if (x == xCannon && y >= cannonHeight) {
                         if (y == cannonHeight)
                         {
                             level.setBlock(x, y, (byte) (14 + 0 * 16));
@@ -372,12 +366,10 @@ public class LevelGenerator {
                 int l = random.nextInt(5) + 3;
                 int xxo = random.nextInt(length - l - 2) + xo + 1;
 
-                if (occupied[xxo - xo] || occupied[xxo - xo + l] || occupied[xxo - xo - 1] || occupied[xxo - xo + l + 1])
-                {
+                if (occupied[xxo - xo] || occupied[xxo - xo + l] || occupied[xxo - xo - 1] || occupied[xxo - xo + l + 1]) {
                     keepGoing = false;
                 }
-                else
-                {
+                else {
                     occupied[xxo - xo] = true;
                     occupied[xxo - xo + l] = true;
                     if(enemies)addEnemyLine(xxo, xxo + l, h - 1,winged);
@@ -414,10 +406,9 @@ public class LevelGenerator {
         return length;
     }
 
-    private void addEnemyLine(int x0, int x1, int y,boolean winged)
-    {
+    private void addEnemyLine(int x0, int x1, int y,boolean winged) {
         for (int x = x0; x < x1; x++) {
-            if (random.nextInt(35) < difficulty + 1) { //35 variable determines the chance of spawning an enemy
+            if(random.nextInt(35) < difficulty + 1) { //35 variable determines the chance of spawning an enemy
                 int type = random.nextInt(4);
                 if (difficulty < 1) {
                     type = Enemy.ENEMY_GOOMBA;
@@ -430,25 +421,21 @@ public class LevelGenerator {
         }
     }
 
-    private int buildTubes(int xo, int maxLength, boolean enemies)
-    {
+    private int buildTubes(int xo, int maxLength, boolean enemies) {
         int length = random.nextInt(10) + 5;
         if (length > maxLength) length = maxLength;
 
         int floor = height - 1 - random.nextInt(4);
         int xTube = xo + 1 + random.nextInt(4);
         int tubeHeight = floor - random.nextInt(2) - 2;
-        for (int x = xo; x < xo + length; x++)
-        {
-            if (x > xTube + 1)
-            {
+        for (int x = xo; x < xo + length; x++) {
+            if (x > xTube + 1) {
                 xTube += 3 + random.nextInt(4);
                 tubeHeight = floor - random.nextInt(2) - 2;
             }
             if (xTube >= xo + length - 2) xTube += 10;
 
-            if (x == xTube && random.nextInt(11) < difficulty + 1)
-            {
+            if (x == xTube && random.nextInt(11) < difficulty + 1) {
                 if(enemies)level.setSpriteTemplate(x, tubeHeight, new SpriteTemplate(Enemy.ENEMY_FLOWER, false));
             }
 
@@ -458,8 +445,7 @@ public class LevelGenerator {
                 {
                     level.setBlock(x, y, (byte) (1 + 9 * 16));
                 }
-                else
-                {
+                else {
                     if ((x == xTube || x == xTube + 1) && y >= tubeHeight)
                     {
                         int xPic = 10 + x - xTube;

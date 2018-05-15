@@ -1,5 +1,6 @@
 package ch.idsia.tools;
 
+import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.sprites.Mario;
@@ -36,6 +37,7 @@ public class EvaluationInfo
     private int timesHurt=MagicNumberUndef;
     public String Memo = "";
     public int timeLeft = MagicNumberUndef;
+    private Agent usedAgent = null;
     public String agentName = "undefinedAgentName";
     public String agentType = "undefinedAgentType";
     public int levelDifficulty = MagicNumberUndef;
@@ -141,6 +143,14 @@ public class EvaluationInfo
 
 	public void setExactTimeLeft(int exactTimeLeft) {
 		this.exactTimeLeft = exactTimeLeft;
+	}
+
+	public Agent getUsedAgent() {
+		return usedAgent;
+	}
+
+	public void setUsedAgent(Agent usedAgent) {
+		this.usedAgent = usedAgent;
 	}
 
 	@Override
