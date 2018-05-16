@@ -5,18 +5,24 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -167,20 +173,23 @@ public class MarioAiRunner {
 	
 	public static void challengeRun(String packageName, int agentsPerRound, List<LevelConfig> levels, boolean autoKill) {
 		try {
-			
 			ClassLoader cl=ClassLoader.getSystemClassLoader();
-			URI uri = cl.getResource(packageName.replace('.', '/')).toURI();
-			
-			 Path myPath;
-			 FileSystem fileSystem=null;
-		        if (uri.getScheme().equals("jar")) {
+			URI uri=null;
+			Enumeration<URL>test=cl.getResources(packageName.replace('.', '/'));
+			List<Agent> agents=new ArrayList<>();
+			while(test.hasMoreElements()) {
+				uri=test.nextElement().toURI();
+				
+				Path myPath;
+				FileSystem fileSystem=null;
+				
+		        if (uri.getScheme().equals("jar")) { //package is in jar
 		            fileSystem = FileSystems.newFileSystem(uri, Collections.<String, Object>emptyMap());
 		            myPath = fileSystem.getPath("/"+packageName.replace('.', '/'));		            
-		        } else {
+		        } else { 
 		            myPath = Paths.get(uri);
 		        }
 		        Stream<Path> walk = Files.walk(myPath, Integer.MAX_VALUE);
-		        List<Agent> agents=new ArrayList<>();
 		        
 		        String tmpSeparator = "\\\\";
 		        String filter=".+"+packageName.replace(".", tmpSeparator)+tmpSeparator+"[^"+tmpSeparator+"]+\\.class$";
@@ -197,11 +206,16 @@ public class MarioAiRunner {
 		        }
 		        walk.close();
 		        if(fileSystem!=null) fileSystem.close();
-		        //--- finished fetching agents from package
+			}
+		    //--- finished fetching agents from package
 		        
+			if(agents.isEmpty()) {
+				log.warn("No agents found to evaluate!");
+				log.warn("Returning...");
+			}
 		        log.info("Challenge started!");
 	        	log.info("Agents, which will compete against each other:");
-	        	for(Agent nextAgent:agents)log.info(nextAgent.getName()+" of Class: "+(nextAgent.getClass().getSimpleName()));
+	        	for(Agent nextAgent:agents)log.info(nextAgent.getName()+"/"+(nextAgent.getClass().getSimpleName()));
 	        	
 		        Map<Agent,Double> scores=new HashMap<>();
 		        Scanner sc=new Scanner(System.in);
@@ -216,7 +230,7 @@ public class MarioAiRunner {
 		        		}
 		        	}
 		        	else {
-		        	log.info("How many agents should be killed this round?");
+		        	log.info("How many agents(of "+agents.size()+") should be killed this round?");
 		        	agentsToKill=sc.nextInt();
 		        	if(agents.size()-agentsToKill<agentsPerRound) agentsToKill=agents.size()-agentsPerRound;
 		        	if(agentsToKill<0) agentsToKill=0;
@@ -248,6 +262,11 @@ public class MarioAiRunner {
 						}
 		        	}
 		        			
+		        	
+		        	
+		        	List<Entry<Agent,Double>> tmpScores=new ArrayList<>(scores.entrySet());
+		        	tmpScores.sort(new EntryComperator());
+		        	
 		        		while(agents.size()>oldAgentSize-agentsToKill) {
 		        			Agent toKill=agents.get(0);
 		        			
@@ -259,7 +278,7 @@ public class MarioAiRunner {
 		        		}
 		        		
 		        		log.info("Scores:");
-		        		for(Map.Entry<Agent, Double> nextEntry: scores.entrySet()) log.info("Agent: "+nextEntry.getKey().getName()+" Score: "+nextEntry.getValue());
+		        		for(Entry<Agent,Double> nextEntry:tmpScores) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass()+" : "+nextEntry.getValue());
 		        }
 		        
 		        log.info("The winner is...");
@@ -284,6 +303,15 @@ public class MarioAiRunner {
 			log.catching(e);
 		}
 	}
+	
+	public static class EntryComperator implements Comparator<Entry<Agent,Double>>{
+		@Override
+		public int compare(Entry<Agent, Double> o1, Entry<Agent, Double> o2) {
+			return -(o1.getValue().compareTo(o2.getValue()));
+		}
+		
+	}
+
 	
 	public static void main (String[] args) {
 		
