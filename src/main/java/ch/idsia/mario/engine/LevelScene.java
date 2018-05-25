@@ -295,7 +295,7 @@ public class LevelScene implements SpriteContext {
 			case (14):
 			case (30):
 			case (46): // canon
-				return 14; // angry flower pot or cannon
+				return 46; // angry flower pot or cannon
 			}
 			System.err.println("Unknown value el = " + el + " ; Please, inform the developers");
 			return el;
@@ -1168,7 +1168,8 @@ public class LevelScene implements SpriteContext {
 	}
 	
 	public STATUS getMarioStatus(){
-		return mario.getStatus();
+		if(mario!=null) return mario.getStatus();
+		return STATUS.UNKNOWN;
 	}
 	
 	public boolean isMarioOnGround() {

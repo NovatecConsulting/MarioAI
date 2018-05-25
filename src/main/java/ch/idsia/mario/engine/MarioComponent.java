@@ -65,7 +65,8 @@ public class MarioComponent extends JComponent implements Environment {
     private KeyListener prevHumanKeyBoardAgent;
     private LevelScene levelScene = null;
     
-    VolatileImage lastImage;
+    private VolatileImage lastImage;
+    private boolean finished;
  
     //--- Constructor
     public MarioComponent(int width, int height, RunnerOptions rOptions) {
@@ -205,7 +206,7 @@ public class MarioComponent extends JComponent implements Environment {
                     }
             }
             else {
-                System.err.println("Null Action received. Skipping simulation...");
+                log.error("Null Action received. Skipping simulation...");
                 stop();
             }
 
@@ -242,7 +243,6 @@ public class MarioComponent extends JComponent implements Environment {
                 marioStatus =  levelScene.getMarioStatus();
                 if (marioStatus != STATUS.RUNNING) break;
             }
-           
             // Delay depending on how far we are behind.
             if (delay > 0)
                 try {
@@ -772,11 +772,15 @@ public class MarioComponent extends JComponent implements Environment {
     
     @Override
 	public void performTick() {
-		if(levelScene.getMarioStatus()==STATUS.RUNNING) {
+		if(levelScene!=null&&levelScene.getMarioStatus()==STATUS.RUNNING) {
 			log.info("Perform tick at Frame: "+frame);
 			setPaused(true);
 			this.performTick=true;
 		}
+	}
+
+	public boolean isFinished() {
+		return finished;
 	}
 
 }

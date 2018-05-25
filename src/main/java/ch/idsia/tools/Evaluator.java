@@ -1,6 +1,5 @@
 package ch.idsia.tools;
 
-import java.util.Comparator;
 import java.util.concurrent.Callable;
 import ch.idsia.mario.engine.MarioComponent;
 
@@ -12,12 +11,10 @@ import ch.idsia.mario.engine.MarioComponent;
  * Package: .Tools
  */
 
-public class Evaluator implements Callable<EvaluationInfo>
-{
-    RunnerOptions rOptions;
-    MarioComponent component;
-    MainFrame configurator;
-
+public class Evaluator implements Callable<EvaluationInfo> {
+    private RunnerOptions rOptions;
+    private MarioComponent component;
+    private MainFrame configurator;
 
     public EvaluationInfo evaluate() {
         EvaluationInfo evaluationInfo=null;
@@ -36,9 +33,11 @@ public class Evaluator implements Callable<EvaluationInfo>
 
         @SuppressWarnings("unused") //TODO USE
 		long elapsed = currentTime - startTime;
-      
+        configurator.finished();
         return evaluationInfo;
     }
+    
+    
 
     public Evaluator(RunnerOptions rOptions,MainFrame configurator) {           
     	this.rOptions=rOptions;
@@ -50,50 +49,5 @@ public class Evaluator implements Callable<EvaluationInfo>
 	public EvaluationInfo call() throws Exception {
 		return evaluate();
 	}
-}
 
-class evBasicFitnessComparator implements Comparator<Object>
-{
-    public int compare(Object o, Object o1)
-    {
-        double ei1Fitness = ((EvaluationInfo)(o)).computeBasicFitness();
-        double ei2Fitness = ((EvaluationInfo)(o1)).computeBasicFitness();
-        if (ei1Fitness < ei2Fitness)
-            return 1;
-        else if (ei1Fitness > ei2Fitness)
-            return -1;
-        else
-            return 0;
-    }
-}
-
-class evCoinsFitnessComparator implements Comparator<Object>
-{
-    public int compare(Object o, Object o1)
-    {
-        int ei1Fitness = ((EvaluationInfo)(o)).numberOfGainedCoins;
-
-        int ei2Fitness = ((EvaluationInfo)(o1)).numberOfGainedCoins;
-        if (ei1Fitness < ei2Fitness)
-            return 1;
-        else if (ei1Fitness > ei2Fitness)
-            return -1;
-        else
-            return 0;
-    }
-}
-
-class evDistanceFitnessComparator implements Comparator<Object>
-{
-    public int compare(Object o, Object o1)
-    {
-        double ei1Fitness = ((EvaluationInfo)(o)).computeDistancePassed();
-        double ei2Fitness = ((EvaluationInfo)(o1)).computeDistancePassed();
-        if (ei1Fitness < ei2Fitness)
-            return 1;
-        else if (ei1Fitness > ei2Fitness)
-            return -1;
-        else
-            return 0;
-    }
 }

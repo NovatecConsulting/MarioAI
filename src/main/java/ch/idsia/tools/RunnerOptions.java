@@ -24,17 +24,11 @@ public class RunnerOptions {
 	
 	private boolean paused=false;
 	
-	private boolean labels=false;
-	
 	private boolean debugView=false;
-	
-	private boolean powerRestauration=false;
 	
 	private MODE marioStartMode = MODE.FIRE;
 	
 	private boolean marioInvulnerable=false; //shouldn't be possible for competition
-	
-	private boolean exitWhenFinished=false;
 	
 	private LevelConfig config;
 	
@@ -59,10 +53,8 @@ public class RunnerOptions {
 		this.viewable=toCopy.isViewable();
 		this.timeLimit=toCopy.getTimeLimit();
 		this.paused=toCopy.isPaused();
-		this.powerRestauration=toCopy.isPowerRestauration();
 		this.marioStartMode=toCopy.getMarioStartMode();
 		this.marioInvulnerable=toCopy.isMarioInvulnerable();
-		this.exitWhenFinished=toCopy.isExitWhenFinished();
 		this.trials=toCopy.trials;
 		this.maxTrials=toCopy.getMaxTrials();
 		this.ZLevelEnemies=toCopy.getZLevelEnemies();
@@ -80,10 +72,8 @@ public class RunnerOptions {
 		res.viewable=this.isViewable();
 		res.timeLimit=this.getTimeLimit();
 		res.paused=this.isPaused();
-		res.powerRestauration=this.isPowerRestauration();
 		res.marioStartMode=this.getMarioStartMode();
 		res.marioInvulnerable=this.isMarioInvulnerable();
-		res.exitWhenFinished=this.isExitWhenFinished();
 		res.trials=this.trials;
 		res.maxTrials=this.getMaxTrials();
 		res.ZLevelEnemies=this.getZLevelEnemies();
@@ -146,14 +136,6 @@ public class RunnerOptions {
 		this.paused = paused;
 	}
 
-	public boolean isPowerRestauration() {
-		return powerRestauration;
-	}
-
-	public void setPowerRestauration(boolean powerRestauration) {
-		this.powerRestauration = powerRestauration;
-	}
-
 	public MODE getMarioStartMode() {
 		return marioStartMode;
 	}
@@ -168,14 +150,6 @@ public class RunnerOptions {
 
 	public void setMarioInvulnerable(boolean marioInvulnerable) { //TODO make private
 		this.marioInvulnerable = marioInvulnerable;
-	}
-
-	public boolean isExitWhenFinished() {
-		return exitWhenFinished;
-	}
-
-	public void setExitWhenFinished(boolean exitWhenFinished) {
-		this.exitWhenFinished = exitWhenFinished;
 	}
 
 	public int getTrials() {
@@ -222,10 +196,6 @@ public class RunnerOptions {
 		this.maxTrials = maxTrials;
 	}
 
-	public boolean isLabels() {
-		return labels;
-	}
-	
 	public LEVEL_TYPES getLevelType() {
 		return config.getType();
 	}

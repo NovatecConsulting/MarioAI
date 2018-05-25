@@ -109,6 +109,19 @@ public class LevelConfig{
 //	public static final LevelConfig LevelCUSTOM3=new LevelConfig(12345678,256,10,LEVEL_TYPES.OVERGROUND,false,false,false,new int[]{1,0,0,10,0});
 	
 	/**
+	 * Example Overworld Challenge Level
+	 */
+	public final static LevelConfig CHALLENGE_OVERWORLD_EXAMPLE=new LevelConfig(0,512,1,LEVEL_TYPES.OVERGROUND,true,false,true,true,new int[]{3,10,1,0,0});
+	/**
+	 * Example Underground Challenge Level
+	 */
+	public final static LevelConfig CHALLENGE_UNDERGROUND_EXAMPLE=new LevelConfig(0,512,4,LEVEL_TYPES.UNDERGROUND,true,false,true,true,new int[]{9,6,3,1,2});
+	/**
+	 * Example Castle Challenge Level
+	 */
+	public final static LevelConfig CHALLENGE_CASTLE_EXAMPLE=new LevelConfig(0,512,8,LEVEL_TYPES.CASTLE,true,true,true,true,new int[]{4,12,2,1,1});
+	
+	/**
 	 * Standard level with difficulty 0
 	 */
 	public static final LevelConfig STANDARD00=new LevelConfig(42,256,0,LEVEL_TYPES.OVERGROUND);

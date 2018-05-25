@@ -12,17 +12,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -47,7 +46,8 @@ import io.prometheus.client.exporter.HTTPServer;
  */
 public class MarioAiRunner {
 	
-	private static Logger log=LogManager.getLogger(MarioAiRunner.class);
+	private static final Logger log=LogManager.getLogger(MarioAiRunner.class);
+	private static final int standardPort=1234;
 	/**
 	 * No instances needed.
 	 */
@@ -68,7 +68,7 @@ public class MarioAiRunner {
 	public static void run(Agent agent,LevelConfig levelConfig,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
 		List<Agent> tmp=new ArrayList<>();
 		tmp.add(agent);
-		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, zoomFactor, randomize, viewable, debugView);
+		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, zoomFactor, randomize, viewable, debugView, false, standardPort);
 	}
 	
 	/**
@@ -92,7 +92,7 @@ public class MarioAiRunner {
 		run(agent, levelConfig, 24,zoomFactor,randomize, true,false);
 	}
 	
-	public static List<EvaluationInfo> multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
+	public static List<EvaluationInfo> multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView, boolean exitOnFinish, int serverPort) {
 		
 		//log.info("MarioAi - trying to start evaluation...");
 		if(agents==null){
@@ -125,19 +125,18 @@ public class MarioAiRunner {
 		baseOptions.setDebugView(debugView);
 		log.trace("debugView="+debugView);
 		
-		int port=1234; //TODO changeable? just a test
 		try {
 			HTTPServer server=null;
 			try {
-				server=new HTTPServer(port, true);
+				server=new HTTPServer(serverPort, true);
 			}
 			catch (BindException e) {
-				log.error("Port "+port+" is already in use!");
+				log.error("Port "+serverPort+" is already in use!");
 				log.error("No server will be started!");
 			}
 
-			ExecutorService runner = Executors.newCachedThreadPool();
-			MainFrame configurator=new MainFrame(agents.size(), false, viewable, new Point());
+			ExecutorService runner = Executors.newWorkStealingPool();
+			MainFrame configurator=new MainFrame(agents.size(), false,viewable,exitOnFinish, new Point());
 			
 			List<Future<EvaluationInfo>> results= new ArrayList<>();
 
@@ -147,18 +146,16 @@ public class MarioAiRunner {
 				Evaluator ev=new Evaluator(baseOptions.getCopyWithNewAgent(next),configurator);
 				results.add(runner.submit(ev));
 			}
-			
-			
+
 			//log.info("waiting for results...");
 			
 			List<EvaluationInfo> res=new ArrayList<>();
 			for(Future<EvaluationInfo> next: results) {
 				EvaluationInfo info=next.get();
 				res.add(info);
-				//log.info("Agent: "+info.agentName+" finished");
-				//log.info(info);
+				log.info("Agent: "+info.agentName+" finished");
+				log.info(info);
 			}
-			
 			
 			runner.shutdown();
 			if(server!=null)server.stop();
@@ -171,7 +168,26 @@ public class MarioAiRunner {
 		return new ArrayList<>();
 	}
 	
-	public static void challengeRun(String packageName, int agentsPerRound, List<LevelConfig> levels, boolean autoKill) {
+	public static void challengeRun(String packageName,List<LevelConfig> levels, int agentsPerRound, int zoomFactor, boolean autoKill) {
+		if(packageName==null) {
+			log.info("packageName can't be null");
+			log.info("Returning...");
+			return;
+		}
+		
+		if(levels==null||levels.isEmpty()) {
+				log.info("No levels given for the challenge");
+				log.info("Returning...");
+				return;
+			}
+			
+		
+		if(agentsPerRound<1) {
+				log.info("agentsPerRound must be bigger than 0");
+				log.info("Returning...");
+				return;
+			}
+		
 		try {
 			ClassLoader cl=ClassLoader.getSystemClassLoader();
 			URI uri=null;
@@ -198,7 +214,8 @@ public class MarioAiRunner {
 		        	Path tmp=it.next();
 		        	if(tmp.toString().replace("/", "\\").matches(filter)) {
 			        	try {
-							agents.add((Agent)cl.loadClass(packageName+"."+tmp.getFileName().toString().substring(0, tmp.getFileName().toString().length()-6)).newInstance());
+			        		Class<?> tmpClass=cl.loadClass(packageName+"."+tmp.getFileName().toString().substring(0, tmp.getFileName().toString().length()-6));
+							if(Agent.class.isAssignableFrom(tmpClass))agents.add((Agent)tmpClass.newInstance());
 						} catch (ClassNotFoundException e) {
 							log.catching(Level.FATAL,e);
 						}
@@ -212,6 +229,7 @@ public class MarioAiRunner {
 			if(agents.isEmpty()) {
 				log.warn("No agents found to evaluate!");
 				log.warn("Returning...");
+				return;
 			}
 		        log.info("Challenge started!");
 	        	log.info("Agents, which will compete against each other:");
@@ -219,24 +237,49 @@ public class MarioAiRunner {
 	        	
 		        Map<Agent,Double> scores=new HashMap<>();
 		        Scanner sc=new Scanner(System.in);
-		        for(LevelConfig nextLevel:levels) {
+		        
+		        Iterator<LevelConfig> tmpLevels=levels.iterator();
+		        List<Entry<Agent,Double>> tmpScores=null;
+		        while(tmpLevels.hasNext()) {
+		        	LevelConfig nextLevel=tmpLevels.next();
+		        	
 		        	int oldAgentSize=agents.size();
 
-		        	int agentsToKill=0;
-		        	if(autoKill) {
-		        		if(oldAgentSize>agentsPerRound) {
-		        			agentsToKill=oldAgentSize/2;
-		        			if(agentsPerRound>oldAgentSize-agentsToKill) agentsToKill=oldAgentSize-agentsPerRound;
-		        		}
+		        	int agentsToKill=-1;
+		        	if(tmpLevels.hasNext()) {
+			        	if(autoKill) {
+			        		if(oldAgentSize>2) agentsToKill=(2>oldAgentSize-agentsToKill) ? oldAgentSize-2:oldAgentSize/2;
+			        		else agentsToKill=0;
+			        		
+			        	}
+			        	else {
+			        		log.info("How many agents(of "+agents.size()+") should be killed this round?");
+			        		int maxKillable=(agents.size()-2<0) ?  0 : (agents.size()-2);
+			        		log.info(maxKillable+" Agents could be killed.");
+			        		while(agentsToKill==-1) {
+					        	try {
+					        		agentsToKill=sc.nextInt();
+	
+						        	if(agents.size()-agentsToKill<2) {
+						        		agentsToKill=agents.size()-2;
+						        	}
+						        	if(agentsToKill<0) agentsToKill=0;
+					        	}
+					        	catch(InputMismatchException e) {
+					        		sc.next();
+					        		log.info("Input was not an integer, please try again");
+					        	} 
+			        		}
+			        	}
+			        	log.info("Starting next round...");
+			        	log.info("Next round started - "+agentsToKill+" will be killed!");
 		        	}
 		        	else {
-		        	log.info("How many agents(of "+agents.size()+") should be killed this round?");
-		        	agentsToKill=sc.nextInt();
-		        	if(agents.size()-agentsToKill<agentsPerRound) agentsToKill=agents.size()-agentsPerRound;
-		        	if(agentsToKill<0) agentsToKill=0;
+		        		agentsToKill=0;
+		        		log.info("Enter anything to start the next round - FINAL ROUND");
+		        		sc.next();
+		        		log.info("Starting final round...");
 		        	}
-		        	log.info("Starting next round...");
-		        	log.info("Next round started - "+agentsToKill+" will be killed!");
 		        	
 		        	int agentsPlayed=0;
 		        	int totalAgentsPlayed=0;
@@ -250,21 +293,19 @@ public class MarioAiRunner {
 		        		totalAgentsPlayed+=agentsPlayed;
 		        		agentsPlayed=0;
 		        		
-		        		for(EvaluationInfo nextInfo:multiAgentRun(tmpAgents, nextLevel, new ChallengeTask(), 24, 4, false, true, false)) {
+		        		for(EvaluationInfo nextInfo:multiAgentRun(tmpAgents, nextLevel, new ChallengeTask(), 24, zoomFactor, false, true, false, true, standardPort)) {
 		        			Double oldScore=scores.get(nextInfo.getUsedAgent());
 		        			if(oldScore==null) oldScore=0.0;
 		        			scores.put(nextInfo.getUsedAgent(), oldScore+nextInfo.computeBasicFitness());
 		        		}
-		        		try {
-							Thread.sleep(4*1000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
+		        		
+		        		if(totalAgentsPlayed<agents.size()) {
+		        		log.info("Enter anything to continue");
+		        		sc.next();
+		        		}
 		        	}
-		        			
-		        	
-		        	
-		        	List<Entry<Agent,Double>> tmpScores=new ArrayList<>(scores.entrySet());
+
+		        	tmpScores=new ArrayList<>(scores.entrySet());
 		        	tmpScores.sort(new EntryComperator());
 		        	
 		        		while(agents.size()>oldAgentSize-agentsToKill) {
@@ -273,14 +314,39 @@ public class MarioAiRunner {
 		        			for(Agent nextAgent: agents) {
 		        				if(scores.get(toKill)>scores.get(nextAgent)) toKill=nextAgent;
 		        			}
+		        			
+		        			List<Agent> duellist=new ArrayList<>();
+		        			for(Agent nextAgent: agents) {
+		        				if(nextAgent==toKill) {
+		        					duellist.add(nextAgent);
+		        					continue;
+		        				}
+		        				if(Math.abs(scores.get(toKill)-scores.get(nextAgent))<0.0001) duellist.add(nextAgent);
+		        			}
+		        			if(duellist.size()>1) {
+		        				log.info("It's duel time!");
+		        				log.info("The following agents are about to duel:");
+		        				for(Agent nextDuellist:duellist) log.info(nextDuellist.getName()+"/"+nextDuellist.getClass().getSimpleName());
+		        				
+		        				log.info("Enter anything to start the duel");
+		        				sc.next();
+		        				
+			        			double worstScore=Double.MAX_VALUE;
+			        			
+			        			for(EvaluationInfo nextInfo:multiAgentRun(duellist, nextLevel, new ChallengeTask(), 24, zoomFactor, true, true, false, true, standardPort)) {
+			        				if(nextInfo.computeBasicFitness()<worstScore) toKill=nextInfo.getUsedAgent();
+			        			}
+		        			log.info("Agent "+toKill.getName()+" lost the duell.");
+		        			}
+		        			
 		        			agents.remove(toKill);
 		        			log.info("Agent "+toKill.getName()+" was removed.");
 		        		}
 		        		
 		        		log.info("Scores:");
-		        		for(Entry<Agent,Double> nextEntry:tmpScores) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass()+" : "+nextEntry.getValue());
+		        		for(Entry<Agent,Double> nextEntry:tmpScores) if(agents.contains(nextEntry.getKey())) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass().getSimpleName()+" : "+nextEntry.getValue());		
 		        }
-		        
+		        sc.close();
 		        log.info("The winner is...");
 		        
 		        Agent winner=null;
@@ -288,10 +354,11 @@ public class MarioAiRunner {
 		        	if(winner==null) winner=nextEntry.getKey();
 		        	else if(scores.get(winner)<scores.get(nextEntry.getKey())) winner=nextEntry.getKey();
 		        }
-		        log.info("..."+winner.getName()+" of "+winner.getClass());
-		        sc.close();
+		        log.info("..."+winner.getName()+"/"+winner.getClass().getSimpleName());
 		        
-		        
+		        log.info("Final Scores:");
+          		for(Entry<Agent,Double> nextEntry:tmpScores) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass().getSimpleName()+" : "+nextEntry.getValue());
+		            
 		} catch (URISyntaxException e) {
 			log.catching(e);
 			System.exit(1);
@@ -311,7 +378,6 @@ public class MarioAiRunner {
 		}
 		
 	}
-
 	
 	public static void main (String[] args) {
 		
@@ -321,8 +387,14 @@ public class MarioAiRunner {
 		levels.add(LevelConfig.BOWSERS_CASTLE);
 		levels.add(LevelConfig.DEALBREAKER);
 		
-		challengeRun("de.novatec.marioai.agents.included", 4, levels, true);
+		challengeRun("de.novatec.marioai.agents.included",levels, 4,  4, true);
 		System.exit(0);
+		
+//		List<Agent> agents=new ArrayList<>();
+//		
+//		agents.add(new ExampleAgent());
+//		
+//		System.out.println(multiAgentRun(agents, LevelConfig.LEVEL_1, new ChallengeTask(), 24, 3, true, true, false, false));
 	}
 }
 

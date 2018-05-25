@@ -32,6 +32,8 @@ public class KeyboardInterpreter implements KeyListener{
 	public void keyReleased(KeyEvent e) {
 	//System.out.println(e.getKeyChar()+" "+e.getKeyCode()); //debug
 		final MarioComponent actualComponent=configurator.getControlledComponent();
+		if(actualComponent==null) return;
+		
 		switch(e.getKeyCode()) {
 		case KeyEvent.VK_P:
 			actualComponent.togglePaused();

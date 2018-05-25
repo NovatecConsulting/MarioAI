@@ -18,12 +18,15 @@ import ch.idsia.mario.engine.sprites.Mario.STATUS;
 public class MainFrame extends JFrame  { //TODO don't overwrite JFrame
 	
 	private static final long serialVersionUID = 1L;
+	private static final int closeTime=5000;
 
 	private CyclicBarrier barrier;
 	
 	private List<MarioComponent> toControl;
 	
 	private MarioComponent controlledComponent;
+	private int finishedCounter=0;
+	private boolean exitOnFinish;
 	
 	private MouseInterpreter interpreter;
 	
@@ -151,7 +154,7 @@ public class MainFrame extends JFrame  { //TODO don't overwrite JFrame
     }
     
     
-   public MainFrame(int agentAmount, boolean viewAlwaysOnTop, boolean isViewable, Point origin) {
+   public MainFrame(int agentAmount, boolean viewAlwaysOnTop, boolean isViewable, boolean exitOnFinish, Point origin) {
 	   super("MarioAi");
 	   if(agentAmount<1) {
 		   System.err.println("No agents were given to evaluate!");
@@ -170,10 +173,23 @@ public class MainFrame extends JFrame  { //TODO don't overwrite JFrame
        setLocation(origin);
        setResizable(false);
        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+       this.exitOnFinish=exitOnFinish;
        
        interpreter=new MouseInterpreter(this);
        addMouseListener(interpreter);
        new KeyboardInterpreter(this);      
+   }
+   
+   public void finished() {
+	   if(!exitOnFinish||!isVisible()) return;
+	   if(finishedCounter++<toControl.size()-1) return;
+	   try {
+		Thread.sleep(closeTime);
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}
+	   toControl.clear();
+	   this.dispose();
    }
    
    public void awaitBarrier() {
