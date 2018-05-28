@@ -26,7 +26,7 @@ public class RunnerOptions {
 	
 	private boolean debugView=false;
 	
-	private MODE marioStartMode = MODE.FIRE;
+	private MODE marioStartMode = MODE.MODE_FIRE;
 	
 	private boolean marioInvulnerable=false; //shouldn't be possible for competition
 	

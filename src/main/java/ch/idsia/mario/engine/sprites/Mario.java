@@ -28,23 +28,23 @@ public class Mario extends Sprite // cloneable
 	}
 
 	private void setMode(MODE marioMode) {
-		setLarge((marioMode == MODE.LARGE || marioMode == MODE.FIRE),marioMode == MODE.FIRE);
+		setLarge((marioMode == MODE.MODE_LARGE || marioMode == MODE.MODE_FIRE),marioMode == MODE.MODE_FIRE);
 	}
 
 	public Mario.MODE getMode() {
 		if (isLarge()) {
 			if (fire)
-				return Mario.MODE.FIRE;
+				return Mario.MODE.MODE_FIRE;
 			else
-				return Mario.MODE.LARGE;
+				return Mario.MODE.MODE_LARGE;
 		}
 
 		else
-			return Mario.MODE.SMALL;
+			return Mario.MODE.MODE_SMALL;
 	}
 
 	public enum MODE {
-		SMALL, LARGE, FIRE
+		MODE_SMALL, MODE_LARGE, MODE_FIRE
 	}
 	
 	public enum STATUS {
@@ -110,8 +110,8 @@ public class Mario extends Sprite // cloneable
 		
 		facing = 1;
 
-		if (mode == MODE.FIRE) setLarge(true, true);
-		else if (mode == MODE.LARGE) setLarge(true, false);
+		if (mode == MODE.MODE_FIRE) setLarge(true, true);
+		else if (mode == MODE.MODE_LARGE) setLarge(true, false);
 		else setLarge(false, false);
 	}
 

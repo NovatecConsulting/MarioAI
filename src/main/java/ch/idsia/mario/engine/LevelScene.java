@@ -1140,7 +1140,7 @@ public class LevelScene implements SpriteContext {
 	
 	public boolean mayMarioShoot() {
 		if(lastTickFireball==tick-1) return false;
-		return mario.getMode()==MODE.FIRE&&fireballsOnScreen<2;
+		return mario.getMode()==MODE.MODE_FIRE&&fireballsOnScreen<2;
 	}
 	
 	public boolean isMarioFalling() {
