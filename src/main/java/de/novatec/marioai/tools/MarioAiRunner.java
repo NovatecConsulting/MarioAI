@@ -47,7 +47,6 @@ import io.prometheus.client.exporter.HTTPServer;
 public class MarioAiRunner {
 	
 	private static final Logger log=LogManager.getLogger(MarioAiRunner.class);
-	private static final int standardPort=1234;
 	/**
 	 * No instances needed.
 	 */
@@ -68,7 +67,7 @@ public class MarioAiRunner {
 	public static void run(Agent agent,LevelConfig levelConfig,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
 		List<Agent> tmp=new ArrayList<>();
 		tmp.add(agent);
-		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, zoomFactor, randomize, viewable, debugView, false, standardPort);
+		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, zoomFactor, randomize, viewable, debugView, false, false);
 	}
 	
 	/**
@@ -92,7 +91,7 @@ public class MarioAiRunner {
 		run(agent, levelConfig, 24,zoomFactor,randomize, true,false);
 	}
 	
-	public static List<EvaluationInfo> multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView, boolean exitOnFinish, int serverPort) {
+	public static List<EvaluationInfo> multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView, boolean exitOnFinish, boolean pushMetrics) {
 		
 		//log.info("MarioAi - trying to start evaluation...");
 		if(agents==null){
@@ -124,17 +123,9 @@ public class MarioAiRunner {
 		log.trace("initialWindowWidth="+320*zoomFactor+" initialWindowHeight="+240*zoomFactor);
 		baseOptions.setDebugView(debugView);
 		log.trace("debugView="+debugView);
+		baseOptions.setPushMetrics(pushMetrics);
 		
 		try {
-			HTTPServer server=null;
-			try {
-				server=new HTTPServer(serverPort, true);
-			}
-			catch (BindException e) {
-				log.error("Port "+serverPort+" is already in use!");
-				log.error("No server will be started!");
-			}
-
 			ExecutorService runner = Executors.newWorkStealingPool();
 			MainFrame configurator=new MainFrame(agents.size(), false,viewable,exitOnFinish, new Point());
 			
@@ -158,7 +149,6 @@ public class MarioAiRunner {
 			}
 			
 			runner.shutdown();
-			if(server!=null)server.stop();
 			
 			return res;
 			
@@ -293,7 +283,7 @@ public class MarioAiRunner {
 		        		totalAgentsPlayed+=agentsPlayed;
 		        		agentsPlayed=0;
 		        		
-		        		for(EvaluationInfo nextInfo:multiAgentRun(tmpAgents, nextLevel, new ChallengeTask(), 24, zoomFactor, false, true, false, true, standardPort)) {
+		        		for(EvaluationInfo nextInfo:multiAgentRun(tmpAgents, nextLevel, new ChallengeTask(), 24, zoomFactor, false, true, false, true, true)) {
 		        			Double oldScore=scores.get(nextInfo.getUsedAgent());
 		        			if(oldScore==null) oldScore=0.0;
 		        			scores.put(nextInfo.getUsedAgent(), oldScore+nextInfo.computeBasicFitness());
@@ -333,7 +323,7 @@ public class MarioAiRunner {
 		        				
 			        			double worstScore=Double.MAX_VALUE;
 			        			
-			        			for(EvaluationInfo nextInfo:multiAgentRun(duellist, nextLevel, new ChallengeTask(), 24, zoomFactor, true, true, false, true, standardPort)) {
+			        			for(EvaluationInfo nextInfo:multiAgentRun(duellist, nextLevel, new ChallengeTask(), 24, zoomFactor, true, true, false, true, true)) {
 			        				if(nextInfo.computeBasicFitness()<worstScore) toKill=nextInfo.getUsedAgent();
 			        			}
 		        			log.info("Agent "+toKill.getName()+" lost the duell.");

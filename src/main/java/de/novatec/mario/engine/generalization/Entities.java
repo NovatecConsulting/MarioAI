@@ -193,7 +193,7 @@ public class Entities {
             case(Sprite.KIND_RED_KOOPA_WINGED):
             	return EntityType.RED_KOOPA_WINGED;
             case(Sprite.KIND_GREEN_KOOPA):
-            	return EntityType.GREEN_KOOPA_WINGED;
+            	return EntityType.GREEN_KOOPA;
             case(Sprite.KIND_GREEN_KOOPA_WINGED):
             	return EntityType.GREEN_KOOPA_WINGED;
             case(Sprite.KIND_BULLET_BILL):

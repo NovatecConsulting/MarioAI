@@ -6,8 +6,10 @@ import java.awt.Graphics;
 import java.awt.GraphicsConfiguration;
 import java.awt.event.KeyListener;
 import java.awt.image.VolatileImage;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
@@ -27,7 +29,9 @@ import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.RunnerOptions;
 import de.novatec.marioai.agents.included.HumanKeyboardAgent;
 import de.novatec.marioai.tools.MarioNtAgent;
+import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
+import io.prometheus.client.exporter.PushGateway;
 
 public class MarioComponent extends JComponent implements Environment {
 	
@@ -52,7 +56,10 @@ public class MarioComponent extends JComponent implements Environment {
     private static final Level STATISTIC=Level.forName("STATISTIC", 550);
     private static volatile int AGENT_ID=0;
     private int agentId=-1;
-    private static final Gauge data=Gauge.build().name("mariocomponent").help("Actual Amount of Kills.").labelNames("name","agent","id","type").register();
+    private CollectorRegistry registry = new CollectorRegistry();
+    private PushGateway pg = new PushGateway("prometheus-pushgatewaymarioainovatec.eu-de.mybluemix.net:80");
+    private boolean noTry;
+    private final Gauge data=Gauge.build().name("mariocomponent").help("All Agent Information").labelNames("name","agent","id","type").register(registry);
     
     private static final long serialVersionUID = 790878775993203817L;
     private static final int GENERALIZATION_ENEMIES = 1;
@@ -260,7 +267,24 @@ public class MarioComponent extends JComponent implements Environment {
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"time").set(levelScene.getTimeLeft());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance").set(levelScene.getMarioX());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance_percentage").set(levelScene.getMarioX()/(levelScene.getLevelXExit()*16));
-            	
+            	if(!noTry) {
+					Runnable tmp=new Runnable() {
+						
+						@Override
+						public void run() {
+							try {
+								pg.pushAdd(registry, rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
+							} catch (IOException e) {
+								noTry=true;
+								log.catching(e);
+								log.error("Could not log data!");
+							} 
+						}
+					};
+					
+				 new Thread(tmp).start();
+            	}
+
            	 	ThreadContext.put("frame",String.valueOf(frame));
                 log.log(STATISTIC,"Score: "+this.levelScene.getScore());
                 log.log(STATISTIC,"Total Kills: "+levelScene.getKilledCreaturesTotal());
@@ -301,7 +325,34 @@ public class MarioComponent extends JComponent implements Environment {
         evaluationInfo.setGainedFlower(levelScene.getMarioGainedFowers());
         
         evaluationInfo.setTimesHurt(levelScene.getTimesMarioHurt());
-
+        
+        data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"score").set(levelScene.getScore());
+    	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"kills").set(levelScene.getKilledCreaturesTotal());
+    	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"time").set(levelScene.getTimeLeft());
+    	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance").set(levelScene.getMarioX());
+    	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance_percentage").set(levelScene.getMarioX()/(levelScene.getLevelXExit()*16));
+    	if(!noTry) {
+			Runnable tmp=new Runnable() {
+				
+				@Override
+				public void run() {
+					try {
+						pg.pushAdd(registry, rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
+						Thread.sleep(2000);
+					    pg.delete(rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
+					} catch (IOException e) {
+						noTry=true;
+						log.catching(e);
+						log.error("Could not log data!");
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} 
+				}
+			};
+			
+		 new Thread(tmp).start();
+        }
         return evaluationInfo;
     }
     
@@ -578,6 +629,7 @@ public class MarioComponent extends JComponent implements Environment {
 		this.setVisible(rOptions.isViewable()); //must be set before adjustFPS()!!
 		adjustFPS(rOptions.getFPS());
 		actual=rOptions.getAgent();
+		noTry=!rOptions.isPushMetrics();
 		
 		startLevel(rOptions.getLevelSeed(), rOptions.getDifficulty(), rOptions.getLevelType(), rOptions.getLevelLength(), rOptions.getTimeLimit());
 	}

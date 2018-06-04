@@ -37,6 +37,8 @@ public class RunnerOptions {
 	private int trials=0,maxTrials=1; //number of trials
 	
 	private int ZLevelEnemies=1, ZLevelMap=1;
+	
+	private boolean pushMetrics;
 
 	public RunnerOptions(Agent agent,LevelConfig config, Task task) {
 		this.config=config;		
@@ -62,6 +64,7 @@ public class RunnerOptions {
 		this.config=toCopy.config;
 		this.debugView=toCopy.debugView;
 		this.task=toCopy.task;
+		this.pushMetrics=toCopy.pushMetrics;
 	}
 	
 	public RunnerOptions getCopyWithNewAgent(Agent agent) {
@@ -79,6 +82,7 @@ public class RunnerOptions {
 		res.ZLevelEnemies=this.getZLevelEnemies();
 		res.ZLevelMap=this.getZLevelMap();
 		res.debugView=this.debugView;
+		res.pushMetrics=this.pushMetrics;
 		
 		return res;
 	}
@@ -226,6 +230,14 @@ public class RunnerOptions {
 
 	public Task getTask() {
 		return task;
+	}
+
+	public boolean isPushMetrics() {
+		return pushMetrics;
+	}
+
+	public void setPushMetrics(boolean pushMetrics) {
+		this.pushMetrics = pushMetrics;
 	}
 	
 }
