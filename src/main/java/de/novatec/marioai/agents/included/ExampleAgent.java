@@ -20,15 +20,14 @@ public class ExampleAgent extends MarioNtAgent{
 		if(mayShoot()&&isEnemyAhead()) {
 			shoot();
 		}
+		
 		if(isEnemyAhead()) jump();
+
 		if(isSlopeAhead()&&!isHoleAhead()&&!(getDeepCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
 	
 		moveRight();
 		
 		if(isHoleAhead()||isBrickAhead()||isQuestionbrickAbove()) jump();
-
-		
-		else if(isEnemyAhead()) jump();
 		
 		return getMarioInput();
 	}
