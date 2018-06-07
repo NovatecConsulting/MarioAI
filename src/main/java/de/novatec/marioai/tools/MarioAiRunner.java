@@ -33,11 +33,15 @@ import org.apache.logging.log4j.Logger;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.ChallengeTask;
 import ch.idsia.ai.tasks.Task;
+import ch.idsia.mario.engine.MarioComponent;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.Evaluator;
 import ch.idsia.tools.RunnerOptions;
 import ch.idsia.tools.MainFrame;
+import io.prometheus.client.CollectorRegistry;
+import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.HTTPServer;
+import io.prometheus.client.exporter.PushGateway;
 
 /**
  * Simple helper class to start the evaluation of an agent. 
@@ -47,6 +51,7 @@ import io.prometheus.client.exporter.HTTPServer;
 public class MarioAiRunner {
 	
 	private static final Logger log=LogManager.getLogger(MarioAiRunner.class);
+	private static final String jobName="challengeRun";
 	/**
 	 * No instances needed.
 	 */
@@ -158,7 +163,7 @@ public class MarioAiRunner {
 		return new ArrayList<>();
 	}
 	
-	public static void challengeRun(String packageName,List<LevelConfig> levels, int agentsPerRound, int zoomFactor, boolean autoKill) {
+	public static void challengeRun(String packageName,List<LevelConfig> levels, int agentsPerRound, int zoomFactor, boolean autoKill,boolean pushUpdates) {
 		if(packageName==null) {
 			log.info("packageName can't be null");
 			log.info("Returning...");
@@ -216,6 +221,10 @@ public class MarioAiRunner {
 			}
 		    //--- finished fetching agents from package
 		        
+			CollectorRegistry registry = new CollectorRegistry();
+			PushGateway pg = new PushGateway(MarioComponent.address);
+			Gauge data=Gauge.build().name("challenge").help("All Challenge Information").labelNames("name","agent","type").register(registry);
+			pg.delete("challenge");
 			if(agents.isEmpty()) {
 				log.warn("No agents found to evaluate!");
 				log.warn("Returning...");
@@ -334,21 +343,31 @@ public class MarioAiRunner {
 		        		}
 		        		
 		        		log.info("Scores:");
-		        		for(Entry<Agent,Double> nextEntry:tmpScores) if(agents.contains(nextEntry.getKey())) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass().getSimpleName()+" : "+nextEntry.getValue());		
+		        		for(Entry<Agent,Double> nextEntry:tmpScores) {
+		        			if(pushUpdates)data.labels(nextEntry.getKey().getName(),nextEntry.getKey().getClass().getName().trim().replace('.', '_'),"totalScore").set(nextEntry.getValue());
+		        			if(agents.contains(nextEntry.getKey())) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass().getSimpleName()+" : "+nextEntry.getValue());		
+		        		}
+		        		if(pushUpdates)pg.push(registry, "challengeRun");
 		        }
-		        sc.close();
+		       
 		        log.info("The winner is...");
 		        
 		        Agent winner=null;
 		        for(Map.Entry<Agent, Double> nextEntry: scores.entrySet()) {
+		        	if(pushUpdates)data.labels(nextEntry.getKey().getName(),nextEntry.getKey().getClass().getName().trim().replace('.', '_'),"totalScore").set(nextEntry.getValue());
 		        	if(winner==null) winner=nextEntry.getKey();
 		        	else if(scores.get(winner)<scores.get(nextEntry.getKey())) winner=nextEntry.getKey();
 		        }
+		        if(pushUpdates) pg.push(registry, jobName);
 		        log.info("..."+winner.getName()+"/"+winner.getClass().getSimpleName());
 		        
 		        log.info("Final Scores:");
           		for(Entry<Agent,Double> nextEntry:tmpScores) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass().getSimpleName()+" : "+nextEntry.getValue());
-		            
+          		
+          		log.info("Enter anything to exit and remove all statistics");
+        		sc.next();
+          		if(pushUpdates) pg.delete(jobName);
+          		sc.close();
 		} catch (URISyntaxException e) {
 			log.catching(e);
 			System.exit(1);
@@ -377,7 +396,7 @@ public class MarioAiRunner {
 		levels.add(LevelConfig.BOWSERS_CASTLE);
 		levels.add(LevelConfig.DEALBREAKER);
 		
-		challengeRun("de.novatec.marioai.agents.included",levels, 4,  4, true);
+		challengeRun("de.novatec.marioai.agents.included",levels, 4,  4, true,true);
 		System.exit(0);
 		
 //		List<Agent> agents=new ArrayList<>();

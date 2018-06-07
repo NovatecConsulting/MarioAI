@@ -52,12 +52,13 @@ public class MarioComponent extends JComponent implements Environment {
     private int fps;
     
     //--- Logging & Prometheus
+    public static String address="prometheus-pushgatewaymarioainovatec.eu-de.mybluemix.net:80";
     private Logger log;
     private static final Level STATISTIC=Level.forName("STATISTIC", 550);
     private static volatile int AGENT_ID=0;
     private int agentId=-1;
     private CollectorRegistry registry = new CollectorRegistry();
-    private PushGateway pg = new PushGateway("prometheus-pushgatewaymarioainovatec.eu-de.mybluemix.net:80");
+    private PushGateway pg = new PushGateway(address);
     private boolean noTry;
     private final Gauge data=Gauge.build().name("mariocomponent").help("All Agent Information").labelNames("name","agent","id","type").register(registry);
     
@@ -177,7 +178,6 @@ public class MarioComponent extends JComponent implements Environment {
         STATUS marioStatus = STATUS.RUNNING;
 
         int totalActionsPerfomed = 0;
-
         while (running||!readyToExit) {
         	startTime = System.currentTimeMillis();
         	boolean tmpPerformTick=performTick;
@@ -262,6 +262,8 @@ public class MarioComponent extends JComponent implements Environment {
             // advance the frame
             if(!isPaused()||tmpPerformTick) {
             	increaseFrame();
+            	
+            	if(frame%24==0) {
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"score").set(levelScene.getScore());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"kills").set(levelScene.getKilledCreaturesTotal());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"time").set(levelScene.getTimeLeft());
@@ -269,7 +271,7 @@ public class MarioComponent extends JComponent implements Environment {
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"distance_percentage").set(levelScene.getMarioX()/(levelScene.getLevelXExit()*16));
             	if(!noTry) {
 					Runnable tmp=new Runnable() {
-						
+					
 						@Override
 						public void run() {
 							try {
@@ -283,15 +285,20 @@ public class MarioComponent extends JComponent implements Environment {
 					};
 					
 				 new Thread(tmp).start();
-            	}
+            		}
 
-           	 	ThreadContext.put("frame",String.valueOf(frame));
+            	}
+            	ThreadContext.put("frame",String.valueOf(frame));
                 log.log(STATISTIC,"Score: "+this.levelScene.getScore());
                 log.log(STATISTIC,"Total Kills: "+levelScene.getKilledCreaturesTotal());
                 log.log(STATISTIC,"Mario X: "+levelScene.getMarioX());
                 log.log(STATISTIC,"MarioMode: "+levelScene.getMarioMode());
+                
             }
             if(tmpPerformTick==true)performTick=false;
+            
+
+            
         }//while 
         
         //--- Show results on end screen
@@ -338,14 +345,13 @@ public class MarioComponent extends JComponent implements Environment {
 				public void run() {
 					try {
 						pg.pushAdd(registry, rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
-						Thread.sleep(2000);
-					    pg.delete(rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
+					    Thread.sleep(2000);
+						pg.delete(rOptions.getAgent().getClass().getName()+":"+rOptions.getAgent().getName()+":"+agentId);
 					} catch (IOException e) {
 						noTry=true;
 						log.catching(e);
 						log.error("Could not log data!");
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} 
 				}
