@@ -9,8 +9,6 @@ import java.awt.image.VolatileImage;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.concurrent.ForkJoinPool;
-
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -200,7 +198,7 @@ public class MarioComponent extends JComponent implements Environment {
 
             boolean[] action = {false,false,false,false,false};
 
-        	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
+        	if(!paused||tmpPerformTick||!readyToExit) action = getAgent().getAction(this);
         	
         	if(this.isVisible()&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og,debugView,!paused||performTick);
            
@@ -297,9 +295,8 @@ public class MarioComponent extends JComponent implements Environment {
             }
             if(tmpPerformTick==true)performTick=false;
             
-
-            
         }//while 
+        if(rOptions.getAgent() instanceof MarioNtAgent)((MarioNtAgent)rOptions.getAgent()).roundOver(levelScene.getMarioStatus());
         
         //--- Show results on end screen
         if (this.isVisible()) redrawEndScreen();

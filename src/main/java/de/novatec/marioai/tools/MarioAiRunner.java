@@ -224,7 +224,7 @@ public class MarioAiRunner {
 			CollectorRegistry registry = new CollectorRegistry();
 			PushGateway pg = new PushGateway(MarioComponent.address);
 			Gauge data=Gauge.build().name("challenge").help("All Challenge Information").labelNames("name","agent","type").register(registry);
-			pg.delete("challenge");
+//			pg.delete(jobName);
 			if(agents.isEmpty()) {
 				log.warn("No agents found to evaluate!");
 				log.warn("Returning...");
@@ -349,7 +349,6 @@ public class MarioAiRunner {
 		        		}
 		        		if(pushUpdates)pg.push(registry, "challengeRun");
 		        }
-		       
 		        log.info("The winner is...");
 		        
 		        Agent winner=null;
@@ -364,10 +363,11 @@ public class MarioAiRunner {
 		        log.info("Final Scores:");
           		for(Entry<Agent,Double> nextEntry:tmpScores) log.info(nextEntry.getKey().getName()+"/"+nextEntry.getKey().getClass().getSimpleName()+" : "+nextEntry.getValue());
           		
-          		log.info("Enter anything to exit and remove all statistics");
-        		sc.next();
-          		if(pushUpdates) pg.delete(jobName);
+//          		log.info("Enter anything to exit and remove all statistics");
+//        		sc.next();
+//          		if(pushUpdates) pg.delete(jobName);
           		sc.close();
+          		log.info("Exiting...");
 		} catch (URISyntaxException e) {
 			log.catching(e);
 			System.exit(1);
@@ -385,7 +385,6 @@ public class MarioAiRunner {
 		public int compare(Entry<Agent, Double> o1, Entry<Agent, Double> o2) {
 			return -(o1.getValue().compareTo(o2.getValue()));
 		}
-		
 	}
 	
 	public static void main (String[] args) {

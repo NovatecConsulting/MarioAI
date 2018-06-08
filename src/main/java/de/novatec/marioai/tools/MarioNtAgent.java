@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.mario.engine.LevelScene;
+import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entities;
@@ -17,7 +18,7 @@ import de.novatec.mario.engine.generalization.Tiles.TileType;
 
 /**
  * Helper class to implement a proper Agent.
- * Implement {@link #doAiLogic()},{@link #getName()} and if needed {@link #reset()}.
+ * Implement {@link #doAiLogic()},{@link #getName()} and if needed {@link #reset()} and {@link #roundOver(STATUS)}.
  * @author rgu
  *
  */
@@ -43,6 +44,14 @@ public abstract class MarioNtAgent implements Agent{
 	 */
 	@Override
 	public void reset() {		
+	}
+	
+	/**
+	 * This method will be called after finishing an evaluation round.
+	 * @param marioStatus the final status
+	 */
+	public void roundOver(STATUS marioStatus) {
+		
 	}
 
 	/**
@@ -242,6 +251,14 @@ public abstract class MarioNtAgent implements Agent{
 	 */
 	public final boolean isCarrying() {
 		return this.env.getLevelScene().isMarioCarrying();
+	}
+	
+	/**
+	 * Returns Marios status.
+	 * @return an enum-object describing Marios status
+	 */
+	public final STATUS getMarioStatus() {
+		return this.env.getLevelScene().getMarioStatus();
 	}
 	
 	///--- Simple Detection Methods
