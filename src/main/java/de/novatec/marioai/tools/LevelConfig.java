@@ -185,7 +185,11 @@ public class LevelConfig{
 	 * Standard level with difficulty 15
 	 */
 	public static final LevelConfig STANDARD15=new LevelConfig(42,256,15,LEVEL_TYPES.OVERGROUND);
-	
+
+	public final static LevelConfig CHALLENGE_OVERWORLD=new LevelConfig(983470156,512,2,LEVEL_TYPES.OVERGROUND,true,false,true,true,new int[]{5,15,2,0,0});
+	public final static LevelConfig CHALLENGE_UNDERGROUND=new LevelConfig(50912235,512,4,LEVEL_TYPES.UNDERGROUND,true,false,true,true,new int[]{15,10,2,3,1});
+	public final static LevelConfig CHALLENGE_CASTLE=new LevelConfig(1813229492,512,8,LEVEL_TYPES.CASTLE,true,true,true,true,new int[]{6,10,4,3,3});
+
 	/**
 	 * Randomizes the given LevelConfig
 	 * @param toRandomize LevelConfig that should be randomized
