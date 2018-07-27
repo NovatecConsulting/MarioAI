@@ -2,6 +2,7 @@ package de.novatec.marioai.tools;
 
 import java.awt.Point;
 import java.io.IOException;
+import java.net.BindException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -39,6 +40,7 @@ import ch.idsia.tools.RunnerOptions;
 import ch.idsia.tools.MainFrame;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
+import io.prometheus.client.exporter.HTTPServer;
 import io.prometheus.client.exporter.PushGateway;
 
 /**
@@ -268,9 +270,7 @@ public class MarioAiRunner {
 					        	} 
 			        		}
 			        	}
-			        	log.info("Starting next round... - enter key");
-			        	sc.next();
-
+			        	log.info("Starting next round...");
 			        	log.info("Next round started - "+agentsToKill+" will be killed!");
 		        	}
 		        	else {
@@ -388,73 +388,22 @@ public class MarioAiRunner {
 	}
 	
 	public static void main (String[] args) {
+		
+		List<LevelConfig> levels=new ArrayList<>();
 
-		//runSpgGroup1Round1();
-		//runSpgGroup2Round1();
-		//runSpgGroup3Round1();
-		//runSpgRound2();
-		//runSpgRound3();
-
-		//runHsklRound1();
-		//runHsklRound2();
-		//runHsklRound3();
-
+		levels.add(LevelConfig.HARD_ENEMY_TRAINING);
+		levels.add(LevelConfig.BOWSERS_CASTLE);
+		levels.add(LevelConfig.DEALBREAKER);
+		
+		challengeRun("de.novatec.marioai.agents.included",levels, 4,  4, true,true);
 		System.exit(0);
-	}
-
-	private static void runHsklRound1() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_OVERWORLD);
-
-		challengeRun("de.novatec.marioai.agents.hskl",levels, 6,  4, true,true);
-	}
-
-	private static void runHsklRound2() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_UNDERGROUND);
-
-		challengeRun("de.novatec.marioai.agents.hskl",levels, 6,  4, true,true);
-	}
-
-	private static void runHsklRound3() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_CASTLE);
-
-		challengeRun("de.novatec.marioai.agents.hskl",levels, 6,  4, true,true);
-	}
-
-	private static void runSpgGroup1Round1() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_OVERWORLD);
-
-		challengeRun("de.novatec.marioai.agents.spgGroup1",levels, 6,  4, true,true);
-	}
-
-	private static void runSpgGroup2Round1() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_OVERWORLD);
-
-		challengeRun("de.novatec.marioai.agents.spgGroup2",levels, 6,  4, true,true);
-	}
-
-	private static void runSpgGroup3Round1() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_OVERWORLD);
-
-		challengeRun("de.novatec.marioai.agents.spgGroup3",levels, 6,  4, true,true);
-	}
-
-	private static void runSpgRound2() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_UNDERGROUND);
-
-		challengeRun("de.novatec.marioai.agents.spgRound2",levels, 6,  4, true,true);
-	}
-
-	private static void runSpgRound3() {
-		List<LevelConfig> levels = new ArrayList<>();
-		levels.add(LevelConfig.CHALLENGE_CASTLE);
-
-		challengeRun("de.novatec.marioai.agents.spgRound3",levels, 6,  4, true,true);
+		
+//		List<Agent> agents=new ArrayList<>();
+//		
+//		agents.add(new ExampleAgent());
+//		
+//		System.out.println(multiAgentRun(agents, LevelConfig.LEVEL_1, new ChallengeTask(), 24, 3, true, true, false, false));
 	}
 }
+
+
