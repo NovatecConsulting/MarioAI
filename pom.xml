@@ -4,32 +4,7 @@
 
     <groupId>de.novatec.marioai</groupId>
     <artifactId>marioAI</artifactId>
-    <version>1.8</version>
-
-
-    <organization>
-        <name>NovaTec Consulting GmbH</name>
-        <url>http://www.novatec-gmbh.de</url>
-    </organization>
-
-    <developers>
-
-        <developer>
-            <name>Christopher Uldack</name>
-            <email>cu@novatec-gmbh.de</email>
-        </developer>
-
-        <developer>
-            <name>Thorsten Jakoby</name>
-            <email>tj@novatec-gmbh.de</email>
-        </developer>
-
-        <developer>
-            <name>Robin Guth</name>
-            <email>rgu@novatec-gmbh.de</email>
-        </developer>
-
-    </developers>
+    <version>1.81</version>
 
     <scm>
         <url>https://github.com/ChrisUl/MarioAI</url>
@@ -38,33 +13,26 @@
     </scm>
 
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-core</artifactId>
 		    <version>2.11.0</version>
 		</dependency>
-		
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
 		<dependency>
 		    <groupId>org.apache.logging.log4j</groupId>
 		    <artifactId>log4j-api</artifactId>
 		    <version>2.11.0</version>
 		</dependency>
-		
 		<dependency>
 			<groupId>io.prometheus</groupId>
 			<artifactId>simpleclient</artifactId>
 			<version>0.3.0</version>
 		</dependency>
-		
-		<!-- Exposition HTTPServer-->
 		<dependency>
 			<groupId>io.prometheus</groupId>
 			<artifactId>simpleclient_httpserver</artifactId>
 			<version>0.4.0</version>
 		</dependency>
-		
 		<dependency>
   			<groupId>io.prometheus</groupId>
  			<artifactId>simpleclient_pushgateway</artifactId>
@@ -106,32 +74,6 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>assemble-jar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <appendAssemblyId>false</appendAssemblyId>
-                            <descriptors>
-                                <descriptor>assembly.xml</descriptor>
-                            </descriptors>
-                            <archive>
-                                <manifest>
-                                    <mainClass>de.novatec.marioai.tools.MarioAiRunner</mainClass>
-                                </manifest>
-                            </archive>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>

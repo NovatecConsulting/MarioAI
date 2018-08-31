@@ -84,7 +84,15 @@ public class MarioAiRunner {
 	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize) {		
 		run(agent, levelConfig, 24,3,randomize, true,false);
 	}
-	
+	/**
+	 *  Equals the call of @link #run(Agent, LevelConfig, boolean, int)} with attributes run(agent, levelConfig, randomize, 3).
+	 * @param agent Agent to be evaluated
+	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
+	 */
+	public static void run(Agent agent,LevelConfig levelConfig) {
+		run(agent, levelConfig, 24,3, false, true,false);
+	}
+
 	/**
 	 *  Hides some attributes of @link #run(Agent, LevelConfig, int,int, boolean, boolean, boolean). Standard values will be used for missing attributes.
 	 * @param agent Agent to be evaluated

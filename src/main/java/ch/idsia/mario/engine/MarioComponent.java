@@ -26,7 +26,7 @@ import ch.idsia.mario.environments.Environment;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.RunnerOptions;
 import de.novatec.marioai.agents.included.HumanKeyboardAgent;
-import de.novatec.marioai.tools.MarioNtAgent;
+import de.novatec.marioai.tools.MarioAiAgent;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
 import io.prometheus.client.exporter.PushGateway;
@@ -200,7 +200,7 @@ public class MarioComponent extends JComponent implements Environment {
 
         	if(!paused||tmpPerformTick||!readyToExit) action = getAgent().getAction(this);
         	
-        	if(this.isVisible()&&getAgent() instanceof MarioNtAgent&&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioNtAgent)getAgent()).debugDraw(og,debugView,!paused||performTick);
+        	if(this.isVisible()&&getAgent() instanceof MarioAiAgent &&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioAiAgent)getAgent()).debugDraw(og,debugView,!paused||performTick);
            
             if (action != null)
             {
@@ -296,7 +296,7 @@ public class MarioComponent extends JComponent implements Environment {
             if(tmpPerformTick==true)performTick=false;
             
         }//while 
-        if(rOptions.getAgent() instanceof MarioNtAgent)((MarioNtAgent)rOptions.getAgent()).roundOver(levelScene.getMarioStatus());
+        if(rOptions.getAgent() instanceof MarioAiAgent)((MarioAiAgent)rOptions.getAgent()).roundOver(levelScene.getMarioStatus());
         
         //--- Show results on end screen
         if (this.isVisible()) redrawEndScreen();

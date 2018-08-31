@@ -22,7 +22,7 @@ import de.novatec.mario.engine.generalization.Tiles.TileType;
  * @author rgu
  *
  */
-public abstract class MarioNtAgent implements Agent{
+public abstract class MarioAiAgent implements Agent{
 	
 	private MarioInput input=new MarioInput();
 
