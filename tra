@@ -1,0 +1,5 @@
+language: java
+jdk:
+  - oraclejdk10
+git:
+lfs_skip_smudge: true
