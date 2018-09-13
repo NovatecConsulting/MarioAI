@@ -301,7 +301,7 @@ you can use the many paramenters that can be passed to the constructor of
         <td>+58 per item</td>
     </tr>
     <tr>
-        <td>Getting hit by enemy or projectile</td>
+        <td>Getting hit by enemy or projectile </td>
         <td>-42 per hit</td>
     </tr>
 </table>
