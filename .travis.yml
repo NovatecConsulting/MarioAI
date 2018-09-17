@@ -3,3 +3,6 @@ jdk:
   - oraclejdk10
 git:
 lfs_skip_smudge: true
+
+install: true
+script: ./mvnw clean install
