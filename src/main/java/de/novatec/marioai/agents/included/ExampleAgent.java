@@ -4,7 +4,7 @@ import de.novatec.marioai.tools.MarioInput;
 import de.novatec.marioai.tools.MarioAiAgent;
 
 public class ExampleAgent extends MarioAiAgent {
-	
+	//test
 	@Override
 	public String getName() {
 		return "Test Agent";
