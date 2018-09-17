@@ -5,4 +5,5 @@ git:
 lfs_skip_smudge: true
 
 install: true
-script: ./mvnw clean install
+script: 
+- mvn test
