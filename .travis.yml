@@ -4,6 +4,5 @@ jdk:
 git:
 lfs_skip_smudge: true
 
-install: true
-script: 
-- mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+install: mvn install -P !build-extras -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+script: mvn test -P !build-extras -B
