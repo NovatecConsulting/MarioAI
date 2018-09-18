@@ -5,5 +5,7 @@ git:
 lfs_skip_smudge: true
 
 
-script: mvn clean verify
+script: 
+- mvn clean install
+- java -jar marioAI-1.81.jar
 
