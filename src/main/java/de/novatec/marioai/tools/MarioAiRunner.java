@@ -84,15 +84,7 @@ public class MarioAiRunner {
 	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize) {		
 		run(agent, levelConfig, 24,3,randomize, true,false);
 	}
-	/**
-	 *  Equals the call of @link #run(Agent, LevelConfig, boolean, int)} with attributes run(agent, levelConfig, randomize, 3).
-	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
-	 */
-	public static void run(Agent agent,LevelConfig levelConfig) {
-		run(agent, levelConfig, 24,3, false, true,false);
-	}
-
+	
 	/**
 	 *  Hides some attributes of @link #run(Agent, LevelConfig, int,int, boolean, boolean, boolean). Standard values will be used for missing attributes.
 	 * @param agent Agent to be evaluated
@@ -396,24 +388,7 @@ public class MarioAiRunner {
 	}
 	
 	public static void main (String[] args) {
-
-
-
-        MarioAiRunner.multiAgentRun(List.of(new MarioAiAgent() {
-            @Override
-            public String getName() {
-                return "Demo Agent";
-            }
-
-            @Override
-            public MarioInput doAiLogic() {
-               moveRight();
-                return getMarioInput();
-            }
-        }), LevelConfig.LEVEL_1, Task.COMPETITIONTASK, 24,1,false,false,false,false,false);
-        }
-
-/**
+		
 		List<LevelConfig> levels=new ArrayList<>();
 
 		levels.add(LevelConfig.HARD_ENEMY_TRAINING);
@@ -422,13 +397,13 @@ public class MarioAiRunner {
 		
 		challengeRun("de.novatec.marioai.agents.included",levels, 4,  4, true,true);
 		System.exit(0);
-	*/
+		
 //		List<Agent> agents=new ArrayList<>();
 //		
 //		agents.add(new ExampleAgent());
 //		
 //		System.out.println(multiAgentRun(agents, LevelConfig.LEVEL_1, new ChallengeTask(), 24, 3, true, true, false, false));
 	}
-
+}
 
 

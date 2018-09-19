@@ -5,9 +5,9 @@ import java.awt.event.KeyListener;
 
 import ch.idsia.mario.environments.Environment;
 import de.novatec.marioai.tools.MarioInput;
-import de.novatec.marioai.tools.MarioAiAgent;
+import de.novatec.marioai.tools.MarioNtAgent;
 
-public class HumanKeyboardAgent extends MarioAiAgent implements KeyListener {
+public class HumanKeyboardAgent extends MarioNtAgent implements KeyListener {
 
 	private boolean[] action=new boolean[Environment.numberOfButtons];
 	

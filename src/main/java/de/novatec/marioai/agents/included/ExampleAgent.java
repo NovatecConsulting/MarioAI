@@ -1,10 +1,10 @@
 package de.novatec.marioai.agents.included;
 
 import de.novatec.marioai.tools.MarioInput;
-import de.novatec.marioai.tools.MarioAiAgent;
+import de.novatec.marioai.tools.MarioNtAgent;
 
-public class ExampleAgent extends MarioAiAgent {
-	//test
+public class ExampleAgent extends MarioNtAgent{
+	
 	@Override
 	public String getName() {
 		return "Test Agent";
