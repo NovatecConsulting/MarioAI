@@ -402,6 +402,7 @@ public class MarioAiRunner {
 			}
 		}), LevelConfig.LEVEL_1, Task.COMPETITIONTASK, 24, 1, false, false, false, false, false);
 	}
+
 		/**
 		List<LevelConfig> levels=new ArrayList<>();
 
