@@ -10,8 +10,8 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   
 script: 
-"lein deps; lein javac; export DISPLAY=:99.0; ./lazytest.sh"
 - mvn clean install
+- "lein deps; lein javac; export DISPLAY=:99.0; ./lazytest.sh"
 - java -jar /home/travis/build/NovaTecConsulting/MarioAI/target/marioAI-1.8.jar
 
 
