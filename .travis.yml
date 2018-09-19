@@ -5,8 +5,14 @@ jdk:
 git:
 lfs_skip_smudge: true
 
-
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  
 script: 
+"lein deps; lein javac; export DISPLAY=:99.0; ./lazytest.sh"
 - mvn clean install
 - java -jar /home/travis/build/NovaTecConsulting/MarioAI/target/marioAI-1.8.jar
-- echo $DISPLAY
+
+
+
