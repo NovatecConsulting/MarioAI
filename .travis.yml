@@ -1,0 +1,11 @@
+
+language: java
+jdk:
+  - oraclejdk10
+git:
+lfs_skip_smudge: true
+
+
+script: 
+- mvn clean install
+- marioAI-1.81.jar
