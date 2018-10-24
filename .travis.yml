@@ -1,7 +1,7 @@
 
 language: java
 jdk:
-  - oraclejdk10
+  - oraclejdk11
 git:
 lfs_skip_smudge: true
 
@@ -12,6 +12,6 @@ before_script:
 script: 
 - mvn clean install
 - java -jar /home/travis/build/NovaTecConsulting/MarioAI/target/marioAI-1.8.jar
-
+#hgjk
 
 
