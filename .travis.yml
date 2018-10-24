@@ -11,7 +11,7 @@ before_script:
   
 script: 
 - mvn clean install
-- java -jar /home/travis/build/NovaTecConsulting/MarioAI/target/marioAI-1.8.jar
+- java -jar /home/travis/.m2/repository/de/novatec/marioai/marioAI/1.8/marioAI-1.8.jar
 #hgjk
 
 
