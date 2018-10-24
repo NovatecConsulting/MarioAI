@@ -401,7 +401,7 @@ public class MarioAiRunner {
 				jump();
 				return getMarioInput();
 			}
-		}), LevelConfig.BOWSERS_CASTLE, Task.COMPETITIONTASK, 24, 1, false, true, false, false, true);
+		}), LevelConfig.BOWSERS_CASTLE, Task.COMPETITIONTASK, 24, 1, false, true, false, true, true);
 	}
 
 		/**
