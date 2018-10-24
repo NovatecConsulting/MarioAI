@@ -398,9 +398,10 @@ public class MarioAiRunner {
 			@Override
 			public MarioInput doAiLogic() {
 				moveRight();
+				jump();
 				return getMarioInput();
 			}
-		}), LevelConfig.LEVEL_1, Task.COMPETITIONTASK, 24, 1, false, false, false, false, false);
+		}), LevelConfig.BOWSERS_CASTLE, Task.COMPETITIONTASK, 24, 1, false, true, false, false, true);
 	}
 
 		/**

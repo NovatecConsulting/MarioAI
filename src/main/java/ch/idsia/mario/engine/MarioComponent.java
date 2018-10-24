@@ -261,7 +261,7 @@ public class MarioComponent extends JComponent implements Environment {
             if(!isPaused()||tmpPerformTick) {
             	increaseFrame();
             	
-            	if(frame%24==0) {
+            	if(frame%1==0) {
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"score").set(levelScene.getScore());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"kills").set(levelScene.getKilledCreaturesTotal());
             	data.labels(rOptions.getAgent().getName(),rOptions.getAgent().getClass().getName().trim().replace('.', '_'),""+agentId,"time").set(levelScene.getTimeLeft());
