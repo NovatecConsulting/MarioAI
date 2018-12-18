@@ -27,6 +27,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
 
+import de.novatec.marioai.agents.included.ExampleAgent;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -392,16 +393,113 @@ public class MarioAiRunner {
 		MarioAiRunner.multiAgentRun(List.of(new MarioNtAgent() {
 			@Override
 			public String getName() {
-				return "Mario Agent";
+				return "Luigi Agent";
 			}
 
 			@Override
 			public MarioInput doAiLogic() {
 				moveRight();
-				jump();
+
+				if(isEnemyAhead()){
+					jump();
+				}
+				if (isBrickAhead()){
+					jump();
+				}
+				if(isHoleAhead()){
+					jump();
+				}
+
 				return getMarioInput();
+
+
 			}
-		}), LevelConfig.BOWSERS_CASTLE, Task.COMPETITIONTASK, 24, 1, false, true, false, true, true);
+
+
+		},new MarioNtAgent() {
+					@Override
+					public String getName() {
+						return "Mario Agent";
+					}
+
+					@Override
+					public MarioInput doAiLogic() {
+						moveRight();
+						sprint();
+						if(isEnemyAhead()){
+							jump();
+						}
+						if (isBrickAhead()){
+							jump();
+						}
+						if(isHoleAhead()){
+							jump();
+						}
+
+						return getMarioInput();
+
+
+					}
+
+
+				}, new MarioNtAgent() {
+					@Override
+					public String getName() {
+						return "Peach Agent";
+					}
+
+					@Override
+					public MarioInput doAiLogic() {
+						if(mayShoot()&&isEnemyAhead()) {
+							shoot();
+						}
+
+						if(isEnemyAhead()) jump();
+
+						if(isSlopeAhead()&&!isHoleAhead()&&!(getDeepCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
+
+						moveRight();
+
+						if(isHoleAhead()||isBrickAhead()||isQuestionbrickAbove()) jump();
+
+
+
+						return getMarioInput();
+
+
+					}
+
+
+				},new MarioNtAgent() {
+					@Override
+					public String getName() {
+						return "Toad Agent";
+					}
+
+					@Override
+					public MarioInput doAiLogic() {
+						moveRight();
+						sprint();
+						shoot();
+						if(isEnemyAhead()){
+							jump();
+						}
+						if (isBrickAhead()){
+							jump();
+						}
+						if(isHoleAhead()){
+							jump();
+						}
+
+						return getMarioInput();
+
+
+					}}),
+
+				LevelConfig.randomize(LevelConfig.BOWSERS_CASTLE), Task.COMPETITIONTASK, 24, 2, false, true, false, true, true);
+
+
+
 	}
 
 		/**
