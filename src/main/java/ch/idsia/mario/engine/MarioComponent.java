@@ -840,4 +840,3 @@ public class MarioComponent extends JComponent implements Environment {
 
 }
 
-	

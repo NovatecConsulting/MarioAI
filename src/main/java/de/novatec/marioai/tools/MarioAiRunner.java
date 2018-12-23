@@ -387,36 +387,36 @@ public class MarioAiRunner {
 			return -(o1.getValue().compareTo(o2.getValue()));
 		}
 	}
-	
+
 	public static void main (String[] args) {
 
 		MarioAiRunner.multiAgentRun(List.of(new MarioNtAgent() {
-			@Override
-			public String getName() {
-				return "Luigi Agent";
-			}
+					@Override
+					public String getName() {
+						return "Luigi Agent";
+					}
 
-			@Override
-			public MarioInput doAiLogic() {
-				moveRight();
+					@Override
+					public MarioInput doAiLogic() {
+						moveRight();
 
-				if(isEnemyAhead()){
-					jump();
-				}
-				if (isBrickAhead()){
-					jump();
-				}
-				if(isHoleAhead()){
-					jump();
-				}
+						if(isEnemyAhead()){
+							jump();
+						}
+						if (isBrickAhead()){
+							jump();
+						}
+						if(isHoleAhead()){
+							jump();
+						}
 
-				return getMarioInput();
-
-
-			}
+						return getMarioInput();
 
 
-		},new MarioNtAgent() {
+					}
+
+
+				},new MarioNtAgent() {
 					@Override
 					public String getName() {
 						return "Mario Agent";
@@ -479,8 +479,7 @@ public class MarioAiRunner {
 					@Override
 					public MarioInput doAiLogic() {
 						moveRight();
-						sprint();
-						shoot();
+
 						if(isEnemyAhead()){
 							jump();
 						}
@@ -497,6 +496,10 @@ public class MarioAiRunner {
 					}}),
 
 				LevelConfig.randomize(LevelConfig.BOWSERS_CASTLE), Task.COMPETITIONTASK, 24, 2, false, true, false, true, true);
+
+
+
+
 
 
 
