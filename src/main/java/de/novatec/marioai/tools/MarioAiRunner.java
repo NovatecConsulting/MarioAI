@@ -413,6 +413,7 @@ public class MarioAiRunner {
 						return getMarioInput();
 
 
+						
 					}
 
 
@@ -446,7 +447,7 @@ public class MarioAiRunner {
 //		agents.add(new ExampleAgent());
 //		
 //		System.out.println(multiAgentRun(agents, LevelConfig.LEVEL_1, new ChallengeTask(), 24, 3, true, true, false, false));
-	
+
 
 
 
