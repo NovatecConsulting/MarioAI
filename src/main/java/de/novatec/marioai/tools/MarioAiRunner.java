@@ -399,6 +399,7 @@ public class MarioAiRunner {
 					@Override
 					public MarioInput doAiLogic() {
 						moveRight();
+						sprint();
 
 						if(isEnemyAhead()){
 							jump();
