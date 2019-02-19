@@ -7,10 +7,10 @@ jdk:
 before_script:
  - "export DISPLAY=:99.0"
  - "sh -e /etc/init.d/xvfb start"
+ - mvn -Dmaven.javadoc.skip=true verify
 
 script: 
 - mvn clean install
-- mvn -Dmaven.javadoc.skip=true verify
 - java -jar /home/travis/.m2/repository/de/novatec/marioai/marioAI/1.8/marioAI-1.8.jar
 
 
