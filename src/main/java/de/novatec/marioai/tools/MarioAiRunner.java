@@ -393,13 +393,13 @@ public class MarioAiRunner {
 		MarioAiRunner.multiAgentRun(List.of(new MarioNtAgent() {
 					@Override
 					public String getName() {
-						return "Luigi Agent";
+						return "Mario Agent";
 					}
 
 					@Override
 					public MarioInput doAiLogic() {
 						moveRight();
-						
+
 
 						if(isEnemyAhead()){
 							jump();
@@ -418,7 +418,7 @@ public class MarioAiRunner {
 
 				}),
 
-				LevelConfig.randomize(LevelConfig.BOWSERS_CASTLE), Task.COMPETITIONTASK, 24, 2, false, false, false, true, true);
+				LevelConfig.randomize(LevelConfig.BOWSERS_CASTLE), Task.COMPETITIONTASK, 24, 2, false, true, false, true, true);
 
 
 
