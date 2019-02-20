@@ -398,7 +398,7 @@ public class MarioAiRunner {
 						MarioAiRunner.multiAgentRun(List.of(new MarioNtAgent() {
 									@Override
 									public String getName() {
-										return "Luigi Agent";
+										return "Mario Agent";
 									}
 
 									@Override
