@@ -500,7 +500,7 @@ public class MarioAiRunner {
 
 					}}),
 
-				LevelConfig.randomize(LevelConfig.BOWSERS_CASTLE), Task.COMPETITIONTASK, 24, 2, false, true, false, true, true);
+				LevelConfig.randomize(LevelConfig.BOWSERS_CASTLE), Task.COMPETITIONTASK, 24, 2, false, false, false, true, true);
 
 
 
