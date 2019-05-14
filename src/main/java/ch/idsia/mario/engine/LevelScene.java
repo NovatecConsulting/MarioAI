@@ -5,6 +5,7 @@ import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.level.LevelGenerator;
 import ch.idsia.mario.engine.level.SpriteTemplate;
 import ch.idsia.mario.engine.sprites.*;
+import ch.idsia.mario.engine.sprites.Mario.Cause;
 import ch.idsia.mario.engine.sprites.Mario.MODE;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
@@ -311,13 +312,83 @@ public class LevelScene implements SpriteContext {
 				return 0;
 			}
 			return 1; // everything else is "something", so it is 1
+		case (3):
+			switch (el) {
+			case 16: // brick, simple, without any surprise.
+			case 17: // brick with a hidden coin
+			case 18: // brick with a hidden flower
+				return -10;//-10; // prevents cheating
+			case 21: // question brick, contains coin
+			case 22: // question brick, contains flower/mushroom
+				return 21; //21 // question brick, contains something
+			case (-108):
+			case (-107):
+			case (-106):
+			case (15): // Sparcle, irrelevant
+				return 0;
+			case (34):
+				return 34; //34 // COINS $$$
+			case (-128):
+			case (-127):
+			case (-126):
+			case (-125):
+			case (-120):
+			case (-119):
+			case (-118):
+			case (-117):
+			case (-116):
+			case (-115):
+			case (-114):
+			case (-113):
+			case (-112):
+			case (-111):
+			case (-110):
+			case (-109):
+			case (-104):
+			case (-103):
+			case (-102):
+			case (-101):
+			case (-100):
+			case (-99):
+			case (-98):
+			case (-97):
+			case (-69):
+			case (-65):
+			case (-88):
+			case (-87):
+			case (-86):
+			case (-85):
+			case (-84):
+			case (-83):
+			case (-82):
+			case (-81):
+			case (4): // kicked hidden brick
+			case (9):
+				return -10; // -10 border, cannot pass through, can stand on
+			case (-124):
+			case (-123):
+			case (-122):
+			case (-76):
+			case (-74):
+				return -11; // -11 half-border, can jump through from bottom and can stand on
+			case (10):
+			case (11):
+			case (26):
+			case (27):
+				return -10;// -10 flower pot
+			case (14):
+			case (30):
+			case (46): // canon
+				return -10; // -10 angry flower pot or cannon
+			}
+			System.err.println("Unknown value el = " + el + " ; Please, inform the developers");
+			return el;
 		}
 		System.err.println("Unkown ZLevel Z" + ZLevel);
 		return el; // TODO: Throw unknown ZLevel exception
 	}
 
 	private byte ZLevelEnemyGeneralization(byte el, int ZLevel) {
-
 		switch (ZLevel) {
 		case (0):
 
@@ -382,8 +453,41 @@ public class LevelScene implements SpriteContext {
 			}
 			System.err.println("Z2 UNKNOWNN el = " + el);
 			return 1;
+		
+		case (3):
+			switch (el) {
+			case (Sprite.KIND_COIN_ANIM):
+			case (Sprite.KIND_PARTICLE):
+			case (Sprite.KIND_SPARCLE):
+			case (Sprite.KIND_FIREBALL):
+				return 0;
+			case (Sprite.KIND_MARIO):
+				return 0;
+			case (Sprite.KIND_BULLET_BILL):
+			case (Sprite.KIND_GOOMBA):
+			case (Sprite.KIND_GOOMBA_WINGED):
+			case (Sprite.KIND_GREEN_KOOPA):
+			case (Sprite.KIND_GREEN_KOOPA_WINGED):
+			case (Sprite.KIND_RED_KOOPA):
+			case (Sprite.KIND_RED_KOOPA_WINGED):
+				return Sprite.KIND_GOOMBA;
+			case (Sprite.KIND_SHELL):
+				return Sprite.KIND_SHELL;
+			case (Sprite.KIND_SPIKY):
+			case (Sprite.KIND_SPIKY_WINGED):
+			case (Sprite.KIND_ENEMY_FLOWER):
+				return Sprite.KIND_SPIKY;
+			case (Sprite.KIND_FIRE_FLOWER):
+			case (Sprite.KIND_MUSHROOM):
+				return Sprite.KIND_MUSHROOM;
+			}
+			System.err.println("Z3 UNKNOWNN el = " + el);
+			return 1;
+			
+		default: throw new IllegalArgumentException("Enemy ZLevel must be between 0..3 (inclusive)!");
+			
 		}
-		return el; // TODO: Throw unknown ZLevel exception
+//		return el;
 	}
 
 	public byte[][] levelSceneObservation(int ZLevel) {
@@ -600,6 +704,7 @@ public class LevelScene implements SpriteContext {
 	}
 
 	public byte[][] mergedObservation(int ZLevelScene, int ZLevelEnemies) {
+		//System.out.println("ZLevelScene:" +ZLevelScene+" ZLevelEnemies: "+ ZLevelEnemies);
 		byte[][] ret = new byte[Environment.HalfObsWidth * 2][Environment.HalfObsHeight * 2];
 		
 		int MarioXInMap =  mario.getMapX();
@@ -623,7 +728,7 @@ public class LevelScene implements SpriteContext {
 		// ret[w][h] = -1;
 		// ret[Environment.HalfObsWidth][Environment.HalfObsHeight] = mario.kind;
 		for (Sprite sprite : sprites) {
-			if (sprite.getKind() == mario.getKind())
+			if (sprite.getKind() == mario.getKind()||sprite.isDead())
 				continue;
 			if (sprite.getMapX() >= 0 && sprite.getMapX() > MarioXInMap - Environment.HalfObsWidth
 					&& sprite.getMapX() < MarioXInMap + Environment.HalfObsWidth && sprite.getMapY() >= 0
@@ -844,7 +949,7 @@ public class LevelScene implements SpriteContext {
 			timeLeft--;
 		
 		if (timeLeft == 0) {
-			mario.die();			
+			mario.die(Cause.TIME_OUT);			
 		}
 		
 		if (startTime > 0&&mario.getStatus()==STATUS.RUNNING) {
@@ -1172,6 +1277,11 @@ public class LevelScene implements SpriteContext {
 		return STATUS.UNKNOWN;
 	}
 	
+	public Cause getMarioCause() {
+		if(mario!=null) return mario.getCause();
+		return Cause.UNKNOWN;
+	}
+	
 	public boolean isMarioOnGround() {
 		return mario.isOnGround();
 	}
@@ -1213,7 +1323,7 @@ public class LevelScene implements SpriteContext {
 		return this.mario.getTimesHurt();
 	}
 	
-	public int getMarioGainedFowers() {
+	public int getMarioGainedFlowers() {
 		return this.mario.getGainedFlowers();
 	}
 	

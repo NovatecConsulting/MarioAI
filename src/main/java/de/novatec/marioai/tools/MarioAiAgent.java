@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.mario.engine.LevelScene;
+import ch.idsia.mario.engine.sprites.Mario.Cause;
+import ch.idsia.mario.engine.sprites.Mario.MODE;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import de.novatec.mario.engine.generalization.Coordinates;
@@ -18,7 +20,7 @@ import de.novatec.mario.engine.generalization.Tiles.TileType;
 
 /**
  * Helper class to implement a proper Agent.
- * Implement {@link #doAiLogic()},{@link #getName()} and if needed {@link #reset()} and {@link #roundOver(STATUS)}.
+ * Implement {@link #doAiLogic()},{@link #getName()} and if needed {@link #reset()} and {@link #roundOver(STATUS, Cause)}.
  * @author rgu
  *
  */
@@ -49,8 +51,9 @@ public abstract class MarioAiAgent implements Agent{
 	/**
 	 * This method will be called after finishing an evaluation round.
 	 * @param marioStatus the final status
+	 * @param marioCause the cause for Marios status
 	 */
-	public void roundOver(STATUS marioStatus) {
+	public void roundOver(STATUS marioStatus, Cause marioCause) {
 		
 	}
 
@@ -230,6 +233,30 @@ public abstract class MarioAiAgent implements Agent{
 	}
 	
 	/**
+	 * Returns Marios X acceleration
+	 * @return a float value with Mario's X acceleration
+	 */
+	public final float getMarioXA() {
+		return env.getLevelScene().getMarioXA();
+	}
+	
+	/**
+	 * Returns Marios Y acceleration
+	 * @return a float value with Mario's Y acceleration
+	 */
+	public final float getMarioYA() {
+		return env.getLevelScene().getMarioYA();
+	}
+	
+	/**
+	 * Returns Marios mode
+	 * @return an enum instance, representing Marios mode
+	 */
+	public final MODE getMarioMode() {
+		return env.getLevelScene().getMarioMode();
+	}
+	
+	/**
 	 * Is Mario on the ground?
 	 * @return a boolean value indicating whether Mario is on the ground
 	 */
@@ -253,12 +280,48 @@ public abstract class MarioAiAgent implements Agent{
 		return this.env.getLevelScene().isMarioCarrying();
 	}
 	
+	public final boolean isSliding() {
+		return this.env.getLevelScene().isMarioSliding();
+	}
+	
 	/**
 	 * Returns Marios status.
 	 * @return an enum-object describing Marios status
 	 */
 	public final STATUS getMarioStatus() {
 		return this.env.getLevelScene().getMarioStatus();
+	}
+	
+	public final int getTimesMarioHurt() {
+		return this.env.getLevelScene().getTimesMarioHurt();
+	}
+	
+	public final int getKilledCreaturesTotal() {
+		return this.env.getLevelScene().getKilledCreaturesTotal();
+	}
+	
+	public final int getKilledCreaturesByFireBall() {
+		return this.env.getLevelScene().getKilledCreaturesByFireBall();
+	}
+	
+	public final int getKilledCreaturesByStomp() {
+		return this.env.getLevelScene().getKilledCreaturesByStomp();
+	}
+	
+	public final int getKilledCreaturesByShell() {
+		return this.env.getLevelScene().getKilledCreaturesByShell();
+	}
+	
+	public final int getCollectedCoins() {
+		return this.env.getLevelScene().getMarioCoins();
+	}
+	
+	public final int getCollectedFlowers() {
+		return this.env.getLevelScene().getMarioGainedFlowers();
+	}
+	
+	public final int getCollectedMushrooms() {
+		return this.env.getLevelScene().getMarioGainedMushrooms();
 	}
 	
 	///--- Simple Detection Methods
