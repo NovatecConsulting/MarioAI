@@ -13,6 +13,7 @@ public class Mario extends Sprite // cloneable
 	private boolean fire = false;
 	private int coins = 0;
 	private STATUS status = STATUS.RUNNING;
+	private Cause cause=Cause.UNKNOWN;
 	private final int FractionalPowerUpTime = 0;
 	private int gainedMushrooms;
 	private int gainedFlowers;
@@ -59,6 +60,10 @@ public class Mario extends Sprite // cloneable
 		public int getStatus() {
 			return status;
 		}
+	}
+	
+	public enum Cause{
+		TIME_OUT,REACHED_TARGET,DIED,FALL_TO_DEATH,UNKNOWN
 	}
 
 	public void resetCoins() {
@@ -338,7 +343,7 @@ public class Mario extends Sprite // cloneable
 		move(0, ya);
 
 		if (y > spriteContext.getLevelHight() * 16 + 16) {
-			die();
+			die(Cause.FALL_TO_DEATH);
 		}
 
 		if (x < 0) {
@@ -614,7 +619,7 @@ public class Mario extends Sprite // cloneable
 			}
 			invulnerableTime = 32;
 		} else {
-			die();
+			die(Cause.DIED);
 		}
 	}
 
@@ -623,13 +628,15 @@ public class Mario extends Sprite // cloneable
 		yDeathPos = ((int) y);
 		winTime = 1;
 		status = STATUS.WIN;
+		cause=Cause.REACHED_TARGET;
 	}
 
-	public void die() {
+	public void die(Cause c) {
 		xDeathPos = ((int) x);
 		yDeathPos = ((int) y);
 		deathTime = (25);
 		status = STATUS.LOSE;
+		cause=c;
 	}
 
 	public void getFlower() {
@@ -704,6 +711,10 @@ public class Mario extends Sprite // cloneable
 
 	public STATUS getStatus() {
 		return status;
+	}
+	
+	public Cause getCause() {
+		return cause;
 	}
 
 	public boolean isOnGround() {
