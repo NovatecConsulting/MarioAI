@@ -50,7 +50,7 @@ public class MarioComponent extends JComponent implements Environment {
     private int fps;
     
     //--- Logging & Prometheus
-    public static String address="prometheus-pushgatewaymarioainovatec.eu-de.mybluemix.net:80";
+    public static String address="prometheus-pushgateway.eu-de.mybluemix.net:80";
     private Logger log;
     private static final Level STATISTIC=Level.forName("STATISTIC", 550);
     private static volatile int AGENT_ID=0;

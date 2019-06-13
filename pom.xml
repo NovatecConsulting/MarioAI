@@ -4,7 +4,7 @@
 
     <groupId>de.novatec.marioai</groupId>
     <artifactId>marioAI</artifactId>
-    <version>1.82</version>
+    <version>1.83</version>
 
     <scm>
         <url>https://github.com/ChrisUl/MarioAI</url>
