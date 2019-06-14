@@ -1,0 +1,7 @@
+applications:
+- name: grafana
+  buildpack: binary_buildpack
+  memory: 256m
+  command: './run.sh'
+  services:
+  - grafana-db

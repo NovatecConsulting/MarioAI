@@ -1,0 +1,9 @@
+# TODO before:
+# cd prometheus ; sed -i -e 's|15s|1s|' prometheus.yml
+# for pushgateway: cd prometheus ; sed -i -e 's|localhost:8080|prometheus-pushgatewaymarioainovatec.eu-de.mybluemix.net:80|' prometheus.yml
+
+applications:
+- name: prometheus
+  buildpack: binary_buildpack
+  memory: 256m
+  command: 'cd prometheus ; ./prometheus --web.listen-address=:8080'

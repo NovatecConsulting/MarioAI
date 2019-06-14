@@ -1,0 +1,5 @@
+applications:
+- name: prometheus
+  buildpack: binary_buildpack
+  memory: 256m
+  command: 'cd pushGateway ; ./pushgateway --web.listen-address=:8080'
