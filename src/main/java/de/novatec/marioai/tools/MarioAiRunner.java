@@ -37,6 +37,7 @@ import ch.idsia.mario.engine.MarioComponent;
 import ch.idsia.tools.EvaluationInfo;
 import ch.idsia.tools.Evaluator;
 import ch.idsia.tools.RunnerOptions;
+import de.novatec.marioai.agents.included.ExampleAgent;
 import ch.idsia.tools.MainFrame;
 import io.prometheus.client.CollectorRegistry;
 import io.prometheus.client.Gauge;
@@ -46,86 +47,53 @@ import io.prometheus.client.exporter.PushGateway;
 /**
  * Simple helper class to start the evaluation of an agent. 
  * @author rgu 
- *
+ * @author nmn
  */
 public class MarioAiRunner {
 	
 	private static final Logger log=LogManager.getLogger(MarioAiRunner.class);
 	private static final String jobName="challengeRun";
+	private static List<Agent> agents;
+	private static LevelConfig levelConfig;
+	private static Task task; 
+	private static int fps; 
+	private static int zoomFactor; 
+	private static boolean randomize; 
+	private static boolean viewable;
+	private static boolean debugView;
+	private static boolean exitOnFinish; 
+	private static boolean pushMetrics;
 	/**
 	 * No instances needed.
 	 */
-	private MarioAiRunner() {
-		
-	}
-
 	/**
-	 * Starts the evaluation of an agent with the specified parameters.
-	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own.
-	 * @param fps sets the amount of frames per seconds, bigger values make the game faster (Standard: 24 fps)
-	 * @param randomize determines if the level should be randomized based on the levelConfig
-	 * @param viewable determines if the evaluation should be viewable (if true fps will be overridden!)
-	 * @param debugView determines if additional debug-views should be shown
-	 * @param zoomFactor  multiplier for window height/width (Standard: 320x240)
+	 * 
+	 * @param marioAiRunnerBuilder uses all the variables from the builder and copies them 
 	 */
-	public static void run(Agent agent,LevelConfig levelConfig,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView) {
-		List<Agent> tmp=new ArrayList<>();
-		tmp.add(agent);
-		multiAgentRun(tmp, levelConfig, new ChallengeTask(), fps, zoomFactor, randomize, viewable, debugView, false, false);
+	public MarioAiRunner(MarioAiRunnerBuilder marioAiRunnerBuilder) {
+		List<Agent> tmpList = marioAiRunnerBuilder.getAgents();
+		if(tmpList.isEmpty()) tmpList.add(new ExampleAgent());
+		agents = tmpList;
+		levelConfig  = marioAiRunnerBuilder.getLevelConfig();
+		task = marioAiRunnerBuilder.getTask();
+		fps = marioAiRunnerBuilder.getFps();
+		zoomFactor = marioAiRunnerBuilder.getZoomFactor();
+		randomize = marioAiRunnerBuilder.isRandomize();
+		viewable = marioAiRunnerBuilder.isViewable();
+		debugView = marioAiRunnerBuilder.isDebugView();
+		exitOnFinish = marioAiRunnerBuilder.isExitOnFinish();
+		pushMetrics = marioAiRunnerBuilder.isPushMetrics();
+		
 	}
 	
 	/**
-	 *  Equals the call of @link #run(Agent, LevelConfig, boolean, int)} with attributes run(agent, levelConfig, randomize, 3).
-	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
-	 * @param randomize determines if the level should be randomized based on the levelConfig
+	 * 
+	 * @return List<EvaluationInfo> runs all agents using the current settings(variables) and returns the results
 	 */
-	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize) {		
-		run(agent, levelConfig, 24,3,randomize, true,false);
-	}
-	/**
-	 *  Equals the call of @link #run(Agent, LevelConfig, boolean, int)} with attributes run(agent, levelConfig, randomize, 3).
-	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
-	 */
-	public static void run(Agent agent,LevelConfig levelConfig) {
-		run(agent, levelConfig, 24,3, false, true,false);
-	}
-
-	/**
-	 *  Hides some attributes of @link #run(Agent, LevelConfig, int,int, boolean, boolean, boolean). Standard values will be used for missing attributes.
-	 * @param agent Agent to be evaluated
-	 * @param levelConfig Configuration for the {@link}LevelGenerator. Either use preset levelConfigs or create your own
-	 * @param randomize determines if the level should be randomized based on the levelConfig
-	 * @param zoomFactor multiplier for window height/width (Standard: 320x240)
-	 */
-	public static void run(Agent agent,LevelConfig levelConfig,boolean randomize, int zoomFactor) {		
-		run(agent, levelConfig, 24,zoomFactor,randomize, true,false);
-	}
-	
-	public static List<EvaluationInfo> multiAgentRun(List<Agent> agents, LevelConfig levelConfig,Task task,int fps,int zoomFactor, boolean randomize, boolean viewable, boolean debugView, boolean exitOnFinish, boolean pushMetrics) {
-		
-		//log.info("MarioAi - trying to start evaluation...");
-		if(agents==null){
-			log.error("Agents List can't be null!\nPlease use a proper List with agents! - no evaluation started");
-			return new ArrayList<>();
-		}
-		if(agents.isEmpty()) {
-			log.error("Agents List is empty - no evaluation started");
-			return new ArrayList<>();
-		}
-		if(levelConfig==null&&!randomize) log.warn("LevelConfig is null, Level will be randomized!");
-		if(randomize||levelConfig==null) levelConfig=LevelConfig.randomize(levelConfig);
-		if(task==null) {
-			log.error("Task can't be null");
-			log.error("Exiting...");
-			return new ArrayList<>();
-		}
-		if(zoomFactor<1) zoomFactor=1;	
+	public static List<EvaluationInfo> run() {
 		
 		RunnerOptions baseOptions=new RunnerOptions(agents.get(0),levelConfig,task);
-
+		if(randomize) levelConfig = LevelConfig.randomize(levelConfig);
 		baseOptions.setViewable(viewable);
 		log.trace("viewable="+viewable);
 		baseOptions.setFPS(fps);
@@ -171,7 +139,7 @@ public class MarioAiRunner {
 		return new ArrayList<>();
 	}
 	
-	public static void challengeRun(String packageName,List<LevelConfig> levels, int agentsPerRound, int zoomFactor, boolean autoKill,boolean pushUpdates) {
+/*	public static void challengeRun(String packageName,List<LevelConfig> levels, int agentsPerRound, int zoomFactor, boolean autoKill,boolean pushUpdates) {
 		if(packageName==null) {
 			log.info("packageName can't be null");
 			log.info("Returning...");
@@ -386,7 +354,7 @@ public class MarioAiRunner {
 		} catch (IllegalAccessException e) {
 			log.catching(e);
 		}
-	}
+	}*/
 	
 	public static class EntryComperator implements Comparator<Entry<Agent,Double>>{
 		@Override
@@ -395,9 +363,9 @@ public class MarioAiRunner {
 		}
 	}
 	
-	public static void main (String[] args) {
+	//public static void main (String[] args) {
 		
-		List<LevelConfig> levels=new ArrayList<>();
+		/*List<LevelConfig> levels=new ArrayList<>();
 
 		levels.add(LevelConfig.HARD_ENEMY_TRAINING);
 		levels.add(LevelConfig.BOWSERS_CASTLE);
@@ -411,7 +379,8 @@ public class MarioAiRunner {
 //		agents.add(new ExampleAgent());
 //		
 //		System.out.println(multiAgentRun(agents, LevelConfig.LEVEL_1, new ChallengeTask(), 24, 3, true, true, false, false));
-	}
+	*/
+	// }
 }
 
 
