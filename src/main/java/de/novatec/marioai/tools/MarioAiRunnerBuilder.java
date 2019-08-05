@@ -26,7 +26,7 @@ public class MarioAiRunnerBuilder implements Builder{
 	private boolean pushMetrics = false;
 	
 	/**
-	 * @return creates and returns the MarioAiRunner instance using this class' variables
+	 * @return MarioAiRunner using this builder
 	 */
 	public MarioAiRunner construct() {
 		return new MarioAiRunner(this);
@@ -40,34 +40,39 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param adds agents to the builder 
+ * @param agents to be added to the builder
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void addAgents(List<Agent> agents) {
+	public MarioAiRunnerBuilder addAgents(List<Agent> agents) {
 		
 		this.agents.addAll(agents);
+		return this;
 	}
 	/**
 	 * 
-	 * @param adds an agent to the builder
+	 * @param agent to be added to the builder
+	 * @return MarioAiRunnerBuilder, faster use
 	 */
-	public void addAgent(Agent agent) {
+	public MarioAiRunnerBuilder addAgent(Agent agent) {
 		
 		this.agents.add(agent);
+		return this;
 	}
 	
 	/**
-	 * 
-	 * @return LevelConfig supposed to be built
+	 * @return levelConfig currently added to the builder
 	 */
 	public LevelConfig getLevelConfig() {
 		return levelConfig;
 	}
 	/**
 	 * 
-	 * @param set levelConfig from the builder
+	 * @param levelConfig change in the builder
+	 * @return MarioAiRunnerBuilder, faster use
 	 */
-	public void setLevelConfig(LevelConfig levelConfig) {
+	public MarioAiRunnerBuilder setLevelConfig(LevelConfig levelConfig) {
 		if(levelConfig != null)this.levelConfig = levelConfig;
+		return this;
 	}
 /**
  * 
@@ -78,10 +83,12 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param sets the task in the builder
+ * @param task to be set in the builder
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setTask(Task task) {
+	public MarioAiRunnerBuilder setTask(Task task) {
 		if(task != null)this.task = task;
+		return this;
 	}
 /**
  * 
@@ -92,38 +99,44 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param sets fps in the builder
+ * @param fps to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setFps(int fps) {
+	public MarioAiRunnerBuilder setFps(int fps) {
 		if(fps>0)this.fps = fps;
+		return this;
 	}
 /**
  * 
- * @return gets zoomfactor supposed to be built
+ * @return zoomFactor currently used
  */
 	public int getZoomFactor() {
 		return zoomFactor;
 	}
 /**
  * 
- * @param sets zoomFactor in the builder
+ * @param zoomFactor to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setZoomFactor(int zoomFactor) {
+	public MarioAiRunnerBuilder setZoomFactor(int zoomFactor) {
 		if(zoomFactor>0)this.zoomFactor = zoomFactor;
+		return this;
 	}
 /**
  * 
- * @return randomize whether the LevelConfig will be randomized later
+ * @return randomize in the builder
  */
 	public boolean isRandomize() {
 		return randomize;
 	}
 /**
  * 
- * @param sets randomize in the builder
+ * @param randomize to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setRandomize(boolean randomize) {
+	public MarioAiRunnerBuilder setRandomize(boolean randomize) {
 		this.randomize = randomize;
+		return this;
 	}
 /**
  * 
@@ -134,10 +147,12 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param sets viewable in the runner
+ * @param viewable to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setViewable(boolean viewable) {
+	public MarioAiRunnerBuilder setViewable(boolean viewable) {
 		this.viewable = viewable;
+		return this;
 	}
 /**
  * 
@@ -148,10 +163,12 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param debugView sets the state of debugView
+ * @param debugView to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setDebugView(boolean debugView) {
+	public MarioAiRunnerBuilder setDebugView(boolean debugView) {
 		this.debugView = debugView;
+		return this;
 	}
 /**
  * 
@@ -162,10 +179,12 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param exitOnFinish 
+ * @param exitOnFinish to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setExitOnFinish(boolean exitOnFinish) {
+	public MarioAiRunnerBuilder setExitOnFinish(boolean exitOnFinish) {
 		this.exitOnFinish = exitOnFinish;
+		return this;
 	}
 /**
  * 
@@ -176,10 +195,12 @@ public class MarioAiRunnerBuilder implements Builder{
 	}
 /**
  * 
- * @param sets pushMetrics
+ * @param pushMetrics to be set
+ * @return MarioAiRunnerBuilder, faster use
  */
-	public void setPushMetrics(boolean pushMetrics) {
+	public MarioAiRunnerBuilder setPushMetrics(boolean pushMetrics) {
 		this.pushMetrics = pushMetrics;
+		return this;
 	}
 	
 }
