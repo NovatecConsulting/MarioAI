@@ -88,7 +88,7 @@ public class MarioAiRunner {
 	
 	/**
 	 * 
-	 * @return List<EvaluationInfo> runs all agents using the current settings(variables) and returns the results
+	 * @return List of EvaluationInfo runs all agents using the current settings(variables) and returns the results
 	 */
 	public static List<EvaluationInfo> run() {
 		
