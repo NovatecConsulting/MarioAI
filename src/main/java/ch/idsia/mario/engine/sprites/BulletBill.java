@@ -6,19 +6,22 @@ import ch.idsia.mario.engine.LevelScene;
 
 public class BulletBill extends Sprite //cloneable
 {
-    private static final int height = 12;
+    
+    private static int height = 12;
+    private static final SpriteKind kind = SpriteKind.KIND_BULLET_BILL;
 
-    private int facing;
+	private int facing;
 
-    private boolean dead = false;
     private int deadTime = 0;
-
-
+    private final static int yPicPreset = 5;
+    
     public BulletBill(LevelScene world, float x, float y, int dir)
     {
-        kind = KIND_BULLET_BILL;
+    	super();
         sheet = Art.enemies;
-
+        height = 12;
+        yPic = yPicPreset;
+        
         this.x = x;
         this.y = y;
         this.spriteContext = world;
@@ -27,7 +30,6 @@ public class BulletBill extends Sprite //cloneable
 
         facing = 0;
         wPic = 16;
-        yPic = 5;
 
         xPic = 0;
         ya = -5;
@@ -63,7 +65,7 @@ public class BulletBill extends Sprite //cloneable
                 }
                 else
                 {
-                    spriteContext.getMarioHurt();
+                    spriteContext.hurtMario();
                 }
             }
         }
@@ -80,7 +82,7 @@ public class BulletBill extends Sprite //cloneable
                 deadTime = 1;
                 for (int i = 0; i < 8; i++)
                 {
-                    spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 1, 5));
+                    spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 5));
                 }
                 spriteContext.removeSprite(this);
             }
@@ -148,5 +150,10 @@ public class BulletBill extends Sprite //cloneable
 
 	public static int getHeight() {
 		return height;
-	}      
+	}    
+	
+	@Override
+	public SpriteKind getKind() {
+		return kind;
+	}
 }

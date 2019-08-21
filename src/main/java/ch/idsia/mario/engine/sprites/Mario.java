@@ -18,6 +18,7 @@ public class Mario extends Sprite // cloneable
 	private int gainedFlowers;
 	private int timesHurt=0;
 	private boolean isMarioInvulnerable;
+	private static final SpriteKind kind = SpriteKind.KIND_MARIO;
 
 	public void reset(MODE marioMode) {
 		setMode(marioMode);
@@ -102,7 +103,6 @@ public class Mario extends Sprite // cloneable
 	private Sprite carried = null;
 
 	public Mario(LevelScene world, MODE mode) {
-		kind = KIND_MARIO;
 		this.spriteContext = world;
 		keys = Scene.keys; // SK: in fact, this is already redundant due to using Agent
 		x = 32;
@@ -328,7 +328,7 @@ public class Mario extends Sprite // cloneable
 			for (int i = 0; i < 1; i++) {
 				spriteContext.addSprite(new Sparkle(spriteContext, (int) (x + Math.random() * 4 - 2) + facing * 8,
 						(int) (y + Math.random() * 4) - 24, (float) (Math.random() * 2 - 1), (float) Math.random() * 1,
-						0, 1, 5));
+						0, 5));
 			}
 			ya *= 0.5f;
 		}
@@ -420,7 +420,7 @@ public class Mario extends Sprite // cloneable
 				for (int i = 0; i < 3; i++) {
 					spriteContext.addSprite(
 							new Sparkle(spriteContext, (int) (x + Math.random() * 8 - 4), (int) (y + Math.random() * 4),
-									(float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 1, 5));
+									(float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 5));
 				}
 			}
 		}
@@ -550,7 +550,7 @@ public class Mario extends Sprite // cloneable
 			for (int xx = 0; xx < 2; xx++)
 				for (int yy = 0; yy < 2; yy++)
 					spriteContext.addSprite(new Sparkle(spriteContext, x * 16 + xx * 8 + (int) (Math.random() * 8),
-							y * 16 + yy * 8 + (int) (Math.random() * 8), 0, 0, 0, 2, 5));
+							y * 16 + yy * 8 + (int) (Math.random() * 8), 0, 0, 0, 5));
 		}
 
 		if (blocking && ya < 0) {
@@ -597,7 +597,7 @@ public class Mario extends Sprite // cloneable
 		}
 	}
 
-	public void getHurt() {
+	public void hurt() {
 		if (getDeathTime() > 0 || isMarioInvulnerable())
 			return;
 
@@ -793,6 +793,11 @@ public class Mario extends Sprite // cloneable
 
 	public boolean isSliding() {
 		return sliding;
+	}
+	
+	@Override
+	public SpriteKind getKind() {
+		return kind;
 	}
 
 }

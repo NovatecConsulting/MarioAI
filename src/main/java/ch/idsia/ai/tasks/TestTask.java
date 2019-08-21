@@ -2,20 +2,19 @@ package ch.idsia.ai.tasks;
 
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 
-public class ChallengeTask implements Task{
-	
+public class TestTask implements Task{
 	public static final int DISTANCE_PHYS_TO_CELLS = 16;
-	public static final int TIME_WEIGHT = 8;
+	public static final float DISTANCE_WEIGHT = 1.5f;
+	public static final int TIME_WEIGHT = 16;
 	public static final int WIN_WEIGHT = 1024;
-	public static final int KILLS_TOTAL_WEIGHT = 42;
-	public static final int KILLS_BY_STOMP_WEIGHT = 42;
-	public static final int KILLS_BY_SHELL_WEIGHT = 42;
-	public static final int KILLS_BY_FIRE_WEIGHT = 42;
-	public static final int COLLECTED_COINS_WEIGHT = 16;
-	public static final int COLLECTED_MUSHROOMS_WEIGHT = 42;
-	public static final int COLLECTED_FLOWERS_WEIGHT = 42;
-	public static final int TIMES_HURT_WEIGHT = 42;
-	
+	public static final int KILLS_TOTAL_WEIGHT = 40;
+	public static final int KILLS_BY_STOMP_WEIGHT = 50;
+	public static final int KILLS_BY_SHELL_WEIGHT = 60;
+	public static final int KILLS_BY_FIRE_WEIGHT = 30;
+	public static final int COLLECTED_COINS_WEIGHT = 20;
+	public static final int COLLECTED_MUSHROOMS_WEIGHT = 100;
+	public static final int COLLECTED_FLOWERS_WEIGHT = 150;
+	public static final int TIMES_HURT_WEIGHT = 200;	
 	
 	@Override
 	public double getScoreBasesOnValues(STATUS marioStatus, int timeLeft, double marioX, int killsTotal,int killsByStomp, int killsByShell, int killsByFire, int collectedCoins, int collectedMuhsrooms,int collectedFlowers, int timesHurt) {
@@ -23,7 +22,7 @@ public class ChallengeTask implements Task{
 		
 		//---Positive 
 		//--- Distance Score
-		if(marioX>=0) res+=(int)marioX/DISTANCE_PHYS_TO_CELLS; //adding passed distance 
+		if(marioX>=0) res+=(int)DISTANCE_WEIGHT*marioX/DISTANCE_PHYS_TO_CELLS; //adding passed distance 
 		
 		//---Time Score
 		if(timeLeft>=0)res+=timeLeft*TIME_WEIGHT; // adding Points for time left
@@ -57,5 +56,4 @@ public class ChallengeTask implements Task{
 	public String getName() {
 		return this.getClass().getSimpleName();
 	}
-	
 }

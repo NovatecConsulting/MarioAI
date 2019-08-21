@@ -1,5 +1,7 @@
 package ch.idsia.mario.engine.sprites;
 
+import java.awt.Graphics;
+
 import ch.idsia.mario.engine.Art;
 import ch.idsia.mario.engine.LevelScene;
 
@@ -7,6 +9,7 @@ import ch.idsia.mario.engine.LevelScene;
 public class Shell extends Sprite {//cloneable
     private static final float GROUND_INERTIA = 0.89f;
     private static final float AIR_INERTIA = 0.89f;
+    private static final SpriteKind kind = SpriteKind.KIND_SHELL;
 
     private boolean onGround = false;
 
@@ -15,16 +18,16 @@ public class Shell extends Sprite {//cloneable
 
     private int facing;
 
-    private static final boolean avoidCliffs = false; //don't even ask why they put this in... (does work though)
     private int anim;
 
     private boolean dead = false;
     private int deadTime = 0;
     private boolean carried; //useless?
+    
+    private static final int yPicPreset = 13;
 
 
-	public Shell(LevelScene world, float x, float y, int type) {
-        kind = KIND_SHELL;
+	public Shell(LevelScene world, float x, float y) {
         sheet = Art.enemies;
 
         this.x = x;
@@ -33,7 +36,7 @@ public class Shell extends Sprite {//cloneable
         xPicO = 8;
         yPicO = 31;
 
-        yPic = type;
+        yPic = yPicPreset;
         facing = 0;
         wPic = 16;
 
@@ -104,7 +107,7 @@ public class Shell extends Sprite {//cloneable
                 {
                     if (facing != 0)
                     {
-                        spriteContext.getMarioHurt();
+                        spriteContext.hurtMario();
                     }
                     else
                     {
@@ -130,7 +133,7 @@ public class Shell extends Sprite {//cloneable
                 deadTime = 1;
                 for (int i = 0; i < 8; i++)
                 {
-                    spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 1, 5));
+                    spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 5));
                 }
                 spriteContext.removeSprite(this);
             }
@@ -224,7 +227,6 @@ public class Shell extends Sprite {//cloneable
             if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya)) collide = true;
             if (isBlocking(x + xa + width, y + ya, xa, ya)) collide = true;
 
-            if (avoidCliffs && onGround && !spriteContext.levelIsBlocking((int) ((x + xa + width) / 16), (int) ((y) / 16 + 1), xa, 1)) collide = true;
         }
         if (xa < 0)
         {
@@ -232,7 +234,6 @@ public class Shell extends Sprite {//cloneable
             if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya)) collide = true;
             if (isBlocking(x + xa - width, y + ya, xa, ya)) collide = true;
 
-            if (avoidCliffs && onGround && !spriteContext.levelIsBlocking((int) ((x + xa - width) / 16), (int) ((y) / 16 + 1), xa, 1)) collide = true;
         }
 
         if (collide)
@@ -353,5 +354,10 @@ public class Shell extends Sprite {//cloneable
 
 	public void setCarried(boolean carried) {
 		this.carried = carried;
+	}
+	
+	@Override
+	public SpriteKind getKind() {
+		return kind;
 	}
 }

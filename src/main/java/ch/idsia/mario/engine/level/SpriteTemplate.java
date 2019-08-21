@@ -1,18 +1,24 @@
 package ch.idsia.mario.engine.level;
 
 import ch.idsia.mario.engine.LevelScene;
-import ch.idsia.mario.engine.sprites.Enemy;
+import ch.idsia.mario.engine.sprites.BulletBill;
+import ch.idsia.mario.engine.sprites.CoinAnim;
 import ch.idsia.mario.engine.sprites.FlowerEnemy;
+import ch.idsia.mario.engine.sprites.Goomba;
+import ch.idsia.mario.engine.sprites.Koopa_Green;
+import ch.idsia.mario.engine.sprites.Koopa_Red;
+import ch.idsia.mario.engine.sprites.Spiky;
 import ch.idsia.mario.engine.sprites.Sprite;
+import ch.idsia.mario.engine.sprites.SpriteKind;
 
 public class SpriteTemplate {
     private int lastVisibleTick = -1;
 	private Sprite sprite;
     private boolean winged;
    
-    private int type;
+    private SpriteKind type;
     
-    public SpriteTemplate(int type, boolean winged) {
+    public SpriteTemplate(SpriteKind type, boolean winged) {
         this.type = type;
         this.winged = winged;
     }
@@ -26,13 +32,29 @@ public class SpriteTemplate {
     
     public void spawn(LevelScene world, int x, int y, int dir) {
         if (sprite!=null && isDead()) return; // sprite won't be respawned after death
-
-        if (type==Enemy.ENEMY_FLOWER) {
-            sprite = new FlowerEnemy(world, x*16+15, y*16+24, x, y);
-        }
-        else {
-            sprite = new Enemy(world, x*16+8, y*16+15, dir, type, winged, x, y);
-        }
+        
+		    switch(type) {
+			    case KIND_ENEMY_FLOWER:
+			    	sprite = new FlowerEnemy(world, x*16+15, y*16+24, x, y);
+			    	break;
+			    case KIND_RED_KOOPA:
+			    	sprite = new Koopa_Red(world, x*16+8, y*16+15, dir, winged, x, y);
+			    	break;
+			    case KIND_GREEN_KOOPA:
+			    	sprite = new Koopa_Green(world, x*16+8, y*16+15, dir, winged, x, y);
+			    	break;
+			    case KIND_GOOMBA:
+			    	sprite = new Goomba(world, x*16+8, y*16+15, dir, winged, x, y);
+			    	break;
+			    case KIND_SPIKY:
+			    	sprite = new Spiky(world, x*16+8, y*16+15, dir, winged, x, y);
+			    	break;
+				case KIND_BULLET_BILL:
+					sprite = new BulletBill(world, x*16+8, y*16+15, dir);
+					break;
+				default: 
+					break;
+		    }
         world.addSprite(sprite);
     }
     
@@ -40,8 +62,8 @@ public class SpriteTemplate {
 		return lastVisibleTick;
 	}
     
-    public void setLastVisinleTick(int lastVisbileTick) {
-    	this.lastVisibleTick=lastVisbileTick;
+    public void setLastVisibleTick(int lastVisibleTick) {
+    	this.lastVisibleTick=lastVisibleTick;
     }
 
 	public Sprite getSprite() {
@@ -56,7 +78,7 @@ public class SpriteTemplate {
 		return winged;
 	}
 
-    public int getType() {
+    public SpriteKind getType() {
         return type;
     }
 

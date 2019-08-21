@@ -4,35 +4,14 @@ import ch.idsia.mario.engine.LevelScene;
 import java.awt.*;
 
 public abstract class Sprite {
-    public static final int KIND_NONE = 0;
-    public static final int KIND_MARIO = -31;
-    public static final int KIND_GOOMBA = 2;
-    public static final int KIND_GOOMBA_WINGED = 3;
-    public static final int KIND_RED_KOOPA = 4;
-    public static final int KIND_RED_KOOPA_WINGED = 5;
-    public static final int KIND_GREEN_KOOPA = 6;
-    public static final int KIND_GREEN_KOOPA_WINGED = 7;
-    public static final int KIND_BULLET_BILL = 8;
-    public static final int KIND_SPIKY = 9;
-    public static final int KIND_SPIKY_WINGED = 10;
-    public static final int KIND_ENEMY_FLOWER = 12;
-    public static final int KIND_SHELL = 13;
-    public static final int KIND_MUSHROOM = 14;
-    public static final int KIND_FIRE_FLOWER = 15;    
-    public static final int KIND_PARTICLE = 21;
-    public static final int KIND_SPARCLE = 22;
-    public static final int KIND_COIN_ANIM = 20;
-    public static final int KIND_FIREBALL = 25;
-
-    public static final int KIND_UNDEF = -42;
 
     protected LevelScene spriteContext;
-    protected byte kind = KIND_UNDEF;
     
     protected float xOld, yOld, x, y, xa, ya;
     protected int mapX, mapY;
     
-    protected int xPic, yPic; //coords for picture
+    protected int xPic; //coords for picture
+    protected int yPic;
     protected int wPic = 32; //width of picture
     protected int hPic = 32;// height of picture
     protected int xPicO, yPicO;
@@ -53,7 +32,6 @@ public abstract class Sprite {
     
     protected Sprite(LevelScene alreadyCopied,Sprite toCopy) { 
     	
-    	this.kind = toCopy.kind;
 		this.xOld = toCopy.xOld;
 		this.yOld = toCopy.yOld;
 		this.x = toCopy.x;
@@ -83,7 +61,7 @@ public abstract class Sprite {
     
     @Override
 	public String toString() {
-		return "Sprite [kind=" + kind + ", x=" + x + ", y=" + y + ", isClone= "+isClone+"]";
+		return "Sprite [x=" + x + ", y=" + y + ", isClone= "+isClone+"]";
 	}
 
 	public void registerSpriteContext(LevelScene spriteContext) {
@@ -132,9 +110,9 @@ public abstract class Sprite {
         return false;
     }
     
-    public byte getKind() {
-    	return kind;
-    }
+//    public SpriteKind getKind() {
+//    	return kind;
+//    }
 
 	public float getxOld() {
 		return xOld;
@@ -211,6 +189,8 @@ public abstract class Sprite {
 	public void setDead(boolean dead) {
 		this.dead = dead;
 	}
+	
+	public abstract SpriteKind getKind();
 	
 //    public void setSpriteTemplate(SpriteTemplate spriteTemplate) {
 //		this.spriteTemplate = spriteTemplate;
