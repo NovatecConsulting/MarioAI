@@ -33,8 +33,4 @@ public class ExampleAgent extends MarioAiAgent {
 		
 		return getMarioInput();
 	}
-	
-	public static void main(String[]args) {
-		MarioAiRunner.run(new HumanKeyboardAgent(), LevelConfig.LEVEL_6, 50, 3, false, true, false);
-	}
 }
