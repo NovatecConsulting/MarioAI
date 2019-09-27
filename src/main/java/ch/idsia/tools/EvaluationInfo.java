@@ -4,6 +4,7 @@ import ch.idsia.ai.agents.Agent;
 import ch.idsia.ai.tasks.Task;
 import ch.idsia.mario.engine.level.Level;
 import ch.idsia.mario.engine.sprites.Mario;
+import ch.idsia.mario.engine.sprites.Mario.Cause;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 
 import java.text.DecimalFormat;
@@ -21,6 +22,7 @@ public class EvaluationInfo
     private static final int MagicNumberUndef = -42;
     public Level.LEVEL_TYPES levelType = Level.LEVEL_TYPES.UNKNOWN;
     public STATUS marioStatus = STATUS.UNKNOWN;
+    private Cause marioCause=Cause.UNKNOWN;
     public int livesLeft = MagicNumberUndef;
     public double lengthOfLevelPassedPhys = MagicNumberUndef;
     public int lengthOfLevelPassedCells = MagicNumberUndef;
@@ -120,7 +122,15 @@ public class EvaluationInfo
 	public void setGainedFlower(int gainedFlower) {
 		this.gainedFlower = gainedFlower;
 	}
+	
+	public Cause getMarioCause() {
+		return marioCause;
+	}
 
+	public void setMarioCause(Cause marioCause) {
+		this.marioCause = marioCause;
+	}
+	
 	public int getTimesHurt() {
 		return timesHurt;
 	}
