@@ -31,14 +31,12 @@ public class MarioAiRunnerBuilder implements Builder<MarioAiRunner>{
 		return agents;
 	}
 
-	public MarioAiRunnerBuilder addAgents(List<Agent> agents) {
-		
+	public MarioAiRunnerBuilder addAllAgents(List<Agent> agents) {
 		this.agents.addAll(agents);
 		return this;
 	}
 
 	public MarioAiRunnerBuilder addAgent(Agent agent) {
-		
 		this.agents.add(agent);
 		return this;
 	}

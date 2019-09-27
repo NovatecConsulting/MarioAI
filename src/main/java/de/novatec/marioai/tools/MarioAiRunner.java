@@ -67,7 +67,6 @@ public class MarioAiRunner {
 	 * No instances needed.
 	 */
 	/**
-	 * 
 	 * @param marioAiRunnerBuilder uses all the variables from the builder and copies them 
 	 */
 	public MarioAiRunner(MarioAiRunnerBuilder marioAiRunnerBuilder) {
@@ -89,12 +88,10 @@ public class MarioAiRunner {
 	}
 	
 	/**
-	 * 
-	 * @return List of EvaluationInfo runs all agents using the current settings(variables) and returns the results
+	 * @return List of EvaluationInfo (= result of the runs)
 	 */
 	public static List<EvaluationInfo> run() {
-		
-		RunnerOptions baseOptions=new RunnerOptions(agents.get(0),levelConfig,task);
+		RunnerOptions baseOptions = new RunnerOptions(agents.get(0),levelConfig,task);
 		if(randomize) {
 			levelConfig = LevelConfig.randomize(levelConfig);
 		}
