@@ -72,7 +72,9 @@ public class MarioAiRunner {
 	 */
 	public MarioAiRunner(MarioAiRunnerBuilder marioAiRunnerBuilder) {
 		List<Agent> tmpList = marioAiRunnerBuilder.getAgents();
-		if(tmpList.isEmpty()) tmpList.add(new ExampleAgent());
+		if(tmpList.isEmpty()) {
+			tmpList.add(new ExampleAgent());
+		}
 		agents = tmpList;
 		levelConfig  = marioAiRunnerBuilder.getLevelConfig();
 		task = marioAiRunnerBuilder.getTask();
@@ -93,7 +95,9 @@ public class MarioAiRunner {
 	public static List<EvaluationInfo> run() {
 		
 		RunnerOptions baseOptions=new RunnerOptions(agents.get(0),levelConfig,task);
-		if(randomize) levelConfig = LevelConfig.randomize(levelConfig);
+		if(randomize) {
+			levelConfig = LevelConfig.randomize(levelConfig);
+		}
 		baseOptions.setViewable(viewable);
 		log.trace("viewable="+viewable);
 		baseOptions.setFPS(fps);
