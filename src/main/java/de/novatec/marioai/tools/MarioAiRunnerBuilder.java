@@ -68,7 +68,9 @@ public class MarioAiRunnerBuilder implements Builder<MarioAiRunner>{
 	}
 
 	public MarioAiRunnerBuilder setFps(int fps) {
-		if(fps>0)this.fps = fps;
+		if(fps>0) {
+			this.fps = fps;
+		}
 		return this;
 	}
 

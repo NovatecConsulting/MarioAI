@@ -84,7 +84,6 @@ public class MarioAiRunner {
 		debugView = marioAiRunnerBuilder.isDebugView();
 		exitOnFinish = marioAiRunnerBuilder.isExitOnFinish();
 		pushMetrics = marioAiRunnerBuilder.isPushMetrics();
-		
 	}
 	
 	/**
