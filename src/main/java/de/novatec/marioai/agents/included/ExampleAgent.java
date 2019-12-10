@@ -1,6 +1,7 @@
 package de.novatec.marioai.agents.included;
 
 import de.novatec.marioai.tools.MarioInput;
+import ch.idsia.mario.engine.EnvironmentWrapper;
 import de.novatec.marioai.tools.MarioAiAgent;
 
 public class ExampleAgent extends MarioAiAgent {
@@ -17,13 +18,14 @@ public class ExampleAgent extends MarioAiAgent {
 
 	@Override
 	public MarioInput doAiLogic() {
-		if(mayShoot()&&isEnemyAhead()) {
+		EnvironmentWrapper help = getEnvironment();
+		if(help.mayShoot()&&isEnemyAhead()) {
 			shoot();
 		}
 		
 		if(isEnemyAhead()) jump();
 
-		if(isSlopeAhead()&&!isHoleAhead()&&!(getDeepCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
+		if(isSlopeAhead()&&!isHoleAhead()&&!(getAStarCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
 	
 		moveRight();
 		
