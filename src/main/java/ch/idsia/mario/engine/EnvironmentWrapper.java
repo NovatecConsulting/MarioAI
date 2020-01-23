@@ -1,11 +1,12 @@
 package ch.idsia.mario.engine;
 
-import java.util.List;
-
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
 import ch.idsia.mario.environments.Environment;
 import de.novatec.mario.engine.generalization.Coordinates;
 
+/**
+ * wrapper for the environment class, this is supposed to become the only way to get info from the environment (so the player can't manipulate it)
+ */
 public class EnvironmentWrapper {
 	private Environment env;
 	
