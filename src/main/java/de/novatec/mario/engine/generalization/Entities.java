@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import ch.idsia.mario.engine.LevelScene;
-import ch.idsia.mario.engine.sprites.Sprite;
+import ch.idsia.mario.engine.sprites.SpriteKind;
 
 public class Entities {
 
@@ -13,7 +13,7 @@ public class Entities {
 	
 	public Entities(LevelScene scene) {
 		this.scene=scene;
-		}
+	}
 	
 	public void setLevelScene(LevelScene scene) {
 		this.scene=scene;
@@ -176,47 +176,37 @@ public class Entities {
 			return this.kind.dangerLevel;
 		}
 
-		public static EntityType getKindByType(byte type) {
+		public static EntityType getKindByType(SpriteKind type) {
 		switch(type) {
-  		    case(Sprite.KIND_COIN_ANIM): 
-            case(Sprite.KIND_PARTICLE):
-            case(Sprite.KIND_SPARCLE):
-            case(Sprite.KIND_MARIO):
+  		    case KIND_COIN_ANIM: 
+            case KIND_SPARCLE:
+            case KIND_MARIO:
           	  return EntityType.NONE;
 
-            case(Sprite.KIND_GOOMBA): 
+            case KIND_GOOMBA: 
             	return EntityType.GOOMBA; 
-            case(Sprite.KIND_GOOMBA_WINGED):
-            	return EntityType.GOOMBA_WINGED;
-            case(Sprite.KIND_RED_KOOPA):
+            case KIND_RED_KOOPA:
             	return EntityType.RED_KOOPA;
-            case(Sprite.KIND_RED_KOOPA_WINGED):
-            	return EntityType.RED_KOOPA_WINGED;
-            case(Sprite.KIND_GREEN_KOOPA):
+            case KIND_GREEN_KOOPA:
             	return EntityType.GREEN_KOOPA;
-            case(Sprite.KIND_GREEN_KOOPA_WINGED):
-            	return EntityType.GREEN_KOOPA_WINGED;
-            case(Sprite.KIND_BULLET_BILL):
+            case KIND_BULLET_BILL:
             	return EntityType.BULLET_BILL;
-            case(Sprite.KIND_SPIKY):
+            case KIND_SPIKY:
             	return EntityType.SPIKY;
-            case(Sprite.KIND_SPIKY_WINGED):
-            	return EntityType.SPIKY_WINGED;
-            case(Sprite.KIND_ENEMY_FLOWER):
+            case KIND_ENEMY_FLOWER:
             	return EntityType.ENEMY_FLOWER;
-            case(Sprite.KIND_SHELL):
+            case KIND_SHELL:
             	return EntityType.SHELL;
-            case(Sprite.KIND_MUSHROOM):
+            case KIND_MUSHROOM:
             	return EntityType.MUSHROOM;
-            case(Sprite.KIND_FIRE_FLOWER):
+            case KIND_FIRE_FLOWER:
             	return EntityType.FIRE_FLOWER;
-            case (Sprite.KIND_FIREBALL):
+            case KIND_FIREBALL:
             	return EntityType.FIREBALL;
             default: return EntityType.UNKNOWN;
             
   			}
 		}
-		
 	}
 	
 	public enum EntityKind{

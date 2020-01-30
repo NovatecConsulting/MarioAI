@@ -1,7 +1,9 @@
 package de.novatec.marioai.agents.included;
 
 import de.novatec.marioai.tools.MarioInput;
+import de.novatec.marioai.tools.LevelConfig;
 import de.novatec.marioai.tools.MarioAiAgent;
+import de.novatec.marioai.tools.MarioAiRunner;
 
 public class ExampleAgent extends MarioAiAgent {
 	
@@ -23,7 +25,7 @@ public class ExampleAgent extends MarioAiAgent {
 		
 		if(isEnemyAhead()) jump();
 
-		if(isSlopeAhead()&&!isHoleAhead()&&!(getDeepCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
+		if(isSlopeAhead()&&!isHoleAhead()&&!(getAStarCopyOfLevelScene().getMarioXA()<2)) return getMarioInput();
 	
 		moveRight();
 		

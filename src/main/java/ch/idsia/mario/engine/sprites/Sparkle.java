@@ -8,29 +8,34 @@ public class Sparkle extends Sprite //cloneable
     private int life;
     private int xPicStart;
     
+    private final static int yPicPreset = 1;
+    private static final SpriteKind kind = SpriteKind.KIND_SPARCLE;
+    
     public Sparkle(LevelScene world,int x, int y, float xa, float ya)
     {
-        this(world,x, y, xa, ya, (int)(Math.random()*2), 0, 5);
+        this(world,x, y, xa, ya, (int)(Math.random()*2), 5);
+        yPic = yPicPreset;
     }
 
-    public Sparkle(LevelScene world,int x, int y, float xa, float ya, int xPic, int yPic, int timeSpan)
+    public Sparkle(LevelScene world,int x, int y, float xa, float ya, int xPic, int timeSpan)
     {
     	this.spriteContext=world;
-        kind = KIND_SPARCLE;
         sheet = Art.particles;
         this.x = x;
         this.y = y;
         this.xa = xa;
         this.ya = ya;
         this.xPic = xPic;
-        xPicStart = xPic;
         this.yPic = yPic;
+        xPicStart = xPic;
         this.xPicO = 4;
         this.yPicO = 4;
         
         wPic = 8;
         hPic = 8;
         life = 10+(int)(Math.random()*timeSpan);
+        
+        yPic = yPicPreset;
     }
     
     public Sparkle(LevelScene alreadyCopied,Sparkle toCopy) {
@@ -38,6 +43,7 @@ public class Sparkle extends Sprite //cloneable
     	
     	this.life=toCopy.life;
     	this.xPicStart=toCopy.xPicStart;
+    	yPic = yPicPreset;
     }
 
     public void move()
@@ -52,4 +58,9 @@ public class Sparkle extends Sprite //cloneable
         x+=xa;
         y+=ya;
     }
+    
+    @Override
+	public SpriteKind getKind() {
+		return kind;
+	}
 }

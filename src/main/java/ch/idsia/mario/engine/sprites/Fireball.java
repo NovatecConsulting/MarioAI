@@ -8,6 +8,7 @@ public class Fireball extends Sprite //cloneable
 {
     private static float GROUND_INERTIA = 0.89f;
     private static float AIR_INERTIA = 0.89f;
+    private static final SpriteKind kind = SpriteKind.KIND_FIREBALL;
 
     private float runTime;
     private boolean onGround = false;
@@ -20,9 +21,10 @@ public class Fireball extends Sprite //cloneable
 
     private boolean dead = false;
     private int deadTime = 0;
+    
+    private final static int yPicPreset = 3;
 
     public Fireball(LevelScene world, float x, float y, int facing) {
-        kind = KIND_FIREBALL;
         sheet = Art.particles;
 
         this.x = x;
@@ -38,6 +40,7 @@ public class Fireball extends Sprite //cloneable
 
         xPic = 4;
         ya = 4;
+        yPic = yPicPreset;
         
         world.usedFireball();
     }
@@ -51,6 +54,7 @@ public class Fireball extends Sprite //cloneable
     	this.anim=toCopy.anim;
     	this.dead=toCopy.dead;
     	this.deadTime=toCopy.deadTime;
+        yPic = yPicPreset;
     	
     }
 
@@ -60,7 +64,7 @@ public class Fireball extends Sprite //cloneable
         {
             for (int i = 0; i < 8; i++)
             {
-                spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 8 - 4)+4, (int) (y + Math.random() * 8-4)+2, (float) Math.random() * 2 - 1-facing, (float) Math.random() *2 -1, 0, 1, 5));
+                spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 8 - 4)+4, (int) (y + Math.random() * 8-4)+2, (float) Math.random() * 2 - 1-facing, (float) Math.random() *2 -1, 0, 5));
             }
             spriteContext.removeSprite(this);
 
@@ -239,4 +243,9 @@ public class Fireball extends Sprite //cloneable
     public int getAnim() {
     	return anim;
     }
+    
+    @Override
+	public SpriteKind getKind() {
+		return kind;
+	}
 }

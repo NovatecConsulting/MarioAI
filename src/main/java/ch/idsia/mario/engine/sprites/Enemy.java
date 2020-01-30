@@ -6,53 +6,25 @@ import ch.idsia.mario.engine.LevelScene;
 import java.awt.*;
 
 
-public class Enemy extends Sprite {//cloneable
-    public static final int ENEMY_RED_KOOPA = 0;
-    public static final int ENEMY_GREEN_KOOPA = 1;
-    public static final int ENEMY_GOOMBA = 2;
-    public static final int ENEMY_SPIKY = 3;
-    public static final int ENEMY_FLOWER = 4;
+public abstract class Enemy extends Sprite {//cloneable
 
-    private static final float GROUND_INERTIA = 0.89f;
-    private static final float AIR_INERTIA = 0.89f;
+    protected static final float GROUND_INERTIA = 0.89f;
+    protected static final float AIR_INERTIA = 0.89f;
 
-    private float runTime;
-    private boolean onGround = false;
+    protected float runTime;
+    protected boolean onGround = false;
     protected int width = 4;
-    protected int height = 24;
+    protected int height;
 
     protected int facing;
     protected int deadTime = 0;
     protected boolean flyDeath = false;
 
-    protected boolean avoidCliffs = true;
-    private int type;
-
-    protected boolean winged = true;
-    private int wingTime = 0;
-    
-    protected boolean noFireballDeath;
+    protected boolean winged;
+    protected int wingTime = 0;
 	
-    public Enemy(LevelScene world, int x, int y, int dir, int type, boolean winged, int mapX, int mapY) {
-        byte k = KIND_UNDEF;
-        switch (type) {
-            case ENEMY_RED_KOOPA:
-                k = (byte) (4 + ((winged) ? 1 : 0));
-                break;
-            case ENEMY_GREEN_KOOPA:
-                k = (byte) (6 + ((winged) ? 1 : 0));
-                break;
-            case ENEMY_GOOMBA:
-                k = (byte) (2 + ((winged) ? 1 : 0));
-                break;
-            case ENEMY_FLOWER:
-                k = (byte) (11);
-                break;
-            case ENEMY_SPIKY:
-                k = (byte) (9 + ((winged) ? 1 : 0));
-        }
-        kind = k;
-        this.type = type;
+    public Enemy(LevelScene world, int x, int y, int dir, boolean winged, int mapX, int mapY) {
+
         sheet = Art.enemies;
         this.winged = winged;
 
@@ -63,11 +35,6 @@ public class Enemy extends Sprite {//cloneable
         xPicO = 8;
         yPicO = 31;
 
-        avoidCliffs = type == Enemy.ENEMY_RED_KOOPA;
-        
-        noFireballDeath = type == Enemy.ENEMY_SPIKY;
-
-        yPic = type;
         if (yPic > 1) height = 12;
         facing = dir;
         if (facing == 0) facing = 1;
@@ -84,53 +51,14 @@ public class Enemy extends Sprite {//cloneable
 		this.facing = toCopy.facing;
 		this.deadTime = toCopy.deadTime;
 		this.flyDeath = toCopy.flyDeath;
-		this.avoidCliffs = toCopy.avoidCliffs;
-		this.type = toCopy.type;
 		this.winged = toCopy.winged;
 		this.wingTime = toCopy.wingTime;
-		this.noFireballDeath = toCopy.noFireballDeath;
+		this.yPic = toCopy.yPic;
     }
 
 	public void collideCheck() {
-        if (deadTime != 0) {
-            return;
-        }
-
-        float xMarioD = spriteContext.getMarioX() - x;
-        float yMarioD = spriteContext.getMarioY() - y;
-        if (xMarioD > -width*2-4 && xMarioD < width*2+4) {
-            if (yMarioD > -height && yMarioD < spriteContext.getMarioHeight()) {
-                if (type != Enemy.ENEMY_SPIKY && spriteContext.getMarioYA() > 0 && yMarioD <= 0 && (!spriteContext.isMarioOnGround() || !spriteContext.wasMarioOnGround())) {
-                    spriteContext.marioStomp(this);
-                    if (winged) {
-                        winged = false;
-                        ya = 0;
-                    }
-                    else {
-                        this.yPicO = 31 - (32 - 8);
-                        hPic = 8;
-                        this.dead=true;
-                        deadTime = 10;
-                        winged = false;
-
-                        if (type == Enemy.ENEMY_RED_KOOPA) {
-                            spriteContext.addSprite(new Shell(spriteContext, x, y, 0));
-                        }
-                        else if (type == Enemy.ENEMY_GREEN_KOOPA) {
-                            spriteContext.addSprite(new Shell(spriteContext, x, y, 1));
-                        }
-//                      System.out.println("collideCheck and stomp");
-                        spriteContext.incrementKilledCreaturesTotal();
-                        spriteContext.killedCreatureByStomp();;
-                    }
-                }
-                else {
-                    spriteContext.getMarioHurt();
-                }
-            }
-        }
     }
-
+	
     public void move() {
         wingTime++;
         if (deadTime > 0) {
@@ -139,7 +67,7 @@ public class Enemy extends Sprite {//cloneable
             if (deadTime == 0) {
                 deadTime = 1;
                 for (int i = 0; i < 8; i++) {
-                    spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 1, 5));
+                    spriteContext.addSprite(new Sparkle(spriteContext,(int) (x + Math.random() * 16 - 8) + 4, (int) (y - Math.random() * 8) + 4, (float) (Math.random() * 2 - 1), (float) Math.random() * -1, 0, 5));
                 }
                 spriteContext.removeSprite(this);
             }
@@ -218,91 +146,10 @@ public class Enemy extends Sprite {//cloneable
 
     private boolean move(float xa, float ya)
     {
-        while (xa > 8)
-        {
-            if (!move(8, 0)) return false;
-            xa -= 8;
-        }
-        while (xa < -8)
-        {
-            if (!move(-8, 0)) return false;
-            xa += 8;
-        }
-        while (ya > 8)
-        {
-            if (!move(0, 8)) return false;
-            ya -= 8;
-        }
-        while (ya < -8)
-        {
-            if (!move(0, -8)) return false;
-            ya += 8;
-        }
-
-        boolean collide = false;
-        if (ya > 0)
-        {
-            if (isBlocking(x + xa - width, y + ya, xa, 0)) collide = true;
-            else if (isBlocking(x + xa + width, y + ya, xa, 0)) collide = true;
-            else if (isBlocking(x + xa - width, y + ya + 1, xa, ya)) collide = true;
-            else if (isBlocking(x + xa + width, y + ya + 1, xa, ya)) collide = true;
-        }
-        if (ya < 0)
-        {
-            if (isBlocking(x + xa, y + ya - height, xa, ya)) collide = true;
-            else if (collide || isBlocking(x + xa - width, y + ya - height, xa, ya)) collide = true;
-            else if (collide || isBlocking(x + xa + width, y + ya - height, xa, ya)) collide = true;
-        }
-        if (xa > 0)
-        {
-            if (isBlocking(x + xa + width, y + ya - height, xa, ya)) collide = true;
-            if (isBlocking(x + xa + width, y + ya - height / 2, xa, ya)) collide = true;
-            if (isBlocking(x + xa + width, y + ya, xa, ya)) collide = true;
-
-            if (avoidCliffs && onGround && !spriteContext.levelIsBlocking((int) ((x + xa + width) / 16), (int) ((y) / 16 + 1), xa, 1)) collide = true;
-        }
-        if (xa < 0)
-        {
-            if (isBlocking(x + xa - width, y + ya - height, xa, ya)) collide = true;
-            if (isBlocking(x + xa - width, y + ya - height / 2, xa, ya)) collide = true;
-            if (isBlocking(x + xa - width, y + ya, xa, ya)) collide = true;
-
-            if (avoidCliffs && onGround && !spriteContext.levelIsBlocking((int) ((x + xa - width) / 16), (int) ((y) / 16 + 1), xa, 1)) collide = true;
-        }
-
-        if (collide)
-        {
-            if (xa < 0)
-            {
-                x = (int) ((x - width) / 16) * 16 + width;
-                this.xa = 0;
-            }
-            if (xa > 0)
-            {
-                x = (int) ((x + width) / 16 + 1) * 16 - width - 1;
-                this.xa = 0;
-            }
-            if (ya < 0)
-            {
-                y = (int) ((y - height) / 16) * 16 + height;
-                this.ya = 0;
-            }
-            if (ya > 0)
-            {
-                y = (int) (y / 16 + 1) * 16 - 1;
-                onGround = true;
-            }
-            return false;
-        }
-        else
-        {
-            x += xa;
-            y += ya;
-            return true;
-        }
+        return false;
     }
 
-    private boolean isBlocking(float _x, float _y, float xa, float ya)
+    protected boolean isBlocking(float _x, float _y, float xa, float ya)
     {
         int x = (int) (_x / 16);
         int y = (int) (_y / 16);
@@ -345,30 +192,6 @@ public class Enemy extends Sprite {//cloneable
 
     public boolean fireballCollideCheck(Fireball fireball)
     {
-        if (deadTime != 0) return false;
-
-        float xD = fireball.x - x;
-        float yD = fireball.y - y;
-
-        if (xD > -16 && xD < 16) {
-            if (yD > -height && yD < fireball.getHeight()) {
-                if (noFireballDeath) return true;
-                
-                xa = fireball.getFacing() * 2;
-                ya = -5;
-                flyDeath = true;
-                
-                this.dead=true;
-                
-                deadTime = 100;
-                winged = false;
-                hPic = -hPic;
-                yPicO = -yPicO + 16;
-                spriteContext.incrementKilledCreaturesTotal();
-                spriteContext.killedCreaturesByFireBall();
-                return true;
-            }
-        }
         return false;
     }
 
@@ -391,22 +214,16 @@ public class Enemy extends Sprite {//cloneable
         }
     }
 
-    public void render(Graphics og)
+    public void render(Graphics og, SpriteKind kind)
     {
         if (winged)
         {
             int xPixel = (int) xOld - xPicO;
             int yPixel = (int) yOld - yPicO;
 
-            if (type == Enemy.ENEMY_GREEN_KOOPA || type == Enemy.ENEMY_RED_KOOPA)
-            {
-            }
-            else
-            {
-                xFlipPic = !xFlipPic;
-                og.drawImage(sheet[wingTime / 4 % 2][4], xPixel + (xFlipPic ? wPic : 0) + (xFlipPic ? 10 : -10), yPixel + (yFlipPic ? hPic : 0) - 8, xFlipPic ? -wPic : wPic, yFlipPic ? -hPic : hPic, null);
-                xFlipPic = !xFlipPic;
-            }
+            xFlipPic = !xFlipPic;
+            og.drawImage(sheet[wingTime / 4 % 2][4], xPixel + (xFlipPic ? wPic : 0) + (xFlipPic ? 10 : -10), yPixel + (yFlipPic ? hPic : 0) - 8, xFlipPic ? -wPic : wPic, yFlipPic ? -hPic : hPic, null);
+            xFlipPic = !xFlipPic;
         }
 
         super.render(og);
@@ -416,7 +233,7 @@ public class Enemy extends Sprite {//cloneable
             int xPixel = (int) xOld - xPicO;
             int yPixel = (int) yOld - yPicO;
 
-            if (type == Enemy.ENEMY_GREEN_KOOPA || type == Enemy.ENEMY_RED_KOOPA)
+            if (kind == SpriteKind.KIND_GREEN_KOOPA || kind == SpriteKind.KIND_RED_KOOPA)
             {
                 og.drawImage(sheet[wingTime / 4 % 2][4], xPixel + (xFlipPic ? wPic : 0) + (xFlipPic ? 10 : -10), yPixel + (yFlipPic ? hPic : 0) - 10, xFlipPic ? -wPic : wPic, yFlipPic ? -hPic : hPic, null);
             }

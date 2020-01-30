@@ -1,7 +1,7 @@
 package ch.idsia.mario.engine.level;
 
 import ch.idsia.mario.engine.level.Level.LEVEL_TYPES;
-import ch.idsia.mario.engine.sprites.Enemy;
+import ch.idsia.mario.engine.sprites.SpriteKind;
 
 import java.util.Random;
 
@@ -409,12 +409,38 @@ public class LevelGenerator {
     private void addEnemyLine(int x0, int x1, int y,boolean winged) {
         for (int x = x0; x < x1; x++) {
             if(random.nextInt(35) < difficulty + 1) { //35 variable determines the chance of spawning an enemy
-                int type = random.nextInt(4);
+                SpriteKind type = null;
                 if (difficulty < 1) {
-                    type = Enemy.ENEMY_GOOMBA;
+                    type = SpriteKind.KIND_GOOMBA;
                 }
                 else if (difficulty < 3) {
-                    type = random.nextInt(3);
+                    switch(random.nextInt(3)) {
+	                    case(0):
+	                    	type = SpriteKind.KIND_RED_KOOPA;
+	                    	break;
+	                    case(1):
+	                    	type = SpriteKind.KIND_GREEN_KOOPA;
+	                    	break;
+	                    case(2):
+	                    	type = SpriteKind.KIND_GOOMBA;
+	                    	break;
+                    }
+                }
+                else {
+                	switch(random.nextInt(4)) {
+                    case(0):
+                    	type = SpriteKind.KIND_RED_KOOPA;
+                    	break;
+                    case(1):
+                    	type = SpriteKind.KIND_GREEN_KOOPA;
+                    	break;
+                    case(2):
+                    	type = SpriteKind.KIND_GOOMBA;
+                    	break;
+                    case(3):
+                    	type = SpriteKind.KIND_SPIKY;
+                    	break;
+                    }
                 }
                 level.setSpriteTemplate(x, y, new SpriteTemplate(type, winged&&random.nextInt(35) < difficulty));
             }
@@ -436,7 +462,7 @@ public class LevelGenerator {
             if (xTube >= xo + length - 2) xTube += 10;
 
             if (x == xTube && random.nextInt(11) < difficulty + 1) {
-                if(enemies)level.setSpriteTemplate(x, tubeHeight, new SpriteTemplate(Enemy.ENEMY_FLOWER, false));
+                if(enemies)level.setSpriteTemplate(x, tubeHeight, new SpriteTemplate(SpriteKind.KIND_ENEMY_FLOWER, false));
             }
 
             for (int y = 0; y < height; y++)

@@ -7,11 +7,13 @@ import ch.idsia.mario.engine.LevelScene;
 public class CoinAnim extends Sprite //cloneable
 {
     private int life = 16;
+    private static final SpriteKind kind = SpriteKind.KIND_COIN_ANIM;
+    
+    private static final int yPicPreset = 2;
 
     public CoinAnim(LevelScene world,int xTile, int yTile)
     {
     	this.spriteContext=world;
-        kind = KIND_COIN_ANIM;
         sheet = Art.level;
         wPic = hPic = 16;
 
@@ -20,7 +22,7 @@ public class CoinAnim extends Sprite //cloneable
         xa = 0;
         ya = -6f;
         xPic = 0;
-        yPic = 2;
+        yPic = yPicPreset;
     }
     
     public CoinAnim(LevelScene alreadyCopied,CoinAnim toCopy) {
@@ -37,7 +39,7 @@ public class CoinAnim extends Sprite //cloneable
             this.spriteContext.removeSprite(this);
             for (int xx = 0; xx < 2; xx++)
                 for (int yy = 0; yy < 2; yy++)
-                    this.spriteContext.addSprite(new Sparkle(spriteContext,(int)x + xx * 8 + (int) (Math.random() * 8), (int)y + yy * 8 + (int) (Math.random() * 8), 0, 0, 0, 2, 5));
+                    this.spriteContext.addSprite(new Sparkle(spriteContext,(int)x + xx * 8 + (int) (Math.random() * 8), (int)y + yy * 8 + (int) (Math.random() * 8), 0, 0, 0, 5));
         }
 
         xPic = life & 3;
@@ -46,4 +48,9 @@ public class CoinAnim extends Sprite //cloneable
         y += ya;
         ya += 1;
     }
+    
+    @Override
+	public SpriteKind getKind() {
+		return kind;
+	}
 }

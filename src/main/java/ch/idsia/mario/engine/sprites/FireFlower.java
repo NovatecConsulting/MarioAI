@@ -7,13 +7,12 @@ import ch.idsia.mario.engine.LevelScene;
 public class FireFlower extends Sprite //cloneable
 {
     private static final int height = 12;
-
+    private static final SpriteKind kind = SpriteKind.KIND_FIRE_FLOWER;
     private int life;
 
     public FireFlower(LevelScene world, int x, int y)
     { 
     	this.spriteContext=world;
-        kind = KIND_FIRE_FLOWER;
         sheet = Art.items;
 
         this.x = x;
@@ -57,4 +56,9 @@ public class FireFlower extends Sprite //cloneable
             return;
         }
     }
+    
+    @Override
+	public SpriteKind getKind() {
+		return kind;
+	}
 }

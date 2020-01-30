@@ -3,26 +3,28 @@ package ch.idsia.mario.engine.sprites;
 import ch.idsia.mario.engine.Art;
 import ch.idsia.mario.engine.LevelScene;
 
-public class Particle extends Sprite //cloneable
+public class BrickAnim extends Sprite //cloneable
 {
-    private int life;
+    private int life = 16;
+    private static final SpriteKind kind = SpriteKind.KIND_BRICK_ANIM;
     
-    public Particle(LevelScene world,int x, int y, float xa, float ya)
+    private static final int yPicPreset = 1;
+
+    public BrickAnim(LevelScene world,int x, int y, float xa, float ya)
     {
-        this(world,x, y, xa, ya, (int)(Math.random()*2), 0);
+        this(world,x, y, xa, ya, (int)(Math.random()*2));
     }
 
-    public Particle(LevelScene world,int x, int y, float xa, float ya, int xPic, int yPic)
+    public BrickAnim(LevelScene world,int x, int y, float xa, float ya, int xPic)
     {
     	this.spriteContext=world;
-        kind = KIND_PARTICLE;
         sheet = Art.particles;
         this.x = x;
         this.y = y;
         this.xa = xa;
         this.ya = ya;
         this.xPic = xPic;
-        this.yPic = yPic;
+        this.yPic = yPicPreset;
         this.xPicO = 4;
         this.yPicO = 4;
         
@@ -31,9 +33,10 @@ public class Particle extends Sprite //cloneable
         life = 10;
     }
     
-    public Particle(LevelScene alreadyCopied,Particle toCopy) {
+    public BrickAnim(LevelScene alreadyCopied,BrickAnim toCopy) {
     	super(alreadyCopied,toCopy);
-
+    	
+    	this.spriteContext=alreadyCopied;
     	this.life=toCopy.life;
     }
 
@@ -45,4 +48,9 @@ public class Particle extends Sprite //cloneable
         ya*=0.95f;
         ya+=3;
     }
+    
+    @Override
+	public SpriteKind getKind() {
+		return kind;
+	}
 }

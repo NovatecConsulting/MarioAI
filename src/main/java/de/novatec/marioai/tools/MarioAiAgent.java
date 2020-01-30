@@ -7,6 +7,7 @@ import java.util.List;
 import ch.idsia.ai.agents.Agent;
 import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.engine.sprites.Mario.STATUS;
+import ch.idsia.mario.engine.sprites.SpriteKind;
 import ch.idsia.mario.environments.Environment;
 import de.novatec.mario.engine.generalization.Coordinates;
 import de.novatec.mario.engine.generalization.Entities;
@@ -577,7 +578,14 @@ public abstract class MarioAiAgent implements Agent{
 	 * @return a byte[] array
 	 */
 	public byte[][] getEnemiesObservationZ(int zLevelEnemies) {
-         return env.getLevelScene().enemiesObservation(zLevelEnemies);
+		 SpriteKind[][] tmp = env.getLevelScene().enemiesObservation(zLevelEnemies);
+		 byte[][] ret = new byte[tmp.length][tmp[0].length];
+		 for(int i=0;i<tmp.length;i++) {
+			 for(int j=0;j<tmp[0].length;j++) {
+				 ret[i][j] = tmp[i][j].getNumber();
+			 }
+		 }
+         return ret;
 	}
 	
 	////////////////////////////////

@@ -4,14 +4,16 @@ import java.io.*;
 import ch.idsia.mario.engine.LevelScene;
 import ch.idsia.mario.engine.sprites.BulletBill;
 import ch.idsia.mario.engine.sprites.CoinAnim;
-import ch.idsia.mario.engine.sprites.Enemy;
 import ch.idsia.mario.engine.sprites.FireFlower;
 import ch.idsia.mario.engine.sprites.Fireball;
 import ch.idsia.mario.engine.sprites.FlowerEnemy;
+import ch.idsia.mario.engine.sprites.Goomba;
+import ch.idsia.mario.engine.sprites.Koopa_Green;
+import ch.idsia.mario.engine.sprites.Koopa_Red;
 import ch.idsia.mario.engine.sprites.Mushroom;
-import ch.idsia.mario.engine.sprites.Particle;
 import ch.idsia.mario.engine.sprites.Shell;
 import ch.idsia.mario.engine.sprites.Sparkle;
+import ch.idsia.mario.engine.sprites.Spiky;
 import ch.idsia.mario.engine.sprites.Sprite;
 
 public class Level
@@ -123,44 +125,56 @@ public class Level
     
     private SpriteTemplate[][] getDeepCopyOf(LevelScene alreadyCopied,SpriteTemplate[][] toCopy){
     	SpriteTemplate[][] copy=new SpriteTemplate[toCopy.length][toCopy[0].length];
-    	Sprite toAdd;
+    	Sprite toAdd = null;
     	
     	for(int i=0; i<toCopy.length;i++) {
     		for(int j=0;j<toCopy[i].length;j++) {
     			if(toCopy[i][j]==null) continue;
     			Sprite actual=toCopy[i][j].getSprite();
-    			
-    			if(actual instanceof Enemy &&  !(actual instanceof FlowerEnemy)) {
-    				toAdd=new Enemy(alreadyCopied, (Enemy)actual);
-    			}
-    			else if(actual instanceof BulletBill) {
-    				toAdd=new BulletBill(alreadyCopied, (BulletBill)actual);
-    			}
-    			else if(actual instanceof CoinAnim) {
-    				toAdd=new CoinAnim(alreadyCopied, (CoinAnim)actual);
-    			}
-    			else if(actual instanceof Sparkle) {
-    				toAdd=new Sparkle(alreadyCopied, (Sparkle)actual);
-    			}
-    			else if(actual instanceof Fireball) {
-    				toAdd=new Fireball(alreadyCopied, (Fireball)actual);
-    			}
-    			else if(actual instanceof Particle) {
-    				toAdd=new Particle(alreadyCopied, (Particle)actual);
-    			}
-    			else if(actual instanceof Shell) {
-    				toAdd=new Shell(alreadyCopied, (Shell)actual);
-    			}
-    			else if(actual instanceof FireFlower) {
-    				toAdd=new FireFlower(alreadyCopied, (FireFlower)actual);
-    			}
-    			else if(actual instanceof FlowerEnemy) {
-    				toAdd=new FlowerEnemy(alreadyCopied, (FlowerEnemy)actual);
-    			}
-    			else if(actual instanceof Mushroom) {
-    				toAdd=new Mushroom(alreadyCopied, (Mushroom)actual);
-    			}
-    			else toAdd=null;
+    			if(actual == null) continue;
+    			switch(actual.getKind()) {
+    				case KIND_ENEMY_FLOWER: 
+    					toAdd = new FlowerEnemy(alreadyCopied, (FlowerEnemy)actual);
+    					break;
+    				case KIND_RED_KOOPA:
+	    				toAdd = new Koopa_Red(alreadyCopied, (Koopa_Red)actual);
+	    				break;
+	    			case KIND_GREEN_KOOPA:
+	    				toAdd = new Koopa_Green(alreadyCopied, (Koopa_Green)actual);
+	    				break;
+	    			case KIND_GOOMBA:
+	    				toAdd = new Goomba(alreadyCopied, (Goomba)actual);
+	    				break;
+	    			case KIND_SPIKY:
+	    				toAdd = new Spiky(alreadyCopied, (Spiky)actual);
+	    				break;
+				    case KIND_BULLET_BILL:
+				    	toAdd=new BulletBill(alreadyCopied, (BulletBill)actual);
+				    	break;
+				    case KIND_COIN_ANIM:
+				    	toAdd=new CoinAnim(alreadyCopied, (CoinAnim)actual);
+				    	break;
+				    case KIND_SPARCLE:
+				    	toAdd=new Sparkle(alreadyCopied, (Sparkle)actual);;
+				    	break;
+				    case KIND_FIREBALL:
+				    	toAdd = new Fireball(alreadyCopied, (Fireball)actual);
+				    	break;
+		    		case KIND_SHELL:
+				    	toAdd=new Shell(alreadyCopied, (Shell)actual);
+				    	break;
+				    case KIND_FIRE_FLOWER:
+				    	toAdd=new FireFlower(alreadyCopied, (FireFlower)actual);
+				    	break;
+				    case KIND_MUSHROOM:
+				    	toAdd = new Mushroom(alreadyCopied, (Mushroom)actual);
+				    	break;
+					case KIND_UNDEF:
+						System.out.println(" Kind Undefined in getDeepCopyOf method. Please contact the devs.");
+						break;
+				default:
+					break;
+				}
     			copy[i][j]=new SpriteTemplate(toAdd, toCopy[i][j]);
     		}
     	}

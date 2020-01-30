@@ -139,36 +139,47 @@ public class LevelScene implements SpriteContext {
 		List<Sprite> res=new ArrayList<Sprite>();
 				
 		for(Sprite next:toCopy) {
-			if(next instanceof Enemy &&  !(next instanceof FlowerEnemy)) {
-				res.add(new Enemy(this, (Enemy)next));
-			}
-			else if(next instanceof BulletBill) {
-				res.add(new BulletBill(this, (BulletBill)next));
-			}
-			else if(next instanceof CoinAnim) {
-				res.add(new CoinAnim(this, (CoinAnim)next));
-			}
-			else if(next instanceof Sparkle) {
-				res.add(new Sparkle(this, (Sparkle)next));
-			}
-			else if(next instanceof Fireball) {
-				res.add(new Fireball(this, (Fireball)next));
-			}
-			else if(next instanceof Particle) {
-				res.add(new Particle(this, (Particle)next));
-			}
-			else if(next instanceof Shell) {
-				res.add(new Shell(this, (Shell)next));
-			}
-			else if(next instanceof FireFlower) {
-				res.add(new FireFlower(this, (FireFlower)next));
-			}
-			else if(next instanceof FlowerEnemy) {
+			switch(next.getKind()) {
+			case KIND_ENEMY_FLOWER: 
 				res.add(new FlowerEnemy(this, (FlowerEnemy)next));
-			}
-			else if(next instanceof Mushroom) {
-				res.add(new Mushroom(this, (Mushroom)next));
-			}
+				break;
+			case KIND_RED_KOOPA:
+				res.add(new Koopa_Red(this, (Koopa_Red)next));
+				break;
+			case KIND_GREEN_KOOPA:
+				res.add(new Koopa_Green(this, (Koopa_Green)next));
+				break;
+			case KIND_GOOMBA:
+				res.add(new Goomba(this, (Goomba)next));
+				break;
+			case KIND_SPIKY:
+				res.add(new Spiky(this, (Spiky)next));
+				break;
+		    case KIND_BULLET_BILL:
+		    	res.add(new BulletBill(this, (BulletBill)next));
+		    	break;
+		    case KIND_COIN_ANIM:
+		    	res.add(new CoinAnim(this, (CoinAnim)next));
+		    	break;
+		    case KIND_SPARCLE:
+		    	res.add(new Sparkle(this, (Sparkle)next));
+		    	break;
+		    case KIND_FIREBALL:
+		    	res.add(new Fireball(this, (Fireball)next));
+		    	break;
+		/*    case KIND_PARTICLE:
+		    	res.add(new Particle(this, (Particle)next));
+		    	break;*/
+    		case KIND_SHELL:
+    			res.add(new Shell(this, (Shell)next));
+		    	break;
+		    case KIND_FIRE_FLOWER:
+		    	res.add(new FireFlower(this, (FireFlower)next));
+		    	break;
+		    case KIND_MUSHROOM:
+		    	res.add(new Mushroom(this, (Mushroom)next));
+		    	break;
+		}
 		}
 		return res;
 	}
@@ -197,15 +208,15 @@ public class LevelScene implements SpriteContext {
 		String s = "";
 		if (el == 0 || el == 1)
 			s = "##";
-		s += (el == mario.getKind()) ? "#M.#" : el;
+		s += (el == /*mario.getKind()*/ -31) ? "#M.#" : el;
 		while (s.length() < 4)
 			s += "#";
 		return s + " ";
 	}
 
-	private String enemyToStr(int el) {
+	private String enemyToStr(SpriteKind el) {
 		String s = "";
-		if (el == 0)
+		if (el == SpriteKind.KIND_NONE)
 			s = "";
 		s += (el == mario.getKind()) ? "-m" : el;
 		while (s.length() < 2)
@@ -316,72 +327,61 @@ public class LevelScene implements SpriteContext {
 		return el; // TODO: Throw unknown ZLevel exception
 	}
 
-	private byte ZLevelEnemyGeneralization(byte el, int ZLevel) {
+	private SpriteKind ZLevelEnemyGeneralization(SpriteKind el, int ZLevel) {
 
 		switch (ZLevel) {
 		case (0):
 
 			switch (el) {
 			// cancel irrelevant sprite codes
-			case (Sprite.KIND_COIN_ANIM):
-			case (Sprite.KIND_PARTICLE):
-			case (Sprite.KIND_SPARCLE):
+			case KIND_COIN_ANIM:
+			case KIND_SPARCLE:
 				
-				return Sprite.KIND_NONE;
+				return SpriteKind.KIND_NONE;
 			}
 			return el; // all the rest should go as is
 		case (1):
-
 			switch (el) {
-			case (Sprite.KIND_COIN_ANIM):
-			case (Sprite.KIND_PARTICLE):
-			case (Sprite.KIND_SPARCLE):
-				return Sprite.KIND_NONE;
-			case (Sprite.KIND_MARIO):
-				return Sprite.KIND_MARIO;
-			case (Sprite.KIND_FIREBALL):
-				return Sprite.KIND_FIREBALL;
-			case (Sprite.KIND_BULLET_BILL):
-			case (Sprite.KIND_GOOMBA):
-			case (Sprite.KIND_GOOMBA_WINGED):
-			case (Sprite.KIND_GREEN_KOOPA):
-			case (Sprite.KIND_GREEN_KOOPA_WINGED):
-			case (Sprite.KIND_RED_KOOPA):
-			case (Sprite.KIND_RED_KOOPA_WINGED):
-			case (Sprite.KIND_SHELL):
-
-				return Sprite.KIND_GOOMBA;
-			case (Sprite.KIND_SPIKY):
-			case (Sprite.KIND_ENEMY_FLOWER):
-			case (Sprite.KIND_SPIKY_WINGED):
-				return Sprite.KIND_SPIKY;
+			case KIND_COIN_ANIM:
+			case KIND_SPARCLE:
+				return SpriteKind.KIND_NONE;
+			case KIND_MARIO:
+				return SpriteKind.KIND_MARIO;
+			case KIND_FIREBALL:
+				return SpriteKind.KIND_FIREBALL;
+			case KIND_BULLET_BILL:
+			case KIND_GOOMBA:
+			case KIND_GREEN_KOOPA:
+			case KIND_RED_KOOPA:
+			case KIND_SHELL:
+				return SpriteKind.KIND_GOOMBA;
+			case KIND_SPIKY:
+			case KIND_ENEMY_FLOWER:
+				return SpriteKind.KIND_SPIKY;
+			default:
+				break;
 			}
 			System.err.println("UNKOWN el = " + el);
 			return el;
 		case (2):
 			switch (el) {
-			case (Sprite.KIND_COIN_ANIM):
-			case (Sprite.KIND_PARTICLE):
-			case (Sprite.KIND_SPARCLE):
-			case (Sprite.KIND_FIREBALL):
-
-				return Sprite.KIND_NONE;
-			case (Sprite.KIND_MARIO):
-				return Sprite.KIND_MARIO;
-			case (Sprite.KIND_BULLET_BILL):
-			case (Sprite.KIND_GOOMBA):
-			case (Sprite.KIND_GOOMBA_WINGED):
-			case (Sprite.KIND_GREEN_KOOPA):
-			case (Sprite.KIND_GREEN_KOOPA_WINGED):
-			case (Sprite.KIND_RED_KOOPA):
-			case (Sprite.KIND_RED_KOOPA_WINGED):
-			case (Sprite.KIND_SHELL):
-			case (Sprite.KIND_SPIKY):
-			case (Sprite.KIND_ENEMY_FLOWER):
-				return 1;
+			case KIND_COIN_ANIM:
+			case KIND_SPARCLE:
+			case KIND_FIREBALL:
+				return SpriteKind.KIND_NONE;
+			case KIND_MARIO:
+				return SpriteKind.KIND_MARIO;
+			case KIND_BULLET_BILL:
+			case KIND_GOOMBA:
+			case KIND_GREEN_KOOPA:
+			case KIND_RED_KOOPA:
+			case KIND_SHELL:
+			case KIND_SPIKY:
+			case KIND_ENEMY_FLOWER:
+				return SpriteKind.KIND_GREEN_KOOPA;
 			}
 			System.err.println("Z2 UNKNOWNN el = " + el);
-			return 1;
+			return SpriteKind.KIND_GREEN_KOOPA;
 		}
 		return el; // TODO: Throw unknown ZLevel exception
 	}
@@ -521,15 +521,15 @@ public class LevelScene implements SpriteContext {
 		return res;
 	}
 
-	public byte[][] enemiesObservation(int ZLevel) {
-		byte[][] ret = new byte[Environment.HalfObsWidth * 2][Environment.HalfObsHeight * 2];
+	public SpriteKind[][] enemiesObservation(int ZLevel) {
+		SpriteKind[][] ret = new SpriteKind[Environment.HalfObsWidth * 2][Environment.HalfObsHeight * 2];
 		// TODO: Move to constants 16
 		int MarioXInMap = (int) mario.getX() / 16;
 		int MarioYInMap = (int) mario.getY() / 16;
 
 		for (int w = 0; w < ret.length; w++)
 			for (int h = 0; h < ret[0].length; h++)
-				ret[w][h] = 0;
+				ret[w][h] = SpriteKind.KIND_NONE;
 		// ret[Environment.HalfObsWidth][Environment.HalfObsHeight] = mario.kind;
 		for (Sprite sprite : sprites) {
 			if (sprite.getKind() == mario.getKind())
@@ -583,8 +583,8 @@ public class LevelScene implements SpriteContext {
 		List<Float> poses = new ArrayList<Float>();
 		for (Sprite sprite : sprites) {
 			// check if is an influenceable creature
-			if (sprite.getKind() >= Sprite.KIND_GOOMBA && sprite.getKind() <= Sprite.KIND_MUSHROOM) {
-				poses.add((float) sprite.getKind());
+			if (sprite.getKind().getNumber() >= SpriteKind.KIND_GOOMBA.getNumber() && sprite.getKind().getNumber() <= SpriteKind.KIND_MUSHROOM.getNumber()) {
+				poses.add((float) sprite.getKind().getNumber());
 				poses.add(sprite.getX());
 				poses.add(sprite.getY());
 			}
@@ -623,7 +623,7 @@ public class LevelScene implements SpriteContext {
 		// ret[w][h] = -1;
 		// ret[Environment.HalfObsWidth][Environment.HalfObsHeight] = mario.kind;
 		for (Sprite sprite : sprites) {
-			if (sprite.getKind() == mario.getKind())
+			if (sprite.getKind() == SpriteKind.KIND_MARIO)
 				continue;
 			if (sprite.getMapX() >= 0 && sprite.getMapX() > MarioXInMap - Environment.HalfObsWidth
 					&& sprite.getMapX() < MarioXInMap + Environment.HalfObsWidth && sprite.getMapY() >= 0
@@ -632,9 +632,9 @@ public class LevelScene implements SpriteContext {
 				int obsX = sprite.getMapY() - MarioYInMap + Environment.HalfObsHeight;
 				int obsY = sprite.getMapX() - MarioXInMap + Environment.HalfObsWidth;
 				if (ret[obsX][obsY] != 14) {
-					byte tmp = ZLevelEnemyGeneralization(sprite.getKind(), ZLevelEnemies);
-					if (tmp != Sprite.KIND_NONE)
-						ret[obsX][obsY] = tmp;
+					SpriteKind tmp = ZLevelEnemyGeneralization(sprite.getKind(), ZLevelEnemies);
+					if (tmp != SpriteKind.KIND_NONE)
+						ret[obsX][obsY] = tmp.getNumber();
 				}
 			}
 		}
@@ -694,7 +694,7 @@ public class LevelScene implements SpriteContext {
 
 	public String bitmapEnemiesObservation(int ZLevel) {
 		String ret = "";
-		byte[][] enemiesObservation = enemiesObservation(ZLevel);
+		SpriteKind[][] enemiesObservation = enemiesObservation(ZLevel);
 		mario.getX();
 		mario.getY();
 
@@ -708,8 +708,8 @@ public class LevelScene implements SpriteContext {
 					block = 0;
 					bitCounter = 0;
 				}
-				int temp = enemiesObservation[i][j];
-				if (temp != -1)
+				SpriteKind temp = enemiesObservation[i][j];
+				// if (temp != -1)		should never be -1
 					block |= MathX.powsof2[bitCounter];
 				++bitCounter;
 			}
@@ -757,7 +757,7 @@ public class LevelScene implements SpriteContext {
 				}
 			}
 
-			byte[][] enemiesObservation = null;
+			SpriteKind[][] enemiesObservation = null;
 			if (Enemies || mergedObservationFlag) {
 				enemiesObservation = enemiesObservation(ZLevelEnemies);
 			}
@@ -857,7 +857,7 @@ public class LevelScene implements SpriteContext {
 
 		if (xCam < 0)
 			xCam = 0;
-		if (xCam > level.getWidth() * 16 - 320)
+		if (xCam > level.getWidth() * 16 - 320)	// dont go past the end of the level
 			xCam = level.getWidth() * 16 - 320;
 
 		fireballsOnScreen = 0;
@@ -899,7 +899,8 @@ public class LevelScene implements SpriteContext {
 							}
 						}
 
-						st.setLastVisinleTick(tick); 					}
+						st.setLastVisibleTick(tick); 				
+					}
 
 					if (dir != 0) {
 						byte b = level.getBlock(x, y);
@@ -908,7 +909,7 @@ public class LevelScene implements SpriteContext {
 								if ((tick - x * 2) % 100 == 0) {
 									for (int i = 0; i < 8; i++) {
 										addSprite(new Sparkle(this,x * 16 + 8, y * 16 + (int) (Math.random() * 16),
-												(float) Math.random() * dir, 0, 0, 1, 5));
+												(float) Math.random() * dir, 0, 0, 5));
 									}
 									addSprite(new BulletBill(this, x * 16 + 8 + dir * 8, y * 16 + 15, dir));
 								}
@@ -994,7 +995,7 @@ public class LevelScene implements SpriteContext {
 				level.setBlock(x, y, (byte) 0);
 				for (int xx = 0; xx < 2; xx++)
 					for (int yy = 0; yy < 2; yy++)
-						addSprite(new Particle(this,x * 16 + xx * 8 + 4, y * 16 + yy * 8 + 4, (xx * 2 - 1) * 4,
+						addSprite(new BrickAnim(this,x * 16 + xx * 8 + 4, y * 16 + yy * 8 + 4, (xx * 2 - 1) * 4,
 								(yy * 2 - 1) * 4 - 8));
 			} else {
 				level.setBlockData(x, y, (byte) 4);
@@ -1114,8 +1115,8 @@ public class LevelScene implements SpriteContext {
 		return mario.isSliding();
 	}
 	
-	public void getMarioHurt() {
-		mario.getHurt();
+	public void hurtMario() {
+		mario.hurt();
 	}
 	
 	public void marioKick(Shell shell) {
