@@ -89,7 +89,7 @@ public class MarioAiRunner {
 	/**
 	 * @return List of EvaluationInfo (= result of the runs)
 	 */
-	public static List<EvaluationInfo> run() {
+	public List<EvaluationInfo> run() {
 		RunnerOptions baseOptions = new RunnerOptions(agents.get(0),levelConfig,task);
 		if(randomize) {
 			levelConfig = LevelConfig.randomize(levelConfig);
@@ -356,12 +356,12 @@ public class MarioAiRunner {
 		}
 	}*/
 	
-	public static class EntryComperator implements Comparator<Entry<Agent,Double>>{
-		@Override
-		public int compare(Entry<Agent, Double> o1, Entry<Agent, Double> o2) {
-			return -(o1.getValue().compareTo(o2.getValue()));
-		}
-	}
+//	public static class EntryComperator implements Comparator<Entry<Agent,Double>>{
+//		@Override
+//		public int compare(Entry<Agent, Double> o1, Entry<Agent, Double> o2) {
+//			return -(o1.getValue().compareTo(o2.getValue()));
+//		}
+//	}
 	
 	//public static void main (String[] args) {
 		
