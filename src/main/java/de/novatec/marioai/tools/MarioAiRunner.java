@@ -109,8 +109,7 @@ public class MarioAiRunner {
 		
 		try {
 			ExecutorService runner = Executors.newWorkStealingPool();
-			MainFrame configurator=new MainFrame(agents.size(), false,viewable,exitOnFinish, new Point());
-			
+			MainFrame configurator = new MainFrame(agents.size(), true,viewable,exitOnFinish, new Point());
 			List<Future<EvaluationInfo>> results= new ArrayList<>();
 
 			//log.info("Evaluating the following agents: ");

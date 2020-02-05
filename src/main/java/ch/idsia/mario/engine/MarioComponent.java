@@ -198,7 +198,7 @@ public class MarioComponent extends JComponent implements Environment {
 
             boolean[] action = {false,false,false,false,false};
 
-        	if(!paused||tmpPerformTick||!readyToExit) action = getAgent().getAction(this);
+        	if(!paused||tmpPerformTick) action = getAgent().getAction(this);
         	
         	if(this.isVisible()&&getAgent() instanceof MarioAiAgent &&levelScene.getMarioStatus()==STATUS.RUNNING)((MarioAiAgent)getAgent()).debugDraw(og,debugView,!paused||performTick);
            
@@ -296,8 +296,8 @@ public class MarioComponent extends JComponent implements Environment {
             if(tmpPerformTick==true)performTick=false;
             
         }//while 
-        if(rOptions.getAgent() instanceof MarioAiAgent)((MarioAiAgent)rOptions.getAgent()).roundOver(levelScene.getMarioStatus());
-        
+        evaluationInfo.setMarioCause(levelScene.getMarioCause());
+    	if(rOptions.getAgent() instanceof MarioAiAgent)((MarioAiAgent)rOptions.getAgent()).roundOver(levelScene.getMarioStatus(),levelScene.getMarioCause());
         //--- Show results on end screen
         if (this.isVisible()) redrawEndScreen();
         
@@ -326,7 +326,7 @@ public class MarioComponent extends JComponent implements Environment {
         evaluationInfo.setKilledCreaturesbyFire(levelScene.getKilledCreaturesByFireBall());
         
         evaluationInfo.setGainedMushrooms(levelScene.getMarioGainedMushrooms());
-        evaluationInfo.setGainedFlower(levelScene.getMarioGainedFowers());
+        evaluationInfo.setGainedFlower(levelScene.getMarioGainedFlowers());
         
         evaluationInfo.setTimesHurt(levelScene.getTimesMarioHurt());
         
@@ -406,7 +406,7 @@ public class MarioComponent extends JComponent implements Environment {
 			else blackoutTimer-=10;
 		}
 		
-		if (levelScene.getTimeLeft()<=0||levelScene.getMarioStatus()==STATUS.LOSE) { 
+		if (levelScene.getMarioStatus()==STATUS.LOSE) { 
 			setPaused(true);
 			renderBlackout(g, (int)levelScene.getMarioX() - xCam, (int)levelScene.getMarioY() - yCam, (int) (blackoutTimer));
 			if(running)levelFailed();
@@ -478,7 +478,7 @@ public class MarioComponent extends JComponent implements Environment {
 		MarioComponent.drawStringDropShadow(g, "by Shell : " + levelScene.getKilledCreaturesByShell(), 19, 3, 1);
 		MarioComponent.drawStringDropShadow(g, "MUSHROOMS: " + DF2.format(levelScene.getMarioGainedMushrooms()), 0, 5, 4);
 		MarioComponent.drawStringDropShadow(g, "by Stomp : " + levelScene.getKilledCreaturesByStomp(), 19, 4, 1);
-		MarioComponent.drawStringDropShadow(g, "FLOWERS  : " + DF2.format(levelScene.getMarioGainedFowers()), 0, 6, 4);
+		MarioComponent.drawStringDropShadow(g, "FLOWERS  : " + DF2.format(levelScene.getMarioGainedFlowers()), 0, 6, 4);
 		if(wasHijacked)MarioComponent.drawStringDropShadow(g, "HIJACKED!" , 19, 6, 1);
 
 		MarioComponent.drawStringDropShadow(g, "TIME", 33, 0, 7);
@@ -556,7 +556,7 @@ public class MarioComponent extends JComponent implements Environment {
         
         if(levelScene.getKilledCreaturesByShell()>0) drawStringDropShadow(og, "    by shell: "+levelScene.getKilledCreaturesByShell()+" ("+(DF.format((double)levelScene.getKilledCreaturesByShell()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow, 6);
         else drawStringDropShadow(og, "    by shell: 0",start-6,actualRow,6);
-        drawStringDropShadow(og, "  Flowers: "+levelScene.getMarioGainedFowers(), start+19, actualRow++, 6);
+        drawStringDropShadow(og, "  Flowers: "+levelScene.getMarioGainedFlowers(), start+19, actualRow++, 6);
         
         if(levelScene.getKilledCreaturesByFireBall()>0) drawStringDropShadow(og, "    by  fire: "+levelScene.getKilledCreaturesByFireBall()+" ("+(DF.format((double)levelScene.getKilledCreaturesByFireBall()/(double)levelScene.getKilledCreaturesTotal()*100))+"%)", start-6, actualRow++, 6);
         else drawStringDropShadow(og, "    by  fire: 0",start-6,actualRow++,6);
