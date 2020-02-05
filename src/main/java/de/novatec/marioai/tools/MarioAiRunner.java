@@ -63,6 +63,7 @@ public class MarioAiRunner {
 	private static boolean debugView;
 	private static boolean exitOnFinish; 
 	private static boolean pushMetrics;
+	
 	/**
 	 * No instances needed.
 	 */
