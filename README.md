@@ -38,8 +38,12 @@ public class Demo extends MarioAiAgent {
     }
 
     public static void main(String[] args) {
-        MarioAiRunner.run(new Demo(), LevelConfig.LEVEL_1);
-    }
+	MarioAiRunner runner = new MarioAiRunnerBuilder()
+		.addAgent(new Demo())
+		.setLevelConfig(LevelConfig.LEVEL_1)
+		.construct();
+
+    	runner.run();
 }
 ```
 
@@ -196,14 +200,22 @@ convienience methods provided by MarioAI which allow for quickly creating a simp
 </p>
 
 <h4>Running &amp; Configuration</h4>
-<p>You can run your Agent by using static methods in the <i>MarioAiRunner</i> class. The simplest way of
-running your agent is by passing an instance to <i>MarioAiRunner.run(MarioAiAgent agent, LevelConfig levelConfig)</i>.
+<p>You can run your Agent by using the <i>MarioAiRunner</i> class. The simplest way of
+obtaining a Runner to run your agent is using the builder <i> MarioAiRunnerBuilder </i>. You can specify different parameters with the corresponding methods.
+For example you can pass an instance of your agent to the builder object with <i>addAgent()</i>.
+Then you can construct a <i>MarioAiRunner</i> instance with the builder and the method <i>construct()</i>. 
+By calling the method <i>run()</i> of the newly created <i>MarioAiRunner</i>, you can start a run with your agent. 
 <p>MarioAI offers many ways of customizing the level for your purposes. The simplest way to configure the game is to 
-simply use preconfigured levels provided in the enums provided in <i>LevelConfig</i>.</p>
+simply use preconfigured levels provided in the enums provided in <i>LevelConfig</i> and set it as used level of the builder with <i>setLevelConfig()</i>.</p>
 
 ```
     public static void main(String[] args) {
-        MarioAiRunner.run(new Demo(), LevelConfig.LEVEL_1);
+	MarioAiRunner runner = new MarioAiRunnerBuilder()
+		.addAgent(new Demo())
+		.setLevelConfig(LevelConfig.LEVEL_1)
+		.construct();
+    	
+    	runner.run();
     }
 ```
 
@@ -247,10 +259,6 @@ you can use the many paramenters that can be passed to the constructor of
     <tr>
         <td>odds</td>
         <td>Array with length of 5, determines the percentage of level parts [STRAIGHT, HILLS, TUBES, HOLES, BULLETBILL]</td>
-    </tr>
-    <tr>
-        <td></td>
-        <td></td>
     </tr>
 </table>
 </p>

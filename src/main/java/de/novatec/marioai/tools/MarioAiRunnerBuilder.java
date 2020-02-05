@@ -13,14 +13,23 @@ import ch.idsia.ai.tasks.Task;
  */
 public class MarioAiRunnerBuilder implements Builder<MarioAiRunner>{
 	private List<Agent> agents = new ArrayList<Agent>();
-	private LevelConfig levelConfig = LevelConfig.ASTAR_KILLER2;
+	
+	private LevelConfig levelConfig = LevelConfig.LEVEL_1;
+	
 	private Task task = new ChallengeTask(); 
+	
 	private int fps = 24; 
+	
 	private int zoomFactor = 3; 
+	
 	private boolean randomize = false; 
+	
 	private boolean viewable = true;
+	
 	private boolean debugView = false;
-	private boolean exitOnFinish = false; 
+	
+	private boolean exitOnFinish = true; 
+	
 	private boolean pushMetrics = false;
 	
 	public MarioAiRunner construct() {
