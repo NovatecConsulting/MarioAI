@@ -91,10 +91,12 @@ public class MarioAiRunner {
 	 * @return List of EvaluationInfo (= result of the runs)
 	 */
 	public List<EvaluationInfo> run() {
-		RunnerOptions baseOptions = new RunnerOptions(agents.get(0),levelConfig,task);
 		if(randomize) {
 			levelConfig = LevelConfig.randomize(levelConfig);
 		}
+		
+		RunnerOptions baseOptions = new RunnerOptions(agents.get(0),levelConfig,task);
+		
 		baseOptions.setViewable(viewable);
 		log.trace("viewable="+viewable);
 		baseOptions.setFPS(fps);
